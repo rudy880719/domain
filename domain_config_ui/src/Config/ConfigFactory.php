@@ -2,7 +2,7 @@
 
 namespace Drupal\domain_config_ui\Config;
 
-use Drupal\Core\Config\ConfigFactory as CoreConfigFactory;
+use Drupal\Core\Config\ConfigFactory as DomainConfigFactory;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\domain_config_ui\DomainConfigUIManager;
@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Extends core ConfigFactory class to save domain specific configuration.
  */
-class ConfigFactory extends CoreConfigFactory {
+class ConfigFactory extends DomainConfigFactory {
 
   /**
    * The Domain config UI manager.
