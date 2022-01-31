@@ -2,7 +2,7 @@
 
 namespace Drupal\domain_config_ui\Config;
 
-use Drupal\Core\Config\ConfigFactory as DomainConfigFactory;
+use Drupal\domain_config\Config\ConfigFactory as DomainConfigFactory;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\domain_config_ui\DomainConfigUIManager;

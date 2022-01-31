@@ -16,7 +16,7 @@ services:
   domain_config.factory:
     class: Drupal\domain_config\Config\ConfigFactory
     decorates: config.factory
-    decoration_priority: 1
+    decoration_priority: 2
     tags:
       - { name: event_subscriber }
       - { name: service_collector, tag: 'config.factory.override', call: addOverride }
