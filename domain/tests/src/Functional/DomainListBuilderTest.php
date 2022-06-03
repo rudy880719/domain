@@ -16,12 +16,12 @@ class DomainListBuilderTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'user'];
+  protected static $modules = ['domain', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 150 domains.
@@ -76,7 +76,7 @@ class DomainListBuilderTest extends DomainTestBase {
     $user = $user_storage->load($account->id());
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
 
     $this->drupalLogin($account);
 
@@ -142,7 +142,7 @@ class DomainListBuilderTest extends DomainTestBase {
     $user = $user_storage->load($account2->id());
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
 
     $this->drupalLogin($account2);
 

@@ -29,7 +29,7 @@ class DomainEntityAccessTest extends DomainTestBase {
     $this->drupalGet('admin/config/domain');
 
     // Check for the add message.
-    $this->assertText('There are no domain record entities yet.', 'Text for no domains found.');
+    $this->assertSession()->pageTextContains('There are no domain record entities yet.');
 
     // Visit the add domain administration page.
     $this->drupalGet('admin/config/domain/add');
@@ -60,7 +60,7 @@ class DomainEntityAccessTest extends DomainTestBase {
 
     // Visit the add domain add page.
     $this->drupalGet('admin/config/domain/add');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Make a POST request on admin/config/domain/add.
     $edit = $this->domainPostValues();
     // Use hostname with dot (.) to avoid validation error.
@@ -81,7 +81,7 @@ class DomainEntityAccessTest extends DomainTestBase {
     $this->drupalLogin($noneditor);
     // Visit the add domain administration page.
     $this->drupalGet('admin/config/domain/add');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

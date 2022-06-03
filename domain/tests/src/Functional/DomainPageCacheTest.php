@@ -31,7 +31,7 @@ class DomainPageCacheTest extends DomainTestBase {
     $query = $database->query("SELECT cid FROM {cache_page}");
     $result = $query->fetchCol();
 
-    $this->assertEqual(sort($expected), sort($result), 'Cache returns as expected.');
+    $this->assertEquals(sort($expected), sort($result), 'Cache returns as expected.');
 
   }
 

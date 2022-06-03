@@ -215,7 +215,7 @@ class DomainElementManager implements DomainElementManagerInterface {
       '#theme' => 'item_list',
       '#items' => $items,
     ];
-    $string .= render($build);
+    $string .= \Drupal::service('renderer')->render($build);
     return '<div class="disallowed">' . $string . '</div>';
   }
 

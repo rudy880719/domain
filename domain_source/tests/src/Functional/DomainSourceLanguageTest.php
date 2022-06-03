@@ -19,7 +19,7 @@ class DomainSourceLanguageTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'domain',
@@ -32,7 +32,7 @@ class DomainSourceLanguageTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 domains.

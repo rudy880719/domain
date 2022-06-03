@@ -25,7 +25,7 @@ class DomainCheckResponseTest extends DomainTestBase {
     $this->drupalGet('admin/config/domain/add');
     $this->submitForm($edit, 'Save');
     // Did it save correctly?
-    $this->assertNoRaw('The server request to');
+    $this->assertSession()->responseNotContains('The server request to');
     $domains = $storage->loadMultiple();
     $this->assertCount(1, $domains, 'Domain record saved via form.');
 
@@ -43,7 +43,7 @@ class DomainCheckResponseTest extends DomainTestBase {
       // Ensure no test errors.
     }
     // The domain should not save.
-    $this->assertRaw('The server request to');
+    $this->assertSession()->responseContains('The server request to');
     $domains = $storage->loadMultiple();
     $this->assertCount(1, $domains, 'Domain record not saved via form.');
 
@@ -53,7 +53,7 @@ class DomainCheckResponseTest extends DomainTestBase {
     $this->submitForm($edit, 'Save');
 
     // The domain should save.
-    $this->assertNoRaw('The server request to');
+    $this->assertSession()->responseNotContains('The server request to');
     $domains = $storage->loadMultiple();
     $this->assertCount(2, $domains, 'Domain record saved via form.');
   }

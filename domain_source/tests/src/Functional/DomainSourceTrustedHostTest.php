@@ -18,12 +18,12 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_source', 'field', 'node', 'user'];
+  protected static $modules = ['domain', 'domain_source', 'field', 'node', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 3 domains.
@@ -68,7 +68,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
     $this->writeSettings($settings);
     // This URL should fail due to trusted host omission.
     $this->drupalGet($url);
-    $this->assertRaw('The provided host name is not valid for this server.');
+    $this->assertSession()->responseContains('The provided host name is not valid for this server.');
 
     // Now switch the node to a domain that is trusted.
     $node->{DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD} = $domain2->id();
@@ -79,7 +79,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
     // Assert that the URL is what we expect.
     $this->assertTrue($url == $expected, 'fromRoute');
     $this->drupalGet($url);
-    $this->assertResponse(200, 'Url is validated by trusted host settings.');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

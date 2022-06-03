@@ -15,7 +15,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_content'];
+  protected static $modules = ['domain', 'domain_content'];
 
   /**
    * An array of domains.
@@ -27,7 +27,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create five test domains.
@@ -79,7 +79,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
   }
 
   /**
-   * Strips whitespace from a page response and runs assertRaw() equivalent.
+   * Strips whitespace from a page response and runs assertSession()->responseContains() equivalent.
    *
    * In tests, we were having difficulty with spacing in tables. This method
    * takes some concepts from Mink and rearranges them to work for our tests.
@@ -97,7 +97,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
     $content = preg_replace('@>\\s+<@', '><', $content);
     $regex = '/' . preg_quote($text, '/') . '/ui';
     $message = sprintf('The text "%s" was found in the text of the current page.', $text);
-    $this->assert((bool) preg_match($regex, $content), $message);
+    $this->assertTrue((bool) preg_match($regex, $content), $message);
   }
 
 }

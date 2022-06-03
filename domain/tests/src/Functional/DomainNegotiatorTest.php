@@ -16,7 +16,7 @@ class DomainNegotiatorTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_test', 'block'];
+  protected static $modules = ['domain', 'domain_test', 'block'];
 
   /**
    * Tests the handling of an inbound request.
@@ -38,7 +38,7 @@ class DomainNegotiatorTest extends DomainTestBase {
     // Test the response of the default home page.
     foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultiple() as $domain) {
       $this->drupalGet($domain->getPath());
-      $this->assertRaw($domain->label(), 'Loaded the proper domain.');
+      $this->assertSession()->responseContains($domain->label());
     }
   }
 

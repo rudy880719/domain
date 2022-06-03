@@ -14,7 +14,7 @@ class DomainConfigPageCacheTest extends DomainConfigTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain',
     'domain_config',
     'domain_config_test',
@@ -43,7 +43,7 @@ class DomainConfigPageCacheTest extends DomainConfigTestBase {
     $query = $database->query("SELECT cid FROM {cache_page}");
     $result = $query->fetchCol();
 
-    $this->assertEqual(sort($expected), sort($result), implode(', ', $result));
+    $this->assertEquals(sort($expected), sort($result), implode(', ', $result));
 
   }
 

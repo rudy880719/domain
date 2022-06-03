@@ -16,12 +16,12 @@ class DomainAliasListBuilderTest extends DomainAliasTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_alias', 'user'];
+  protected static $modules = ['domain', 'domain_alias', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 domains.
@@ -67,7 +67,7 @@ class DomainAliasListBuilderTest extends DomainAliasTestBase {
     $user = $user_storage->load($account->id());
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
 
     $this->drupalLogin($account);
 

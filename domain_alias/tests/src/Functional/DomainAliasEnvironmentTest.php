@@ -16,12 +16,12 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_alias', 'user'];
+  protected static $modules = ['domain', 'domain_alias', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 3 domains. These will be example.com, one.example.com,
@@ -49,27 +49,27 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
     }
     // Test the environment loader.
     $local = $alias_loader->loadByEnvironment('local');
-    $this->assert(count($local) == 3, 'Three aliases set to local');
+    $this->assertTrue(count($local) == 3, 'Three aliases set to local');
     // Test the environment matcher. $domain here is two.example.com.
     $match = $alias_loader->loadByEnvironmentMatch($domain, 'local');
-    $this->assert(count($match) == 1, 'One environment match loaded');
+    $this->assertTrue(count($match) == 1, 'One environment match loaded');
     $alias = current($match);
-    $this->assert($alias->getPattern() == 'five.' . $this->baseHostname, 'Proper pattern match loaded.');
+    $this->assertTrue($alias->getPattern() == 'five.' . $this->baseHostname, 'Proper pattern match loaded.');
 
     // Set one alias to a different environment.
     $alias->set('environment', 'testing')->save();
     $local = $alias_loader->loadByEnvironment('local');
-    $this->assert(count($local) == 2, 'Two aliases set to local');
+    $this->assertTrue(count($local) == 2, 'Two aliases set to local');
     // Test the environment matcher. $domain here is two.example.com.
     $matches = $alias_loader->loadByEnvironmentMatch($domain, 'local');
-    $this->assert(count($matches) == 0, 'No environment matches loaded');
+    $this->assertTrue(count($matches) == 0, 'No environment matches loaded');
 
     // Test the environment matcher. $domain here is one.example.com.
     $domain = $domain_storage->load('one_example_com');
     $matches = $alias_loader->loadByEnvironmentMatch($domain, 'local');
-    $this->assert(count($matches) == 1, 'One environment match loaded');
+    $this->assertTrue(count($matches) == 1, 'One environment match loaded');
     $alias = current($matches);
-    $this->assert($alias->getPattern() == 'four.' . $this->baseHostname, 'Proper pattern match loaded.');
+    $this->assertTrue($alias->getPattern() == 'four.' . $this->baseHostname, 'Proper pattern match loaded.');
 
     // Now load a page and check things.
     // Since we cannot read the service request, we place a block

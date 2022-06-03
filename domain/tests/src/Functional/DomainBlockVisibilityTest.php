@@ -21,7 +21,7 @@ class DomainBlockVisibilityTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'block'];
+  protected static $modules = ['domain', 'block'];
 
   /**
    * Test domain navigation block.

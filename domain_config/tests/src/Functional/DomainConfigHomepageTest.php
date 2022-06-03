@@ -14,7 +14,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
   /**
    * @var array The modules to enable.
    */
-  public static $modules = ['node', 'views'];
+  protected static $modules = ['node', 'views'];
 
   /**
    * Tests that domain-specific homepage loading works.
@@ -61,7 +61,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
         $expected = $domain->getPath() . $prefix . $homepages[$domain->id()][$langcode];
         $expected_home = $this->drupalGet($expected);
 
-        $this->assertEqual($home, $expected_home, 'Proper home page loaded (' . $domain->id() . ').');
+        $this->assertEquals($home, $expected_home, 'Proper home page loaded (' . $domain->id() . ').');
       }
     }
     // Explicit test for https://www.drupal.org/project/domain/issues/3154402
@@ -87,7 +87,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
         $expected = $domain->getPath() . $prefix . $homepages[$domain->id()][$langcode];
         $expected_home = $this->drupalGet($expected);
 
-        $this->assertEqual($home, $expected_home, 'Proper home page loaded (' . $domain->id() . ').');
+        $this->assertEquals($home, $expected_home, 'Proper home page loaded (' . $domain->id() . ').');
       }
     }
   }

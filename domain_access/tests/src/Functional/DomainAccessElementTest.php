@@ -17,7 +17,7 @@ class DomainAccessElementTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain',
     'domain_access',
     'field',
@@ -28,7 +28,7 @@ class DomainAccessElementTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 domains.
@@ -93,9 +93,9 @@ class DomainAccessElementTest extends DomainTestBase {
     // Check that two values are set.
     $manager = \Drupal::service('domain_access.manager');
     $values = $manager->getAccessValues($node);
-    $this->assert(count($values) == 3, 'Node saved with three domain records.');
+    $this->assertTrue(count($values) == 3, 'Node saved with three domain records.');
     $value = $manager->getAllValue($node);
-    $this->assert($value == 1, 'Node saved to all affiliates.');
+    $this->assertTrue($value == 1, 'Node saved to all affiliates.');
 
     // Now login as a user with limited rights.
     $account = $this->drupalCreateUser([
@@ -108,9 +108,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     $user = $user_storage->load($account->id());
     $values = $manager->getAccessValues($user);
-    $this->assert(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
     $value = $manager->getAllValue($user);
-    $this->assert($value == 0, 'User not saved to all affiliates.');
+    $this->assertTrue($value == 0, 'User not saved to all affiliates.');
 
     $this->drupalLogin($account);
 
@@ -144,9 +144,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $node = $storage->load($node->id());
     // Check that two values are set.
     $values = $manager->getAccessValues($node);
-    $this->assert(count($values) == 2, 'Node saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'Node saved with two domain records.');
     $value = $manager->getAllValue($node);
-    $this->assert($value == 1, 'Node saved to all affiliates.');
+    $this->assertTrue($value == 1, 'Node saved to all affiliates.');
   }
 
 }

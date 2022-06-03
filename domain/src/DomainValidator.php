@@ -125,7 +125,7 @@ class DomainValidator implements DomainValidatorInterface {
    * {@inheritdoc}
    */
   public function checkResponse(DomainInterface $domain) {
-    $url = $domain->getPath() . drupal_get_path('module', 'domain') . '/tests/200.png';
+    $url = $domain->getPath() . \Drupal::service('extension.list.module')->getPath('domain') . '/tests/200.png';
     try {
       // GuzzleHttp no longer allows for bogus URL calls.
       $request = $this->httpClient->get($url);

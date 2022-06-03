@@ -16,7 +16,7 @@ class DomainAccessCacheTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain_access',
   ];
 
@@ -42,7 +42,7 @@ class DomainAccessCacheTest extends DomainTestBase {
     $query = $database->query("SELECT cid FROM {cache_page}");
     $result = $query->fetchCol();
 
-    $this->assertEqual(sort($expected), sort($result), 'Cache returns as expected.');
+    $this->assertEquals(sort($expected), sort($result), 'Cache returns as expected.');
 
     // Now create a node and test the cache.
     // Create an article node assigned to two domains.
@@ -64,7 +64,7 @@ class DomainAccessCacheTest extends DomainTestBase {
     $query = $database->query("SELECT cid FROM {cache_page}");
     $result = $query->fetchCol();
 
-    $this->assertEqual(sort($expected), sort($result), 'Cache returns as expected.');
+    $this->assertEquals(sort($expected), sort($result), 'Cache returns as expected.');
 
     // When we delete the node, we want all cids removed.
     $node1->delete();
@@ -72,7 +72,7 @@ class DomainAccessCacheTest extends DomainTestBase {
     $query = $database->query("SELECT cid FROM {cache_page}");
     $result = $query->fetchCol();
 
-    $this->assertEqual(sort($original), sort($result), 'Cache returns as expected.');
+    $this->assertEquals(sort($original), sort($result), 'Cache returns as expected.');
 
   }
 

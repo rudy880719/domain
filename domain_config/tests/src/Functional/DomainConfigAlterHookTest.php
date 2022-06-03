@@ -14,7 +14,7 @@ class DomainConfigAlterHookTest extends DomainConfigTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain',
     'domain_config',
     'domain_config_test',
@@ -45,7 +45,7 @@ class DomainConfigAlterHookTest extends DomainConfigTestBase {
   /**
    * Test setup.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a domain.
@@ -68,7 +68,7 @@ class DomainConfigAlterHookTest extends DomainConfigTestBase {
     // that requests config thus triggering an early hook invocation (before
     // modules are loaded by the kernel).
     $this->drupalGet('<front>');
-    $this->assertEquals('invoked', $this->drupalGetHeader('X-Domain-Config-Test-page-attachments-hook'));
+    $this->assertEquals('invoked', $this->getSession()->getResponseHeader('X-Domain-Config-Test-page-attachments-hook'));
   }
 
 }

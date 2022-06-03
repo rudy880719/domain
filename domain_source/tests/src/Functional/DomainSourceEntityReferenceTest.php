@@ -16,7 +16,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain',
     'domain_source',
     'field',
@@ -39,17 +39,17 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
 
     // Visit the article field administration page.
     $this->drupalGet('admin/structure/types/manage/article/fields');
-    $this->assertResponse(200, 'Manage fields page sourceed.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check for a domain field.
-    $this->assertText('Domain Source', 'Domain form field found.');
+    $this->assertSession()->pageTextContains('Domain Source');
 
     // Visit the article field display administration page.
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertResponse(200, 'Manage field display page sourceed.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check for a domain field.
-    $this->assertText('Domain Source', 'Domain form field found.');
+    $this->assertSession()->pageTextContains('Domain Source');
   }
 
   /**
@@ -62,6 +62,8 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
       'administer node display',
       'administer domains',
       'administer menu',
+      'create article content',
+      'edit any article content',
     ]);
     $this->drupalLogin($this->admin_user);
 
@@ -70,16 +72,16 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
 
     // Visit the article field display administration page.
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check the new field exists on the page.
-    $this->assertText('Domain Source', 'Found the domain field instance.');
+    $this->assertSession()->pageTextContains('Domain Source');
 
     // We expect to find 5 domain options + none.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
-      $this->assertRaw($string, 'Found the domain option.');
+      $this->assertSession()->responseContains($string);
       if (!isset($one)) {
         $one = $domain->id();
         continue;
@@ -89,7 +91,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
         $two_path = $domain->getPath();
       }
     }
-    $this->assertRaw('value="_none"', 'Found the _none_ option.');
+    $this->assertSession()->responseContains('value="_none"');
 
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
@@ -98,7 +100,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $edit['field_domain_source'] = $two;
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $node = $node_storage->load(1);
     // Check that the value is set.
     $value = domain_source_get($node);
@@ -114,7 +116,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $edit["field_domain_source"] = '_none';
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $node = $node_storage->load(2);
     // Check that the value is set.
     $value = domain_source_get($node);
@@ -152,7 +154,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $this->assertEquals($expected_url, $url, 'URL rewritten correctly.');
     // Load the page with a menu and check that link.
     $this->drupalGet('node/3');
-    $this->assertRaw('href="' . $url, 'Menu link rewritten correctly.');
+    $this->assertSession()->responseContains('href="' . $url);
 
     // Remove the field from the node type and make sure nothing breaks.
     // See https://www.drupal.org/node/2892612
@@ -164,7 +166,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     }
     // Visit the article field display administration page.
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Try to post a node, assigned to no domain.
     $edit2['title[0][value]'] = 'Test node';
     $this->drupalGet('node/add/article');

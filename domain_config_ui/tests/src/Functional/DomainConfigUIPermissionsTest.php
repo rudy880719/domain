@@ -19,14 +19,14 @@ class DomainConfigUIPermissionsTest extends DomainConfigTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain_config_ui',
   ];
 
   /**
    * {@inheritDoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->createAdminUser();
@@ -45,22 +45,22 @@ class DomainConfigUIPermissionsTest extends DomainConfigTestBase {
 
     // Visit the domain config ui administration page.
     $this->drupalGet($path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Visit the site information page.
     $this->drupalGet($path2);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->findField('domain');
 
     $this->drupalLogin($this->editorUser);
 
     // Visit the domain config ui administration page.
     $this->drupalGet($path);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Visit the site information page.
     $this->drupalGet($path2);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->findNoField('domain');
   }
 

@@ -17,12 +17,12 @@ class DomainAdminElementTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'field', 'field_ui', 'user'];
+  protected static $modules = ['domain', 'field', 'field_ui', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 domains.
@@ -71,7 +71,7 @@ class DomainAdminElementTest extends DomainTestBase {
     // Check that two values are set.
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 3, 'User saved with three domain records.');
+    $this->assertTrue(count($values) == 3, 'User saved with three domain records.');
 
     // Now login as a user with limited rights.
     $account = $this->drupalCreateUser([
@@ -82,7 +82,7 @@ class DomainAdminElementTest extends DomainTestBase {
     $this->addDomainsToEntity('user', $account->id(), $ids, DomainInterface::DOMAIN_ADMIN_FIELD);
     $tester = $storage->load($account->id());
     $values = $manager->getFieldValues($tester, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
     $storage->resetCache([$account->id()]);
     $this->drupalLogin($account);
 
@@ -112,7 +112,7 @@ class DomainAdminElementTest extends DomainTestBase {
     $user = $storage->load($user->id());
     // Check that two values are set.
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
 
     // Test the case presented in https://www.drupal.org/node/2841962.
     $config = \Drupal::configFactory()->getEditable('user.settings');

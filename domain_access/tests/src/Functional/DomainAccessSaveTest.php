@@ -17,12 +17,12 @@ class DomainAccessSaveTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_access', 'field', 'user'];
+  protected static $modules = ['domain', 'domain_access', 'field', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 domains.
@@ -51,9 +51,9 @@ class DomainAccessSaveTest extends DomainTestBase {
     // Check that two values are set properly.
     $manager = \Drupal::service('domain_access.manager');
     $values = $manager->getAccessValues($node);
-    $this->assert(count($values) == 1, 'Node saved with one domain records.');
+    $this->assertTrue(count($values) == 1, 'Node saved with one domain records.');
     $value = $manager->getAllValue($node);
-    $this->assert($value == 1, 'Node saved to all affiliates.');
+    $this->assertTrue($value == 1, 'Node saved to all affiliates.');
 
     // Save a node with different values.
     $node = $storage->create([
@@ -69,9 +69,9 @@ class DomainAccessSaveTest extends DomainTestBase {
     // Load and check the node.
     $node = $storage->load(2);
     $values = $manager->getAccessValues($node);
-    $this->assert(count($values) == 2, 'Node saved with two domain records.');
+    $this->assertTrue(count($values) == 2, 'Node saved with two domain records.');
     $value = $manager->getAllValue($node);
-    $this->assert($value == 0, 'Node not saved to all affiliates.');
+    $this->assertTrue($value == 0, 'Node not saved to all affiliates.');
   }
 
 }

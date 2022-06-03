@@ -20,7 +20,7 @@ class DomainContextTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'block'];
+  protected static $modules = ['domain', 'block'];
 
   /**
    * Test block context when no domains exist.

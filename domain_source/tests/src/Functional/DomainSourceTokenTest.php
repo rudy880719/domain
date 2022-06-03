@@ -18,12 +18,12 @@ class DomainSourceTokenTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_access', 'domain_source', 'field', 'node', 'user'];
+  protected static $modules = ['domain', 'domain_access', 'domain_source', 'field', 'node', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 4 domains.
@@ -47,12 +47,12 @@ class DomainSourceTokenTest extends DomainTestBase {
     $node = $this->createNode($nodes_values);
 
     // Token value matches the normal canonical url when canonical rewrite is used.
-    $this->assertEqual($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['one_example_com']->getPath() . 'node/1');
-    $this->assertEqual($node->toUrl('canonical')->setAbsolute()->toString(), $domains['one_example_com']->getPath() . 'node/1');
+    $this->assertEquals($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['one_example_com']->getPath() . 'node/1');
+    $this->assertEquals($node->toUrl('canonical')->setAbsolute()->toString(), $domains['one_example_com']->getPath() . 'node/1');
 
     $node->set(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, 'two_example_com');
-    $this->assertEqual($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['two_example_com']->getPath() . 'node/1');
-    $this->assertEqual($node->toUrl('canonical')->setAbsolute()->toString(), $domains['two_example_com']->getPath() . 'node/1');
+    $this->assertEquals($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['two_example_com']->getPath() . 'node/1');
+    $this->assertEquals($node->toUrl('canonical')->setAbsolute()->toString(), $domains['two_example_com']->getPath() . 'node/1');
 
     // Exclude the canonical path from rewrites.
     $config = $this->config('domain_source.settings');
@@ -63,13 +63,13 @@ class DomainSourceTokenTest extends DomainTestBase {
     // Test token value, and URL without token.
     $node->set(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, 'one_example_com');
     $one_example_com_absolute_url = $node->toUrl('canonical')->setAbsolute()->toString();
-    $this->assertEqual($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['one_example_com']->getPath() . 'node/1');
+    $this->assertEquals($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['one_example_com']->getPath() . 'node/1');
 
     $node->set(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, 'two_example_com');
     $two_example_com_absolute_url = $node->toUrl('canonical')->setAbsolute()->toString();
-    $this->assertEqual($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['two_example_com']->getPath() . 'node/1');
+    $this->assertEquals($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['two_example_com']->getPath() . 'node/1');
 
-    $this->assertEqual($one_example_com_absolute_url, $two_example_com_absolute_url, 'Canonical url rewrite is not used, domain source change did not affect url.');
+    $this->assertEquals($one_example_com_absolute_url, $two_example_com_absolute_url, 'Canonical url rewrite is not used, domain source change did not affect url.');
   }
 
 }

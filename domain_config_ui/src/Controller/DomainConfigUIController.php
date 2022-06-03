@@ -232,7 +232,7 @@ class DomainConfigUIController {
           '#items' => [$value],
           '#title' => self::formatValue($key),
         ];
-        $items[] = render($item);
+        $items[] = \Drupal::service('renderer')->render($item);
       }
       else {
         $list = [];
@@ -244,14 +244,14 @@ class DomainConfigUIController {
           '#items' => $list,
           '#title' => self::formatValue($key),
         ];
-        $items[] = render($variables);
+        $items[] = \Drupal::service('renderer')->render($variables);
       }
     }
     $rendered = [
       '#theme' => 'item_list',
       '#items' => $items,
     ];
-    return render($rendered);
+    return \Drupal::service('renderer')->render($rendered);
   }
 
   /**

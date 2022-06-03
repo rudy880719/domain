@@ -38,8 +38,8 @@ class DomainContentActionsTest extends DomainContentTestBase {
     $new_domain = $this->domains['two_example_com'];
 
     // Domains are linked in the output.
-    $this->assertRaw($old_domain->label() . '</a>');
-    $this->assertNoRaw($new_domain->label() . '</a>');
+    $this->assertSession()->responseContains($old_domain->label() . '</a>');
+    $this->assertSession()->responseNotContains($new_domain->label() . '</a>');
 
     // Add some content to domain two.
     $edit = [
@@ -50,8 +50,8 @@ class DomainContentActionsTest extends DomainContentTestBase {
     $this->submitForm($edit, 'Apply to selected items');
 
     // Both domains should be present.
-    $this->assertRaw($old_domain->label() . '</a>');
-    $this->assertRaw($new_domain->label() . '</a>');
+    $this->assertSession()->responseContains($old_domain->label() . '</a>');
+    $this->assertSession()->responseContains($new_domain->label() . '</a>');
 
     // Remove some content from domain two.
     $edit = [
@@ -62,11 +62,11 @@ class DomainContentActionsTest extends DomainContentTestBase {
     $this->submitForm($edit, 'Apply to selected items');
 
     // Domains are linked properly in the output.
-    $this->assertRaw($old_domain->label() . '</a>');
-    $this->assertNoRaw($new_domain->label() . '</a>');
+    $this->assertSession()->responseContains($old_domain->label() . '</a>');
+    $this->assertSession()->responseNotContains($new_domain->label() . '</a>');
 
     // There should be five elements.
-    $this->assertRaw('node_bulk_form[4]');
+    $this->assertSession()->responseContains('node_bulk_form[4]');
 
     // Remove one from all affiliates.
     $edit = [
@@ -76,8 +76,8 @@ class DomainContentActionsTest extends DomainContentTestBase {
     $this->submitForm($edit, 'Apply to selected items');
 
     // There should be four elements.
-    $this->assertRaw('node_bulk_form[3]');
-    $this->assertNoRaw('node_bulk_form[4]');
+    $this->assertSession()->responseContains('node_bulk_form[3]');
+    $this->assertSession()->responseNotContains('node_bulk_form[4]');
   }
 
 }

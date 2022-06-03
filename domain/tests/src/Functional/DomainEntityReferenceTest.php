@@ -14,7 +14,7 @@ class DomainEntityReferenceTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'field', 'field_ui'];
+  protected static $modules = ['domain', 'field', 'field_ui'];
 
   /**
    * Create, edit and delete a domain field via the user interface.
@@ -30,17 +30,17 @@ class DomainEntityReferenceTest extends DomainTestBase {
 
     // Visit the article field administration page.
     $this->drupalGet('admin/structure/types/manage/article/fields');
-    $this->assertResponse(200, 'Manage fields page accessed.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check for a domain field.
-    $this->assertNoText('Domain test field', 'Domain form field not found.');
+    $this->assertSession()->pageTextNotContains('Domain test field');
 
     // Visit the article field display administration page.
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertResponse(200, 'Manage field display page accessed.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check for a domain field.
-    $this->assertNoText('Domain test field', 'Domain form field not found.');
+    $this->assertSession()->pageTextNotContains('Domain test field');
 
     // Create test domain field.
     $this->domainCreateTestField();
@@ -49,13 +49,13 @@ class DomainEntityReferenceTest extends DomainTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields');
 
     // Check the new field.
-    $this->assertText('Domain test field', 'Added a test field instance.');
+    $this->assertSession()->pageTextContains('Domain test field');
 
     // Visit the article field display administration page.
     $this->drupalGet('admin/structure/types/manage/article/display');
 
     // Check the new field.
-    $this->assertText('Domain test field', 'Added a test field display instance.');
+    $this->assertSession()->pageTextContains('Domain test field');
 
     // Visit the field config page.
     $this->drupalGet('admin/config/people/accounts/fields/user.user.field_domain_access');
@@ -82,16 +82,16 @@ class DomainEntityReferenceTest extends DomainTestBase {
 
     // Visit the article field display administration page.
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check the new field exists on the page.
-    $this->assertText('Domain test field', 'Found the domain field instance.');
+    $this->assertSession()->pageTextContains('Domain test field');
 
     // We expect to find 5 domain options.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
-      $this->assertRaw($string, 'Found the domain option');
+      $this->assertSession()->responseContains($string);
       if (!isset($one)) {
         $one = $domain->id();
         continue;
@@ -107,7 +107,7 @@ class DomainEntityReferenceTest extends DomainTestBase {
     $edit["field_domain[{$two}]"] = TRUE;
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $node = \Drupal::entityTypeManager()->getStorage('node')->load(1);
     $values = $node->get('field_domain');
 

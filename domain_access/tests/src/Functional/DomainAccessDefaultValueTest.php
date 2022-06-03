@@ -18,7 +18,7 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_access', 'field', 'field_ui'];
+  protected static $modules = ['domain', 'domain_access', 'field', 'field_ui'];
 
   /**
    * Test the usage of DomainAccessManager::getDefaultValue().
@@ -39,14 +39,14 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
 
     // Visit the article field display administration page.
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check the new field exists on the page.
-    $this->assertText('Domain Access', 'Found the domain field instance.');
-    $this->assertRaw('name="field_domain_access[example_com]" value="example_com" checked="checked"', 'Default domain selected.');
+    $this->assertSession()->pageTextContains('Domain Access');
+    $this->assertSession()->responseContains('name="field_domain_access[example_com]" value="example_com" checked="checked"');
     // Check the all affiliates field.
-    $this->assertText('Send to all affiliates', 'Found the all affiliates field instance.');
-    $this->assertNoRaw('name="field_domain_all_affiliates[value]" value="1" checked="checked"', 'All affiliates not selected.');
+    $this->assertSession()->pageTextContains('Send to all affiliates');
+    $this->assertSession()->responseNotContains('name="field_domain_all_affiliates[value]" value="1" checked="checked"');
 
     // Now save the node with the values set.
     $edit = [
@@ -78,7 +78,7 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
     $this->drupalLogin($this->test_user);
 
     $this->drupalGet('node/1/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Now save the node with the values set.
     $edit = [

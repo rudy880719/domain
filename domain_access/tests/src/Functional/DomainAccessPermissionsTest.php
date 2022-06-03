@@ -48,12 +48,12 @@ class DomainAccessPermissionsTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_access', 'field', 'node'];
+  protected static $modules = ['domain', 'domain_access', 'field', 'node'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Clear permissions for authenticated users.
     $this->config('user.role.' . RoleInterface::AUTHENTICATED_ID)->set('permissions', [])->save();
@@ -223,19 +223,19 @@ class DomainAccessPermissionsTest extends DomainTestBase {
       $url = $domain->getPath() . 'node/add/page';
       $this->drupalGet($url);
       if ($domain->id() == $two) {
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
       }
       else {
-        $this->assertResponse(403);
+        $this->assertSession()->statusCodeEquals(403);
       }
       // The user should be allowed to create articles.
       $url = $domain->getPath() . 'node/add/article';
       $this->drupalGet($url);
       if ($domain->id() == $two) {
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
       }
       else {
-        $this->assertResponse(403);
+        $this->assertSession()->statusCodeEquals(403);
       }
     }
 
@@ -267,15 +267,15 @@ class DomainAccessPermissionsTest extends DomainTestBase {
       $url = $domain->getPath() . 'node/add/page';
       $this->drupalGet($url);
       if ($domain->id() == $two) {
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
       }
       else {
-        $this->assertResponse(403);
+        $this->assertSession()->statusCodeEquals(403);
       }
       // The user should not be allowed to create articles.
       $url = $domain->getPath() . 'node/add/article';
       $this->drupalGet($url);
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
     }
   }
 
@@ -294,7 +294,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
    */
   public function assertNodeAccess(array $ops, NodeInterface $node, AccountInterface $account) {
     foreach ($ops as $op => $result) {
-      $this->assertEqual($result, $this->accessHandler->access($node, $op, $account), 'Expected result returned.');
+      $this->assertEquals($result, $this->accessHandler->access($node, $op, $account), 'Expected result returned.');
     }
   }
 

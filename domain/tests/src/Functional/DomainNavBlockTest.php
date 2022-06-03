@@ -16,7 +16,7 @@ class DomainNavBlockTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'node', 'block'];
+  protected static $modules = ['domain', 'node', 'block'];
 
   /**
    * Test domain navigation block.
@@ -51,7 +51,7 @@ class DomainNavBlockTest extends DomainTestBase {
         $this->findLink($domain->label());
       }
       else {
-        $this->assertNoRaw($domain->label());
+        $this->assertSession()->responseNotContains($domain->label());
       }
     }
     // Let the anon user view disabled domains. All links should appear.
@@ -75,7 +75,7 @@ class DomainNavBlockTest extends DomainTestBase {
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
       $this->findLink($domain->getHostname());
-      $this->assertRaw($domain->buildUrl(base_path() . 'user/login'));
+      $this->assertSession()->responseContains($domain->buildUrl(base_path() . 'user/login'));
     }
 
     // Now update the configuration and test again.
@@ -90,7 +90,7 @@ class DomainNavBlockTest extends DomainTestBase {
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
       $this->findLink($domain->getPath());
-      $this->assertRaw($domain->getPath());
+      $this->assertSession()->responseContains($domain->getPath());
     }
   }
 

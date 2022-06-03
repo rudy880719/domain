@@ -20,7 +20,7 @@ class DomainReferencesTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'domain',
     'domain_access',
     'field',
@@ -31,7 +31,7 @@ class DomainReferencesTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 domains.
@@ -93,10 +93,10 @@ class DomainReferencesTest extends DomainTestBase {
     // Check that three values are set.
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($testuser, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 3, 'User saved with three domain admin records.');
+    $this->assertTrue(count($values) == 3, 'User saved with three domain admin records.');
     // Check that no access fields are set.
     $values = $manager->getFieldValues($testuser, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain access records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain access records.');
 
     // Now login as a user with limited rights. This is user 4.
     $account = $this->drupalCreateUser([
@@ -108,10 +108,10 @@ class DomainReferencesTest extends DomainTestBase {
     $this->addDomainsToEntity('user', $account->id(), $ids, DomainInterface::DOMAIN_ADMIN_FIELD);
     $limited_admin = $storage->load($account->id());
     $values = $manager->getFieldValues($limited_admin, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain admin records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain admin records.');
     // Check that no access fields are set.
     $values = $manager->getFieldValues($limited_admin, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
-    $this->assert(count($values) == 0, 'User saved with no domain access records.');
+    $this->assertTrue(count($values) == 0, 'User saved with no domain access records.');
 
     // Now edit user 3 as user 4 with limited rights.
     $this->drupalLogin($account);
@@ -148,10 +148,10 @@ class DomainReferencesTest extends DomainTestBase {
     $testuser = $storage->load($testuser->id());
     // Check that two values are set.
     $values = $manager->getFieldValues($testuser, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain admin records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain admin records.');
     // Check that no access fields are set.
     $values = $manager->getFieldValues($testuser, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain access records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain access records.');
 
     // Now login as a user with different limited rights. This is user 5.
     $new_account = $this->drupalCreateUser([
@@ -166,9 +166,9 @@ class DomainReferencesTest extends DomainTestBase {
 
     $new_admin = $storage->load($new_account->id());
     $values = $manager->getFieldValues($new_admin, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain admin records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain admin records.');
     $values = $manager->getFieldValues($new_admin, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain access records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain access records.');
 
     // Now edit the user as someone with limited rights.
     $storage->resetCache([$new_admin->id()]);
@@ -214,9 +214,9 @@ class DomainReferencesTest extends DomainTestBase {
     $testuser = $storage->load($testuser->id());
     // Check that two values are set.
     $values = $manager->getFieldValues($testuser, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assert(count($values) == 2, 'User saved with two domain admin records.');
+    $this->assertTrue(count($values) == 2, 'User saved with two domain admin records.');
     $values = $manager->getFieldValues($testuser, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
-    $this->assert(count($values) == 3, 'User saved with three domain access records.');
+    $this->assertTrue(count($values) == 3, 'User saved with three domain access records.');
 
   }
 

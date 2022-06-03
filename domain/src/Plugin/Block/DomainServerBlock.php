@@ -138,7 +138,7 @@ class DomainServerBlock extends DomainBlockBase {
       '#theme' => 'item_list',
       '#items' => $items,
     ];
-    return render($variables);
+    return \Drupal::service('renderer')->render($variables);
   }
 
 }

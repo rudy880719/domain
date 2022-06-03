@@ -24,7 +24,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'domain', 'domain_access', 'domain_test_views'];
+  protected static $modules = ['node', 'domain', 'domain_access', 'domain_test_views'];
 
   /**
    * Data mapping.
@@ -36,7 +36,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp(): void {
     parent::setUp();
     $this->domainCreateTestDomains(3);
     $this->createTestData();
