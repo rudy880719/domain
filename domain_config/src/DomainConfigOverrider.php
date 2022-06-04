@@ -98,7 +98,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
         }
       }
     }
-    
+
     // Check if any overridden config exists or if we have already
     // made this check.
     // See https://www.drupal.org/project/domain/issues/3126532.
@@ -136,11 +136,15 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
           $config_name = $this->getDomainConfigName($name, $this->domain);
           // Check to see if the config storage has an appropriately named file
           // containing override data.
-          if ($override = $this->storage->read($config_name['langcode'])) {
+          if (in_array($config_name['langcode'], $this->storage->listAll('domain.config.', TRUE))
+            && ($override = $this->storage->read($config_name['langcode']))
+          ) {
             $overrides[$name] = $override;
           }
           // Check to see if we have a file without a specific language.
-          elseif ($override = $this->storage->read($config_name['domain'])) {
+          elseif (in_array($config_name['domain'], $this->storage->listAll('domain.config.', TRUE))
+            && ($override = $this->storage->read($config_name['domain']))
+          ) {
             $overrides[$name] = $override;
           }
 
