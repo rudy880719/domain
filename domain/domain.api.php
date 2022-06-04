@@ -1,5 +1,11 @@
 <?php
 
+use Drupal\domain\DomainInterface;
+use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Entity\Query\QueryInterface;
+
 /**
  * @file
  * API documentation file for Domain module.
@@ -38,9 +44,9 @@ function hook_domain_load(array $domains) {
  * @param \Drupal\domain\DomainInterface $domain
  *   A domain object defined by Drupal\domain\DomainInterface.
  */
-function hook_domain_request_alter(\Drupal\domain\DomainInterface &$domain) {
+function hook_domain_request_alter(DomainInterface $domain) {
   // Add a special case to the example domain.
-  if ($domain->getMatchType() == \Drupal\domain\DomainNegotiatorInterface::DOMAIN_MATCHED_EXACT && $domain->id() == 'example_com') {
+  if ($domain->getMatchType() == DomainNegotiatorInterface::DOMAIN_MATCHED_EXACT && $domain->id() == 'example_com') {
     // Do something here.
     $domain->addProperty('foo', 'Bar');
   }
@@ -64,7 +70,7 @@ function hook_domain_request_alter(\Drupal\domain\DomainInterface &$domain) {
  *   elements 'title' and 'url'; the 'query' value is optional, and used
  *   for link-actions with tokens
  */
-function hook_domain_operations(\Drupal\domain\DomainInterface $domain, \Drupal\Core\Session\AccountInterface $account) {
+function hook_domain_operations(DomainInterface $domain, AccountInterface $account) {
   $operations = [];
   // Check permissions.
   if ($account->hasPermission('view domain aliases') || $account->hasPermission('administer domain aliases')) {
@@ -72,7 +78,7 @@ function hook_domain_operations(\Drupal\domain\DomainInterface $domain, \Drupal\
     $id = $domain->id();
     $operations['domain_alias'] = [
       'title' => t('Aliases'),
-      'url' => \Drupal\Core\Url::fromRoute('domain_alias.admin', ['domain' => $id]),
+      'url' => Url::fromRoute('domain_alias.admin', ['domain' => $id]),
       'weight' => 60,
     ];
   }
@@ -129,7 +135,7 @@ function hook_domain_validate_alter(array &$error_list, $hostname) {
  *      'admin' for assigning administrative permissions for a specific domain.
  *      Most contributed modules will use 'editor'.
  */
-function hook_domain_references_alter(\Drupal\Core\Entity\Query\QueryInterface $query, \Drupal\Core\Session\AccountInterface $account, array $context) {
+function hook_domain_references_alter(QueryInterface $query, AccountInterface $account, array $context) {
   // Remove the default domain from non-admins when editing nodes.
   if ($context['entity_type'] == 'node' && $context['field_type'] == 'editor' && !$account->hasPermission('edit assigned domains')) {
     $default = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultId();
