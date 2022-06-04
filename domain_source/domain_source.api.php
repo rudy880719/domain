@@ -5,6 +5,8 @@
  * API documentation file for Domain Source module.
  */
 
+use Drupal\domain\DomainInterface;
+
 /**
  * Allows modules to specify the target domain for an entity.
  *
@@ -19,15 +21,15 @@
  * If the entity's path is a translation, the requested translation of the
  * entity will be passed as the $entity value.
  *
- * @param \Drupal\domain\Entity\Domain|null &$source
- *   A domain object or NULL if not set.
+ * @param \Drupal\domain\DomainInterface|null $source
+ *   A domain object or NULL if not set, passed by reference.
  * @param string $path
  *   The outbound path request.
  * @param array $options
  *   The options for the url, as defined by
  *   \Drupal\Core\PathProcessor\OutboundPathProcessorInterface.
  */
-function hook_domain_source_alter(array &$source, $path, array $options) {
+function hook_domain_source_alter(DomainInterface $source, $path, array $options) {
   // Always link to the default domain.
   $source = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultDomain();
 }
@@ -48,15 +50,15 @@ function hook_domain_source_alter(array &$source, $path, array $options) {
  * loading a valid domain record or set $source = NULL to discard an existing
  * $source value and not rewrite the path.
  *
- * @param array &$source
- *   The domain array from domain_get_node_match(), passed by reference.
+ * @param \Drupal\domain\DomainInterface|null $source
+ *   A domain object or NULL if not set, passed by reference.
  * @param string $path
  *   The outbound path request.
  * @param array $options
  *   The options for the url, as defined by
  *   \Drupal\Core\PathProcessor\OutboundPathProcessorInterface.
  */
-function hook_domain_source_path_alter(array &$source, $path, array $options) {
+function hook_domain_source_path_alter(DomainInterface $source, $path, array $options) {
   // Always make admin links go to the primary domain.
   $parts = explode('/', $path);
   if (isset($parts[0]) && $parts[0] == 'admin') {
