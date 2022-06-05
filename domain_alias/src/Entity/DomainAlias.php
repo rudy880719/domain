@@ -132,7 +132,10 @@ class DomainAlias extends ConfigEntityBase implements DomainAliasInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
     // Invalidate cache tags relevant to domains.
-    \Drupal::service('cache_tags.invalidator')->invalidateTags(['rendered', 'url.site']);
+    \Drupal::service('cache_tags.invalidator')->invalidateTags([
+      'rendered',
+      'url.site',
+    ]);
   }
 
 }

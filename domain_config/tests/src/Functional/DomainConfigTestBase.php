@@ -47,7 +47,10 @@ abstract class DomainConfigTestBase extends DomainTestBase {
     parent::setUp();
 
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Add language.

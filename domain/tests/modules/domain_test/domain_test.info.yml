@@ -2,9 +2,8 @@ name: "Domain module hook tests"
 description: "Support module for domain hook testing."
 type: module
 package: Testing
-version: VERSION
 core_version_requirement: ^8 || ^9
 hidden: TRUE
 
 dependencies:
-  - domain
+  - drupal:domain

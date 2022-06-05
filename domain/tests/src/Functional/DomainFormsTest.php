@@ -13,7 +13,10 @@ class DomainFormsTest extends DomainTestBase {
    * Create, edit and delete a domain via the user interface.
    */
   public function testDomainInterface() {
-    $this->admin_user = $this->drupalCreateUser(['administer domains', 'create domains']);
+    $this->admin_user = $this->drupalCreateUser([
+      'administer domains',
+      'create domains',
+    ]);
     $this->drupalLogin($this->admin_user);
 
     $storage = \Drupal::entityTypeManager()->getStorage('domain');

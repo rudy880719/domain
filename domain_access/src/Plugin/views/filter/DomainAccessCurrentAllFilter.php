@@ -20,7 +20,7 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
-    $this->value_value = t('Available on current domain');
+    $this->value_value = $this->t('Available on current domain');
   }
 
   /**

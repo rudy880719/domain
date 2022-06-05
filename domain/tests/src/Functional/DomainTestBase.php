@@ -9,7 +9,7 @@ use Drupal\domain\DomainInterface;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
 
 /**
- * Class DomainTestBase.
+ * DomainTestBase abstract class.
  *
  * @package Drupal\Tests\domain\Functional
  */
@@ -128,7 +128,8 @@ abstract class DomainTestBase extends BrowserTestBase {
    *   The input field element.
    */
   public function findNoField($locator) {
-    return $this->assertSession()->fieldNotExists($locator);;
+    return $this->assertSession()->fieldNotExists($locator);
+    ;
   }
 
   /**
@@ -224,7 +225,7 @@ abstract class DomainTestBase extends BrowserTestBase {
    *   TRUE if a given user account is logged in, or FALSE.
    */
   protected function drupalUserIsLoggedIn(AccountInterface $account) {
-    // @TODO: This is a temporary hack for the test login fails when setting $cookie_domain.
+    // @todo This is a temporary hack for the test login fails when setting $cookie_domain.
     if (!isset($account->session_id)) {
       return (bool) $account->id();
     }
@@ -254,7 +255,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], $this->t('Log in'));
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie($this->getSessionName());

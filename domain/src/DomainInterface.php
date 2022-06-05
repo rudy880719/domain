@@ -3,7 +3,6 @@
 namespace Drupal\domain;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\domain\DomainNegotiatorInterface;
 
 /**
  * Provides an interface defining a domain entity.

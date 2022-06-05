@@ -6,8 +6,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\domain\DomainStorageInterface;
+use Drupal\Core\Messenger\Messenger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\Renderer;
 
 /**
  * Base form controller for domain alias edit forms.
@@ -57,6 +58,20 @@ class DomainAliasForm extends EntityForm {
   protected $aliasStorage;
 
   /**
+   * The domain renderer.
+   *
+   * @var Drupal\Core\Render\Renderer
+   */
+  protected $renderer;
+
+  /**
+   * The domain messenger.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
    * Constructs a DomainAliasForm object.
    *
    * @param \Drupal\domain_alias\DomainAliasValidatorInterface $validator
@@ -65,8 +80,12 @@ class DomainAliasForm extends EntityForm {
    *   The configuration factory service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Render\Renderer $renderer
+   *   The renderer.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger.
    */
-  public function __construct(DomainAliasValidatorInterface $validator, ConfigFactoryInterface $config, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(DomainAliasValidatorInterface $validator, ConfigFactoryInterface $config, EntityTypeManagerInterface $entity_type_manager, Renderer $renderer, Messenger $messenger) {
     $this->validator = $validator;
     $this->config = $config;
     $this->entityTypeManager = $entity_type_manager;
@@ -74,6 +93,8 @@ class DomainAliasForm extends EntityForm {
     $this->domainStorage = $entity_type_manager->getStorage('domain');
     // Not loaded directly since it is not an interface.
     $this->accessHandler = $this->entityTypeManager->getAccessControlHandler('domain');
+    $this->renderer = $renderer;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -83,7 +104,9 @@ class DomainAliasForm extends EntityForm {
     return new static(
       $container->get('domain_alias.validator'),
       $container->get('config.factory'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('renderer'),
+      $container->get('messenger')
     );
   }
 
@@ -159,7 +182,7 @@ class DomainAliasForm extends EntityForm {
           '#items' => $match_output,
           '#theme' => 'item_list',
         ];
-        $row[] = \Drupal::service('renderer')->render($output);
+        $row[] = $this->renderer->render($output);
       }
       $rows[] = $row;
     }
@@ -220,12 +243,18 @@ class DomainAliasForm extends EntityForm {
     $alias = $this->entity;
     $edit_link = $alias->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($alias->save() == SAVED_NEW) {
-      \Drupal::messenger()->addMessage($this->t('Created new domain alias.'));
-      $this->logger('domain_alias')->notice('Created new domain alias %name.', ['%name' => $alias->label(), 'link' => $edit_link]);
+      $this->messenger->addMessage($this->t('Created new domain alias.'));
+      $this->logger('domain_alias')->notice('Created new domain alias %name.', [
+        '%name' => $alias->label(),
+        'link' => $edit_link,
+      ]);
     }
     else {
-      \Drupal::messenger()->addMessage($this->t('Updated domain alias.'));
-      $this->logger('domain_alias')->notice('Updated domain alias %name.', ['%name' => $alias->label(), 'link' => $edit_link]);
+      $this->messenger->addMessage($this->t('Updated domain alias.'));
+      $this->logger('domain_alias')->notice('Updated domain alias %name.', [
+        '%name' => $alias->label(),
+        'link' => $edit_link,
+      ]);
     }
     $form_state->setRedirect('domain_alias.admin', ['domain' => $alias->getDomainId()]);
   }

@@ -25,7 +25,7 @@ class DomainAccessCommands extends DomainCommands {
    */
   public function initDomainInfo(InputInterface $input, AnnotationData $annotationData) {
     // To add a field label, append to the 'field-labels' item.
-    // @TODO: watch https://github.com/consolidation/annotated-command/pull/174
+    // @todo watch https://github.com/consolidation/annotated-command/pull/174
     $annotationData['field-labels'] .= "\n" . 'domain_access_entities: Domain access entities';
   }
 
@@ -41,22 +41,26 @@ class DomainAccessCommands extends DomainCommands {
     return $result;
   }
 
-/**
- * @hook option domain:delete
- */
+  /**
+   * Hook to delete on-event call.
+   *
+   * @hook option domain:delete
+   */
   public function deleteOptions(Command $command, AnnotationData $annotationData) {
     $command->addOption(
         'content-assign',
         '',
         InputOption::VALUE_OPTIONAL,
         'Reassign content for Domain Access',
-        null
+        NULL
     );
   }
 
-/**
- * @hook on-event domain-delete
- */
+  /**
+   * Hook to delete on-event call.
+   *
+   * @hook on-event domain-delete
+   */
   public function domainAccessDomainDelete($target_domain, $options) {
     // Run our own deletion routine here.
     if (is_null($options['content-assign'])) {

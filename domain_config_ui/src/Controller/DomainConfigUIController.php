@@ -88,14 +88,14 @@ class DomainConfigUIController {
     $page['table'] = [
       '#type' => 'table',
       '#header' => [
-        'name' => t('Configuration key'),
-        'item' => t('Item'),
-        'domain' => t('Domain'),
-        'language' => t('Language'),
-        'actions' => t('Actions'),
+        'name' => $this->t('Configuration key'),
+        'item' => $this->t('Item'),
+        'domain' => $this->t('Domain'),
+        'language' => $this->t('Language'),
+        'actions' => $this->t('Actions'),
       ],
     ];
-    // @TODO: inject services.
+    // @todo inject services.
     $storage = \Drupal::service('config.storage');
     foreach ($storage->listAll('domain.config') as $name) {
       $elements[] = $this->deriveElements($name);
@@ -237,7 +237,10 @@ class DomainConfigUIController {
       else {
         $list = [];
         foreach ($val as $k => $v) {
-          $list[] = t('<strong>@key</strong> : @value', ['@key' => $k, '@value' => self::formatValue($v)]);
+          $list[] = t('<strong>@key</strong> : @value', [
+            '@key' => $k,
+            '@value' => self::formatValue($v),
+          ]);
         }
         $variables = [
           '#theme' => 'item_list',

@@ -7,6 +7,8 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Domain-specific config overrides.
@@ -74,10 +76,16 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    *   The configuration storage engine.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\domain\DomainNegotiatorInterface $domainNegotiator
+   *   The domain Negotiator.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
+   *   The language manager.
    */
-  public function __construct(StorageInterface $storage, ModuleHandlerInterface $module_handler) {
+  public function __construct(StorageInterface $storage, ModuleHandlerInterface $module_handler, DomainNegotiatorInterface $domainNegotiator, LanguageManagerInterface $languageManager) {
     $this->storage = $storage;
     $this->moduleHandler = $module_handler;
+    $this->$domainNegotiator = $domainNegotiator;
+    $this->languageManager = $languageManager;
   }
 
   /**
@@ -98,7 +106,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
         }
       }
     }
-    
+
     // Check if any overridden config exists or if we have already
     // made this check.
     // See https://www.drupal.org/project/domain/issues/3126532.
@@ -123,7 +131,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
       // Prepare our overrides.
       $overrides = [];
       // loadOverrides() runs on config entities, which means that if we try
-      // to run this routine on our own data, then we end up in an infinite loop.
+      // to run this routine on our own data,then we end up in an infinite loop.
       // So ensure that we are _not_ looking up a domain.record.*.
       $check = current($names);
       $list = explode('.', $check);
@@ -229,11 +237,10 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     // Get the language context. Note that injecting the language manager
     // into the service created a circular dependency error, so we load from
     // the core service manager.
-    $this->languageManager = \Drupal::languageManager();
     $this->language = $this->languageManager->getCurrentLanguage();
 
     // The same issue is true for the domainNegotiator.
-    $this->domainNegotiator = \Drupal::service('domain.negotiator');
+    $this->domainNegotiator = $this->domainNegotiator;
     // Get the domain context.
     $this->domain = $this->domainNegotiator->getActiveDomain(TRUE);
   }

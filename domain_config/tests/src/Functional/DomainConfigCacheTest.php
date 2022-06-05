@@ -49,7 +49,7 @@ class DomainConfigCacheTest extends DomainConfigTestBase {
     $node1 = $this->drupalCreateNode([
       'type' => 'article',
       'field_domain_access' => [$ids],
-      'path' => '/test'
+      'path' => '/test',
     ]);
 
     $original = $expected;

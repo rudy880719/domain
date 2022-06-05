@@ -4,7 +4,6 @@ namespace Drupal\domain_source;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\domain\DomainElementManager;
-use Drupal\domain_source\DomainSourceElementManagerInterface;
 
 /**
  * Checks the access status of entities based on domain settings.

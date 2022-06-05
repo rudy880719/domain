@@ -15,6 +15,12 @@ use Drupal\Component\Utility\Html;
 use Drupal\domain\DomainInterface;
 use Drush\Commands\DrushCommands;
 use GuzzleHttp\Exception\TransferException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\domain\DomainValidatorInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * Drush commands for the domain module.
@@ -22,6 +28,80 @@ use GuzzleHttp\Exception\TransferException;
 class DomainCommands extends DrushCommands implements CustomEventAwareInterface {
 
   use CustomEventAwareTrait;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The domain validator.
+   *
+   * @var \Drupal\domain\DomainValidatorInterface
+   */
+  protected $validator;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity Query.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryInterface
+   */
+  protected $entityQuery;
+
+  /**
+   * Constructs a DomainForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *   The Config Factory object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\domain\DomainValidatorInterface $validator
+   *   The domain validator.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+   *   The entity query.
+   */
+  public function __construct(ConfigFactory $configFactory,
+  EntityTypeManagerInterface $entity_type_manager,
+  DomainValidatorInterface $validator,
+  EntityFieldManagerInterface $entity_field_manager,
+  QueryInterface $entity_query) {
+    $this->configFactory = $configFactory;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->validator = $validator;
+    $this->entityFieldManager = $entity_field_manager;
+    $this->entityQuery = $entity_query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('entity_type.manager'),
+      $container->get('domain.validator'),
+      $container->get('entity_field.manager'),
+      $container->get('entity.query.sql')
+    );
+  }
 
   /**
    * The domain entity storage service.
@@ -177,6 +257,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * domain_admin_entities: Domain admin entities
    * @list-orientation true
    * @format table
+   *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
   public function infoDomains() {
@@ -295,7 +376,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function add($hostname, $name, array $options = ['weight' => NULL, 'scheme' => NULL]) {
+  public function add($hostname, $name, array $options = [
+    'weight' => NULL,
+    'scheme' => NULL,
+  ]) {
     // Validate the weight arg.
     if (!empty($options['weight']) && !is_numeric($options['weight'])) {
       throw new DomainCommandException(
@@ -354,7 +438,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     $validate_response = (bool) $options['validate'];
     if ($this->createDomain($domain, $validate_response)) {
-      return dt('Created the !hostname with machine id !id.', ['!hostname' => $values['hostname'], '!id' => $values['id']]);
+      return dt('Created the !hostname with machine id !id.', [
+        '!hostname' => $values['hostname'],
+        '!id' => $values['id'],
+      ]);
     }
     else {
       return dt('No domain created.');
@@ -424,7 +511,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @see https://github.com/consolidation/annotated-command#option-event-hook
    */
-  public function delete($domain_id, array $options = ['users-assign' => NULL, 'dryrun' => NULL, 'chatty' => NULL]) {
+  public function delete($domain_id, array $options = [
+    'users-assign' => NULL,
+    'dryrun' => NULL,
+    'chatty' => NULL,
+  ]) {
     if (is_null($options['users-assign'])) {
       $policy_users = 'prompt';
     }
@@ -453,7 +544,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       if (empty($really)) {
         return;
       }
-      // TODO: handle deletion of all domains.
+      // @todo handle deletion of all domains.
       $policy_users = "ignore";
       $message = dt('All domain records have been deleted.');
     }
@@ -533,7 +624,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
         $reassign_list
       );
       $reassign_list = array_merge($reassign_base, $reassign_list);
-      $policy = $this->io()->choice(dt('Reassign @type field @field data to:', ['@type' => $delete_options['entity_filter'], '@field' => $delete_options['field']]), $reassign_list);
+      $policy = $this->io()->choice(dt('Reassign @type field @field data to:', [
+        '@type' => $delete_options['entity_filter'],
+        '@field' => $delete_options['field'],
+      ]), $reassign_list);
     }
     elseif ($policy === 'default') {
       $policy = $default_domain->id();
@@ -611,6 +705,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * @param array $options
    *   An associative array of options whose values come from cli, aliases,
    *   config, etc.
+   *
    * @option validate
    *   Force a check of the URL response before allowing registration.
    * @usage drush domain-default www.example.com
@@ -657,6 +752,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @param string $domain_id
    *   The numeric id or hostname of the domain to disable.
+   *
    * @usage drush domain-disable example.com
    * @usage drush domain-disable 1
    *
@@ -693,6 +789,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @param string $domain_id
    *   The numeric id or hostname of the domain to enable.
+   *
    * @usage drush domain-disable example.com
    * @usage drush domain-enable 1
    *
@@ -731,6 +828,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *   The machine name or hostname of the domain to relabel.
    * @param string $name
    *   The name to use for the domain.
+   *
    * @usage drush domain-name example.com Foo
    * @usage drush domain-name 1 Foo
    *
@@ -746,7 +844,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     // Resolve the domain.
     if ($domain = $this->getDomainFromArgument($domain_id)) {
       $domain->saveProperty('name', $name);
-      return dt('Renamed !domain to !name.', ['!domain' => $domain->getHostname(), '!name' => $domain->label()]);
+      return dt('Renamed !domain to !name.', [
+        '!domain' => $domain->getHostname(),
+        '!name' => $domain->label(),
+      ]);
     }
     return dt('No matching domain record found.');
   }
@@ -857,7 +958,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function generate($primary = 'example.com', array $options = ['count' => NULL, 'empty' => NULL, 'scheme' => 'http']) {
+  public function generate($primary = 'example.com', array $options = [
+    'count' => NULL,
+    'empty' => NULL,
+    'scheme' => 'http',
+  ]) {
     // Check the number of domains to create.
     $count = $options['count'];
     if (is_null($count)) {
@@ -932,7 +1037,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     foreach ($prepared as $key => $item) {
       $hostname = mb_strtolower($item);
       $values = [
-        'name' => ($item != $primary) ? ucwords(str_replace(".$primary", '', $item)) : \Drupal::config('system.site')->get('name'),
+        'name' => ($item != $primary) ? ucwords(str_replace(".$primary", '', $item)) : $this->configFactory->get('system.site')->get('name'),
         'hostname' => $hostname,
         'scheme' => $options['scheme'],
         'status' => 1,
@@ -972,7 +1077,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     }
 
     try {
-      $this->domainStorage = \Drupal::entityTypeManager()->getStorage('domain');
+      $this->domainStorage = $this->entityTypeManager->getStorage('domain');
     }
     catch (PluginNotFoundException $e) {
       throw new DomainCommandException('Unable to get domain: no storage', $e);
@@ -1119,7 +1224,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   protected function checkDomain(DomainInterface $domain) {
     /** @var \Drupal\domain\DomainValidatorInterface $validator */
-    $validator = \Drupal::service('domain.validator');
+    $validator = $this->validator;
     return $validator->checkResponse($domain);
   }
 
@@ -1136,7 +1241,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   protected function validateDomain(DomainInterface $domain) {
     /** @var \Drupal\domain\DomainValidatorInterface $validator */
-    $validator = \Drupal::service('domain.validator');
+    $validator = $this->validator;
     return $validator->validate($domain->getHostname());
   }
 
@@ -1223,7 +1328,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   protected function ensureEntityFieldMap() {
     // Try to avoid repeated calls to getFieldMap() assuming it's expensive.
     if (empty($this->entityFieldMap)) {
-      $entity_field_manager = \Drupal::service('entity_field.manager');
+      $entity_field_manager = $this->entityFieldManager;
       $this->entityFieldMap = $entity_field_manager->getFieldMap();
     }
   }
@@ -1255,7 +1360,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       return [];
     }
 
-    $efq = \Drupal::entityQuery($entity_type);
+    // \Drupal::entityQuery($entity_type);
+    $efq = $this->entityQuery($entity_type);
     // Don't access check or we wont get all of the possible entities moved.
     $efq->accessCheck(FALSE);
     $efq->condition($field, $domain_id, '=');
@@ -1290,7 +1396,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function reassignEntities($entity_type, $field, DomainInterface $old_domain, DomainInterface $new_domain, array $ids) {
-    $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type);
+    $entity_storage = $this->entityTypeManager->getStorage($entity_type);
     $entities = $entity_storage->loadMultiple($ids);
 
     foreach ($entities as $entity) {
@@ -1361,6 +1467,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   /**
    * Reassign entities of the supplied type to the $policy domain.
    *
+   * @param array $domains
+   *   Array of domain objects to reassign content away from.
    * @param array $options
    *   Drush options sent to the command. An array such as the following:
    *   [
@@ -1369,8 +1477,6 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *     'field' => DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD,
    *   ];
    *   The caller is expected to provide this information.
-   * @param array $domains
-   *   Array of domain objects to reassign content away from.
    *
    * @return int
    *   The count of updated entities.

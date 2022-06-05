@@ -81,7 +81,7 @@ class DomainElementManager implements DomainElementManagerInterface {
     }
     // Check for domains the user cannot access or the absence of any options.
     if (!empty($disallowed) || $empty) {
-      // @TODO: Potentially show this information to users with permission.
+      // @todo Potentially show this information to users with permission.
       $form[$field_name . '_disallowed'] = [
         '#type' => 'value',
         '#value' => $disallowed,
@@ -168,9 +168,9 @@ class DomainElementManager implements DomainElementManagerInterface {
    * {@inheritdoc}
    */
   public function getFieldValues(EntityInterface $entity, $field_name) {
-    // @TODO: static cache.
+    // @todo static cache.
     $list = [];
-    // @TODO In tests, $entity is returning NULL.
+    // @todo In tests, $entity is returning NULL.
     if (is_null($entity)) {
       return $list;
     }

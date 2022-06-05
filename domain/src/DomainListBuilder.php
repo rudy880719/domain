@@ -12,7 +12,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\domain\DomainInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -157,14 +156,20 @@ class DomainListBuilder extends DraggableListBuilder {
       if ($entity->status() && !$default) {
         $operations['disable'] = [
           'title' => $this->t('Disable'),
-          'url' => Url::fromRoute('domain.inline_action', ['op' => 'disable', 'domain' => $id]),
+          'url' => Url::fromRoute('domain.inline_action', [
+            'op' => 'disable',
+            'domain' => $id,
+          ]),
           'weight' => 50,
         ];
       }
       elseif (!$default) {
         $operations['enable'] = [
           'title' => $this->t('Enable'),
-          'url' => Url::fromRoute('domain.inline_action', ['op' => 'enable', 'domain' => $id]),
+          'url' => Url::fromRoute('domain.inline_action', [
+            'op' => 'enable',
+            'domain' => $id,
+          ]),
           'weight' => 40,
         ];
       }
@@ -172,7 +177,10 @@ class DomainListBuilder extends DraggableListBuilder {
     if (!$default && $super_admin) {
       $operations['default'] = [
         'title' => $this->t('Make default'),
-        'url' => Url::fromRoute('domain.inline_action', ['op' => 'default', 'domain' => $id]),
+        'url' => Url::fromRoute('domain.inline_action', [
+          'op' => 'default',
+          'domain' => $id,
+        ]),
         'weight' => 30,
       ];
     }
@@ -183,13 +191,16 @@ class DomainListBuilder extends DraggableListBuilder {
         'weight' => 20,
       ];
     }
-    $operations += $this->moduleHandler->invokeAll('domain_operations', [$entity, $this->currentUser]);
+    $operations += $this->moduleHandler->invokeAll('domain_operations', [
+      $entity,
+      $this->currentUser,
+    ]);
     foreach ($operations as $key => $value) {
       if (isset($value['query']['token'])) {
         $operations[$key]['query'] += $destination;
       }
     }
-    /** @var DomainInterface $default */
+    /** @var \Drupal\domain\DomainInterface $default */
     $default = $this->domainStorage->loadDefaultDomain();
 
     // Deleting the site default domain is not allowed.

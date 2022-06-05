@@ -162,7 +162,8 @@ function domain_access_presave_generate(EntityInterface $entity) {
   }
 
   // There is a core bug https://www.drupal.org/node/2609252 that causes a
-  // fatal database errors if the boolean DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD is set when
+  // fatal database errors if the boolean
+  // DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD is set when
   // a user cannot access the field. See domain_access_entity_field_access().
   // To overcome this issue, we cast the boolean to integer, which prevents the
   // failure.
@@ -425,7 +426,10 @@ function domain_access_node_create_access(AccountInterface $account, $context, $
       || $account->hasPermission('create domain content'))
     && in_array($id, $user_domains)) {
     // Note the cache context here!
-    return AccessResult::allowed()->addCacheContexts(['user.permissions', 'url.site']);
+    return AccessResult::allowed()->addCacheContexts([
+      'user.permissions',
+      'url.site',
+    ]);
   }
   // No opinion.
   return AccessResult::neutral();
@@ -731,7 +735,8 @@ function domain_access_domain_delete(EntityInterface $entity) {
  * @see domain_access_default_form_values()
  */
 function domain_access_form_alter(&$form, &$form_state, $form_id) {
-  if ($object = $form_state->getFormObject() && !empty($object) && is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
+  if ($object = $form_state->getFormObject() && !empty($object)
+  && is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
     domain_access_default_form_values($form, $form_state, $entity);
   }
 }

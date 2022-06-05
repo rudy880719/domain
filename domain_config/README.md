@@ -86,18 +86,21 @@ settings.php overrides
 For environment-specific or sensitive overrides, use the settings.php method.
 In the above case, add:
 
-`$config['domain.config.three_example_com.en.system.site']['name'] = "My special site";`
+`$config['domain.config.three_example_com.en.system.site']['name'] 
+  = "My special site";`
 
 to your local settings.php file. This will ensure that the `three.example.com`
 domain gets the correct value regardless of other module overrides. If you do
 not have a language set the config system will fallback on the domain-specific
 setting (note the missing '.en'):
 
-`$config['domain.config.three_example_com.system.site']['name'] = "My special site";`
+`$config['domain.config.three_example_com.system.site']['name'] 
+  = "My special site";`
 
 To set nested values you need to nest the config array:
 
-`$config['domain.config.three_example_com.system.site']['page']['front'] = '/node/1;`
+`$config['domain.config.three_example_com.system.site']['page']['front'] 
+  = '/node/1;`
 
 Read more about the "Configuration override system" at
 https://www.drupal.org/node/1928898.
@@ -112,7 +115,11 @@ To do so, clone  `default.services.yml` to `services.yml` and change the
 `required_cache_contexts` value to:
 
 ```YAML
-    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions', 'url.site']
+    required_cache_contexts: [
+      'languages:language_interface', 
+      'theme', 
+      'user.permissions', 
+      'url.site']
 ```
 
 Dependencies

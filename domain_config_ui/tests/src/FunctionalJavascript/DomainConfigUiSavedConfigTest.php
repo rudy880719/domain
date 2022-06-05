@@ -154,7 +154,10 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
    */
   private function createLanguage() {
     // Create and login user.
-    $adminUser = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $adminUser = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($adminUser);
 
     // Add language.

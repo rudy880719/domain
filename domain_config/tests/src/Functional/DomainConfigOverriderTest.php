@@ -63,7 +63,10 @@ class DomainConfigOverriderTest extends DomainConfigTestBase {
 
     // Create five new domains programmatically.
     $this->domainCreateTestDomains(5);
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple(['one_example_com', 'four_example_com']);
+    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple([
+      'one_example_com',
+      'four_example_com',
+    ]);
 
     $domain_one = $domains['one_example_com'];
     $this->drupalGet($domain_one->getPath() . 'user/login');

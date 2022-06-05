@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Messenger\Messenger;
 
 /**
  * Base form for domain edit forms.
@@ -42,6 +43,13 @@ class DomainForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
    * Constructs a DomainForm object.
    *
    * @param \Drupal\domain\DomainStorageInterface $domain_storage
@@ -52,12 +60,15 @@ class DomainForm extends EntityForm {
    *   The domain validator.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger.
    */
-  public function __construct(DomainStorageInterface $domain_storage, RendererInterface $renderer, DomainValidatorInterface $validator, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(DomainStorageInterface $domain_storage, RendererInterface $renderer, DomainValidatorInterface $validator, EntityTypeManagerInterface $entity_type_manager, Messenger $messenger) {
     $this->domainStorage = $domain_storage;
     $this->renderer = $renderer;
     $this->validator = $validator;
     $this->entityTypeManager = $entity_type_manager;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -68,7 +79,8 @@ class DomainForm extends EntityForm {
       $container->get('entity_type.manager')->getStorage('domain'),
       $container->get('renderer'),
       $container->get('domain.validator'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('messenger')
     );
   }
 
@@ -121,9 +133,9 @@ class DomainForm extends EntityForm {
       '#type' => 'radios',
       '#title' => $this->t('Domain URL scheme'),
       '#options' => [
-        'http' => 'http://',
-        'https' => 'https://',
-        'variable' => 'Variable',
+        'http' => $this->t('http://'),
+        'https' => $this->t('https://'),
+        'variable' => $this->t('Variable'),
       ],
       '#default_value' => $domain->getRawScheme(),
       '#description' => $this->t('This URL scheme will be used when writing links and redirects to this domain and its resources. Selecting <strong>Variable</strong> will inherit the current scheme of the web request.'),
@@ -204,7 +216,7 @@ class DomainForm extends EntityForm {
         }
         $form_state->setErrorByName('hostname', $this->t('The server request to @url returned a @response response. To proceed, disable the <em>Test server response</em> in the form.', [
           '@url' => $entity->getPath(),
-          '@response' => $response
+          '@response' => $response,
         ]));
       }
     }
@@ -216,10 +228,10 @@ class DomainForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $status = parent::save($form, $form_state);
     if ($status == SAVED_NEW) {
-      \Drupal::messenger()->addMessage($this->t('Domain record created.'));
+      $this->messenger->addMessage($this->t('Domain record created.'));
     }
     else {
-      \Drupal::messenger()->addMessage($this->t('Domain record updated.'));
+      $this->messenger->addMessage($this->t('Domain record updated.'));
     }
     $form_state->setRedirect('domain.admin');
   }

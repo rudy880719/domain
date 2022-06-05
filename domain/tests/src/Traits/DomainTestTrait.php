@@ -144,7 +144,7 @@ trait DomainTestTrait {
   /**
    * Set the base TLD for this test.
    */
-  public function setBaseTLD() {
+  public function setBaseTld() {
     $hostname = $this->baseHostname;
     $parts = explode('.', $hostname);
     $this->baseTLD = array_pop($parts);

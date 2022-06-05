@@ -19,7 +19,11 @@ class DomainSwitcherBlock extends DomainBlockBase {
    * Overrides \Drupal\block\BlockBase::access().
    */
   public function access(AccountInterface $account, $return_as_object = FALSE) {
-    $access = AccessResult::allowedIfHasPermissions($account, ['administer domains', 'use domain switcher block'], 'OR');
+    $access = AccessResult::allowedIfHasPermissions($account, [
+      'administer domains',
+      'use domain switcher block',
+    ],
+    'OR');
     return $return_as_object ? $access : $access->isAllowed();
   }
 

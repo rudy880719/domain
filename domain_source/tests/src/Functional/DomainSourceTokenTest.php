@@ -18,7 +18,14 @@ class DomainSourceTokenTest extends DomainTestBase {
    *
    * @var array
    */
-  public static $modules = ['domain', 'domain_access', 'domain_source', 'field', 'node', 'user'];
+  public static $modules = [
+    'domain',
+    'domain_access',
+    'domain_source',
+    'field',
+    'node',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
@@ -40,13 +47,18 @@ class DomainSourceTokenTest extends DomainTestBase {
     $nodes_values = [
       'type' => 'page',
       'title' => 'foo',
-      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => ['example_com', 'one_example_com', 'two_example_com'],
+      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [
+        'example_com',
+        'one_example_com',
+        'two_example_com',
+      ],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 0,
       DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => 'one_example_com',
     ];
     $node = $this->createNode($nodes_values);
 
-    // Token value matches the normal canonical url when canonical rewrite is used.
+    // Token value matches the normal canonical
+    // url when canonical rewrite is used.
     $this->assertEqual($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['one_example_com']->getPath() . 'node/1');
     $this->assertEqual($node->toUrl('canonical')->setAbsolute()->toString(), $domains['one_example_com']->getPath() . 'node/1');
 

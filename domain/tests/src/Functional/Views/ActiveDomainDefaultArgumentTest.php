@@ -24,7 +24,12 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'domain', 'domain_access', 'domain_test_views'];
+  public static $modules = [
+    'node',
+    'domain',
+    'domain_access',
+    'domain_test_views',
+  ];
 
   /**
    * Data mapping.

@@ -2,11 +2,10 @@ name: "Domain Access module tests"
 description: "Support module for domain access testing."
 type: module
 package: Testing
-version: VERSION
 core_version_requirement: ^8 || ^9
 hidden: TRUE
 
 dependencies:
-  - domain
-  - domain_access
-  - taxonomy
+  - drupal:domain
+  - drupal:domain_access
+  - drupal:taxonomy

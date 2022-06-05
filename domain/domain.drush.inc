@@ -301,7 +301,7 @@ function drush_domain_generate_domains_validate($primary = 'example.com') {
     \Drupal::database()->truncate("domain")->execute();
   }
   return;
-  // TODO: Add validation.
+  // @todo Add validation.
 }
 
 /**
@@ -367,7 +367,10 @@ function domain_drush_create(DomainInterface $domain) {
   else {
     $domain->save();
     if ($domain->getDomainId()) {
-      drush_print(dt('Created @name at @domain.', ['@name' => $domain->label(), '@domain' => $domain->getHostname()]));
+      drush_print(dt('Created @name at @domain.', [
+        '@name' => $domain->label(),
+        '@domain' => $domain->getHostname(),
+      ]));
     }
     else {
       drush_print(dt('The request could not be completed.'));
@@ -402,7 +405,9 @@ function domain_drush_check_response(DomainInterface $domain) {
       if (empty($response)) {
         $response = 500;
       }
-      return dt('The server request to @url returned a @response response. To proceed, disable the test of the server response by leaving off the --validate flag.', ['@url' => $domain->getPath(), '@response' => $response]);
+      return dt('The server request to @url returned a @response response. 
+      To proceed, disable the test of the server response by leaving off the --validate flag.',
+      ['@url' => $domain->getPath(), '@response' => $response]);
     }
   }
 }
@@ -462,7 +467,7 @@ function drush_domain_delete($argument = NULL) {
 
   return;
 
-  // TODO: Set options for re-assigning content.
+  // @todo Set options for re-assigning content.
   $list = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple(NULL, TRUE);
   $options = ['0' => dt('Do not reassign')];
   foreach ($list as $data) {
@@ -493,7 +498,7 @@ function drush_domain_delete($argument = NULL) {
  *   The domain_id to test. Passing no value tests all records.
  */
 function drush_domain_test($argument = NULL) {
-  // TODO: This won't work in a subdirectory without a parameter.
+  // @todo This won't work in a subdirectory without a parameter.
   if ($base_path = drush_get_option('base_path')) {
     $GLOBALS['base_path'] = '/' . $base_path . '/';
   }
@@ -590,7 +595,10 @@ function drush_domain_machine_name($argument, $machine_name) {
       ->loadByProperties(['machine_name' => $machine_name]);
     foreach ($results as $result) {
       if ($result->id() == $machine_name) {
-        drush_print(dt('The machine_name @machine_name is being used by domain @hostname.', ['@machine_name' => $machine_name, '@hostname' => $result->getHostname()]));
+        drush_print(dt('The machine_name @machine_name is being used by domain @hostname.', [
+          '@machine_name' => $machine_name,
+          '@hostname' => $result->getHostname(),
+        ]));
         return;
       }
     }

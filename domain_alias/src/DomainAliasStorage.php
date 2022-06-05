@@ -28,7 +28,6 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    */
   protected $requestStack;
 
-
   /**
    * Sets the TypedConfigManager dependency.
    *
@@ -42,7 +41,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   /**
    * Sets the request stack object dependency.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
    */
   protected function setRequestStack(RequestStack $request_stack) {
@@ -65,7 +64,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    */
   public function loadSchema() {
     $fields = $this->typedConfig->getDefinition('domain_alias.alias.*');
-    return isset($fields['mapping']) ? $fields['mapping'] : [];
+    return $fields['mapping'] ?? [];
   }
 
   /**
@@ -107,7 +106,10 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    * {@inheritdoc}
    */
   public function loadByEnvironmentMatch(DomainInterface $domain, $environment) {
-    $result = $this->loadByProperties(['domain_id' => $domain->id(), 'environment' => $environment]);
+    $result = $this->loadByProperties([
+      'domain_id' => $domain->id(),
+      'environment' => $environment,
+    ]);
     if (empty($result)) {
       return [];
     }
@@ -153,7 +155,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
     // Pattern lists are sorted based on the fewest wildcards. That gives us
     // more precise matches first.
     uasort($patterns, [$this, 'sort']);
-    // Re-assemble parts without port
+    // Re-assemble parts without port.
     array_unshift($patterns, implode('.', $parts));
 
     // Account for ports.
@@ -214,7 +216,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    *   An array of eligible matching patterns.
    * @param string $hostname
    *   A hostname string, in the format example.com.
-   * @param integer $port
+   * @param int $port
    *   The port of the request.
    *
    * @return array
@@ -228,7 +230,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
 
     $new_patterns = [];
     foreach ($patterns as $index => $pattern) {
-      // If default ports, allow exact no-port alias
+      // If default ports, allow exact no-port alias.
       $new_patterns[] = $pattern . ':*';
       if (empty($port) || $port == 80 || $port == 443) {
         $new_patterns[] = $pattern;

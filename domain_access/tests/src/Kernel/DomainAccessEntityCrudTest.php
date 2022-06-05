@@ -33,7 +33,16 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'field', 'filter', 'text', 'user', 'node', 'domain', 'domain_access'];
+  public static $modules = [
+    'system',
+    'field',
+    'filter',
+    'text',
+    'user',
+    'node',
+    'domain',
+    'domain_access',
+  ];
 
   /**
    * {@inheritdoc}
@@ -51,7 +60,10 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installConfig($this::$modules);
 
-    $type = $this->entityTypeManager->getStorage('node_type')->create(['type' => 'page', 'name' => 'page']);
+    $type = $this->entityTypeManager->getStorage('node_type')->create([
+      'type' => 'page',
+      'name' => 'page',
+    ]);
     $type->save();
 
     module_load_install('domain_access');
@@ -67,7 +79,9 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
    *   Entity type bundle.
    */
   protected function deleteDomainAccessFields($entity_type, $bundle) {
-    $fields = [DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD, DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD];
+    $fields = [DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD,
+      DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD,
+    ];
     foreach ($fields as $field_name) {
       FieldConfig::loadByName($entity_type, $bundle, $field_name)->delete();
     }

@@ -12,7 +12,9 @@ use Drupal\user\RoleInterface;
 class DomainConfigHomepageTest extends DomainConfigTestBase {
 
   /**
-   * @var array The modules to enable.
+   * The module use for enable.
+   *
+   * @var arrayThemodulestoenable
    */
   public static $modules = ['node', 'views'];
 
@@ -66,7 +68,10 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     }
     // Explicit test for https://www.drupal.org/project/domain/issues/3154402
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(['bypass node access', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'bypass node access',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet($domain->getPath() . 'node/' . $node3->id() . '/delete');
     $this->getSession()->getPage()->pressButton('Delete');
