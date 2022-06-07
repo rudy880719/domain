@@ -17,7 +17,7 @@ abstract class DomainConfigTestBase extends DomainTestBase {
    *
    * @var bool
    */
-  protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = FALSE; // phpcs:ignore
 
   /**
    * Languages to enable.
@@ -47,7 +47,8 @@ abstract class DomainConfigTestBase extends DomainTestBase {
     parent::setUp();
 
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $perms = ['administer languages', 'access administration pages'];
+    $admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($admin_user);
 
     // Add language.

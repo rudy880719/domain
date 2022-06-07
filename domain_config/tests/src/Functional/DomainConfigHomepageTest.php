@@ -66,7 +66,8 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     }
     // Explicit test for https://www.drupal.org/project/domain/issues/3154402
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(['bypass node access', 'access administration pages']);
+    $perms = ['bypass node access', 'access administration pages'];
+    $admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($admin_user);
     $this->drupalGet($domain->getPath() . 'node/' . $node3->id() . '/delete');
     $this->getSession()->getPage()->pressButton('Delete');

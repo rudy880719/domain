@@ -25,6 +25,6 @@ class DomainConfigHookProblemTest extends DomainConfigHookTest {
    *
    * @var bool
    */
-  protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = FALSE; // phpcs:ignore
 
 }
