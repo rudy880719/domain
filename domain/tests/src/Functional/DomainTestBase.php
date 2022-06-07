@@ -68,7 +68,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     $this->baseHostname = \Drupal::entityTypeManager()->getStorage('domain')->createHostname();
 
     // Ensure that $this->baseTLD is set.
-    $this->setBaseTLD();
+    $this->setBaseDomain();
 
     $this->database = $this->getDatabaseConnection();
   }

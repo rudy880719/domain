@@ -13,7 +13,8 @@ class DomainCheckResponseTest extends DomainTestBase {
    * Tests that a domain responds as expected.
    */
   public function testDomainCheckResponse() {
-    $this->admin_user = $this->drupalCreateUser(['administer domains', 'create domains']);
+    $perms = ['administer domains', 'create domains'];
+    $this->admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->admin_user);
 
     $storage = \Drupal::entityTypeManager()->getStorage('domain');

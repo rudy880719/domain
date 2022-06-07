@@ -367,7 +367,8 @@ function domain_drush_create(DomainInterface $domain) {
   else {
     $domain->save();
     if ($domain->getDomainId()) {
-      drush_print(dt('Created @name at @domain.', ['@name' => $domain->label(), '@domain' => $domain->getHostname()]));
+      drush_print(dt('Created @name at @domain.',
+        ['@name' => $domain->label(), '@domain' => $domain->getHostname()]));
     }
     else {
       drush_print(dt('The request could not be completed.'));
@@ -402,7 +403,9 @@ function domain_drush_check_response(DomainInterface $domain) {
       if (empty($response)) {
         $response = 500;
       }
-      return dt('The server request to @url returned a @response response. To proceed, disable the test of the server response by leaving off the --validate flag.', ['@url' => $domain->getPath(), '@response' => $response]);
+      return dt('The server request to @url returned a @response response.
+        To proceed, disable the test of the server response by leaving off the --validate flag.',
+        ['@url' => $domain->getPath(), '@response' => $response]);
     }
   }
 }
@@ -590,7 +593,12 @@ function drush_domain_machine_name($argument, $machine_name) {
       ->loadByProperties(['machine_name' => $machine_name]);
     foreach ($results as $result) {
       if ($result->id() == $machine_name) {
-        drush_print(dt('The machine_name @machine_name is being used by domain @hostname.', ['@machine_name' => $machine_name, '@hostname' => $result->getHostname()]));
+        drush_print(dt('The machine_name @machine_name is being used by domain @hostname.',
+          [
+            '@machine_name' => $machine_name,
+            '@hostname' => $result->getHostname()
+          ]
+        ));
         return;
       }
     }

@@ -296,7 +296,9 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function add($hostname, $name, array $options = ['weight' => NULL, 'scheme' => NULL]) {
+  public function add($hostname,
+  $name,
+                      array $options = ['weight' => NULL, 'scheme' => NULL]) {
     // Validate the weight arg.
     if (!empty($options['weight']) && !is_numeric($options['weight'])) {
       throw new DomainCommandException(
@@ -355,7 +357,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     $validate_response = (bool) $options['validate'];
     if ($this->createDomain($domain, $validate_response)) {
-      return dt('Created the !hostname with machine id !id.', ['!hostname' => $values['hostname'], '!id' => $values['id']]);
+      return dt('Created the !hostname with machine id !id.',
+        ['!hostname' => $values['hostname'], '!id' => $values['id']]);
     }
     else {
       return dt('No domain created.');
@@ -425,7 +428,12 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @see https://github.com/consolidation/annotated-command#option-event-hook
    */
-  public function delete($domain_id, array $options = ['users-assign' => NULL, 'dryrun' => NULL, 'chatty' => NULL]) {
+  public function delete($domain_id, array $options = [
+    'users-assign' => NULL,
+    'dryrun' => NULL,
+    'chatty' => NULL
+]) {
+
     if (is_null($options['users-assign'])) {
       $policy_users = 'prompt';
     }
@@ -534,7 +542,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
         $reassign_list
       );
       $reassign_list = array_merge($reassign_base, $reassign_list);
-      $policy = $this->io()->choice(dt('Reassign @type field @field data to:', ['@type' => $delete_options['entity_filter'], '@field' => $delete_options['field']]), $reassign_list);
+      $policy = $this->io()->choice(dt('Reassign @type field @field data to:',
+        [
+          '@type' => $delete_options['entity_filter'],
+          '@field' => $delete_options['field']
+        ]), $reassign_list);
     }
     elseif ($policy === 'default') {
       $policy = $default_domain->id();
@@ -751,7 +763,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     // Resolve the domain.
     if ($domain = $this->getDomainFromArgument($domain_id)) {
       $domain->saveProperty('name', $name);
-      return dt('Renamed !domain to !name.', ['!domain' => $domain->getHostname(), '!name' => $domain->label()]);
+      return dt('Renamed !domain to !name.',
+        ['!domain' => $domain->getHostname(), '!name' => $domain->label()]);
     }
     return dt('No matching domain record found.');
   }
@@ -862,7 +875,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function generate($primary = 'example.com', array $options = ['count' => NULL, 'empty' => NULL, 'scheme' => 'http']) {
+  public function generate($primary = 'example.com',
+    array $options = ['count' => NULL, 'empty' => NULL, 'scheme' => 'http']) {
     // Check the number of domains to create.
     $count = $options['count'];
     if (is_null($count)) {
@@ -1366,6 +1380,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   /**
    * Reassign entities of the supplied type to the $policy domain.
    *
+   * @param array $domains
+   *   Array of domain objects to reassign content away from.
    * @param array $options
    *   Drush options sent to the command. An array such as the following:
    *   [
@@ -1374,8 +1390,6 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *     'field' => DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD,
    *   ];
    *   The caller is expected to provide this information.
-   * @param array $domains
-   *   Array of domain objects to reassign content away from.
    *
    * @return int
    *   The count of updated entities.

@@ -138,13 +138,13 @@ trait DomainTestTrait {
    */
   public function setBaseHostname() {
     $this->baseHostname = \Drupal::entityTypeManager()->getStorage('domain')->createHostname();
-    $this->setBaseTLD();
+    $this->setBaseDomain();
   }
 
   /**
    * Set the base TLD for this test.
    */
-  public function setBaseTLD() {
+  public function setBaseDomain() {
     $hostname = $this->baseHostname;
     $parts = explode('.', $hostname);
     $this->baseTLD = array_pop($parts);

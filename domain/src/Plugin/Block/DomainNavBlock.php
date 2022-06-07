@@ -46,7 +46,10 @@ class DomainNavBlock extends DomainBlockBase {
       '#title' => $this->t('Link paths'),
       '#type' => 'radios',
       '#required' => TRUE,
-      '#options' => ['active' => $this->t('Link to active url'), 'home' => $this->t('Link to site home page')],
+      '#options' => [
+        'active' => $this->t('Link to active url'),
+        'home' => $this->t('Link to site home page')
+      ],
       '#default_value' => !empty($this->configuration['link_options']) ? $this->configuration['link_options'] : $defaults['link_options'],
       '#description' => $this->t('Determines how links to each domain will be written. Note that some paths may not be accessible on all domains.'),
     ];
@@ -93,7 +96,8 @@ class DomainNavBlock extends DomainBlockBase {
    * Overrides \Drupal\block\BlockBase::access().
    */
   public function access(AccountInterface $account, $return_as_object = FALSE) {
-    $access = AccessResult::allowedIfHasPermissions($account, ['administer domains', 'use domain nav block'], 'OR');
+    $access = AccessResult::allowedIfHasPermissions($account,
+              ['administer domains', 'use domain nav block'], 'OR');
     return $return_as_object ? $access : $access->isAllowed();
   }
 

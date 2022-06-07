@@ -13,19 +13,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class DomainNegotiator implements DomainNegotiatorInterface {
 
   /**
-   * Defines record matching types when dealing with request alteration.
-   *
-   * @see hook_domain_request_alter().
-   *
-   * @deprecated These constant will be replaced in the final release by
-   * Drupal\domain\DomainNegotiatorInterface. Note that the new versions have
-   * been renamed to maintain beta compatibility.
-   */
-  const DOMAIN_MATCH_NONE = 0;
-  const DOMAIN_MATCH_EXACT = 1;
-  const DOMAIN_MATCH_ALIAS = 2;
-
-  /**
    * The HTTP_HOST value of the request.
    *
    * @var string

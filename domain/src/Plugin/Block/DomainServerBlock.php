@@ -20,7 +20,8 @@ class DomainServerBlock extends DomainBlockBase {
    * Overrides \Drupal\block\BlockBase::access().
    */
   public function access(AccountInterface $account, $return_as_object = FALSE) {
-    $access = AccessResult::allowedIfHasPermissions($account, ['administer domains', 'view domain information'], 'OR');
+    $access = AccessResult::allowedIfHasPermissions($account,
+              ['administer domains', 'view domain information'], 'OR');
     return $return_as_object ? $access : $access->isAllowed();
   }
 

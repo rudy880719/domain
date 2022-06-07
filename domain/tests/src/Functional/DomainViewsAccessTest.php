@@ -28,7 +28,8 @@ class DomainViewsAccessTest extends DomainTestBase {
     // Create a user. To test the area output was more difficult, so we just
     // configured two views. The page shows the first, admin, user, and the
     // block will show this new user name.
-    $this->user = $this->drupalCreateUser(['administer domains', 'create domains']);
+    $perms = ['administer domains', 'create domains'];
+    $this->user = $this->drupalCreateUser($perms);
     // Place the view block.
     $this->drupalPlaceBlock('views_block:domain_views_access-block_1');
 
