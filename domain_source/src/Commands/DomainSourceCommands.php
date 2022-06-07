@@ -50,7 +50,7 @@ class DomainSourceCommands extends DomainCommands {
         '',
         InputOption::VALUE_OPTIONAL,
         'Reassign content for Domain Source',
-        null
+        NULL
     );
   }
 

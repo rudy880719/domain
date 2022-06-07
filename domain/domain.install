@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\domain\DomainInterface;
-
 /**
  * @file
  * Install, update and uninstall functions for the Domain Access module.
  */
+
+use Drupal\domain\DomainInterface;
 
 /**
  * Implements hook_install().

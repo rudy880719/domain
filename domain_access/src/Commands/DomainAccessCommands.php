@@ -41,22 +41,22 @@ class DomainAccessCommands extends DomainCommands {
     return $result;
   }
 
-/**
- * @hook option domain:delete
- */
+  /**
+   * @hook option domain:delete
+   */
   public function deleteOptions(Command $command, AnnotationData $annotationData) {
     $command->addOption(
         'content-assign',
         '',
         InputOption::VALUE_OPTIONAL,
         'Reassign content for Domain Access',
-        null
+        NULL
     );
   }
 
-/**
- * @hook on-event domain-delete
- */
+  /**
+   * @hook on-event domain-delete
+   */
   public function domainAccessDomainDelete($target_domain, $options) {
     // Run our own deletion routine here.
     if (is_null($options['content-assign'])) {

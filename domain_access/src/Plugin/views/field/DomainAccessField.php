@@ -39,8 +39,8 @@ class DomainAccessField extends EntityField {
    * Sort the domain list, if possible.
    */
   private function sort($a, $b) {
-    $domainA = isset($a['rendered']['#options']['entity']) ? $a['rendered']['#options']['entity'] : 0;
-    $domainB = isset($b['rendered']['#options']['entity']) ? $b['rendered']['#options']['entity'] : 0;
+    $domainA = $a['rendered']['#options']['entity'] ?? 0;
+    $domainB = $b['rendered']['#options']['entity'] ?? 0;
     if ($domainA !== 0) {
       return ($domainA->getWeight() > $domainB->getWeight()) ? 1 : 0;
     }

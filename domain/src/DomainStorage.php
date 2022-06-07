@@ -65,7 +65,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function loadSchema() {
     $fields = $this->typedConfig->getDefinition('domain.record.*');
-    return isset($fields['mapping']) ? $fields['mapping'] : [];
+    return $fields['mapping'] ?? [];
   }
 
   /**

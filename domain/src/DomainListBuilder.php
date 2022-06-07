@@ -189,7 +189,7 @@ class DomainListBuilder extends DraggableListBuilder {
         $operations[$key]['query'] += $destination;
       }
     }
-    /** @var DomainInterface $default */
+    /** @var \Drupal\domain\DomainInterface $default */
     $default = $this->domainStorage->loadDefaultDomain();
 
     // Deleting the site default domain is not allowed.

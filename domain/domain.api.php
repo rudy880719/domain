@@ -1,15 +1,15 @@
 <?php
 
+/**
+ * @file
+ * API documentation file for Domain module.
+ */
+
 use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\Query\QueryInterface;
-
-/**
- * @file
- * API documentation file for Domain module.
- */
 
 /**
  * Notifies other modules that we are loading a domain record from the database.

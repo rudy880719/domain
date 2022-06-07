@@ -128,7 +128,8 @@ abstract class DomainTestBase extends BrowserTestBase {
    *   The input field element.
    */
   public function findNoField($locator) {
-    return $this->assertSession()->fieldNotExists($locator);;
+    return $this->assertSession()->fieldNotExists($locator);
+    ;
   }
 
   /**

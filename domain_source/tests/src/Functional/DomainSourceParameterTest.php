@@ -30,6 +30,9 @@ class DomainSourceParameterTest extends DomainTestBase {
     DomainTestBase::domainCreateTestDomains(3);
   }
 
+  /**
+   *
+   */
   public function testDomainSourceUrls() {
     // Create a node, assigned to a source domain.
     $id = 'example_com';

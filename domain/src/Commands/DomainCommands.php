@@ -177,6 +177,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * domain_admin_entities: Domain admin entities
    * @list-orientation true
    * @format table
+   *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
   public function infoDomains() {
@@ -611,6 +612,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * @param array $options
    *   An associative array of options whose values come from cli, aliases,
    *   config, etc.
+   *
    * @option validate
    *   Force a check of the URL response before allowing registration.
    * @usage drush domain-default www.example.com
@@ -657,6 +659,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @param string $domain_id
    *   The numeric id or hostname of the domain to disable.
+   *
    * @usage drush domain-disable example.com
    * @usage drush domain-disable 1
    *
@@ -693,6 +696,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @param string $domain_id
    *   The numeric id or hostname of the domain to enable.
+   *
    * @usage drush domain-disable example.com
    * @usage drush domain-enable 1
    *
@@ -731,6 +735,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *   The machine name or hostname of the domain to relabel.
    * @param string $name
    *   The name to use for the domain.
+   *
    * @usage drush domain-name example.com Foo
    * @usage drush domain-name 1 Foo
    *
