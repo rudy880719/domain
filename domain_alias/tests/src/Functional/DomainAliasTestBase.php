@@ -13,9 +13,7 @@ abstract class DomainAliasTestBase extends DomainTestBase {
   use DomainAliasTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_alias'];
 

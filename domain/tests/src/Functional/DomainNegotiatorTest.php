@@ -12,9 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 class DomainNegotiatorTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_test', 'block'];
 

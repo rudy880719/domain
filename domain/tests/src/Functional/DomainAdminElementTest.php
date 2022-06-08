@@ -13,9 +13,7 @@ use Drupal\user\UserInterface;
 class DomainAdminElementTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'field', 'field_ui', 'user'];
 

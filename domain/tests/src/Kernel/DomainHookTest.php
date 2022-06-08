@@ -23,9 +23,7 @@ class DomainHookTest extends KernelTestBase {
   use DomainTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_test', 'user', 'node'];
 

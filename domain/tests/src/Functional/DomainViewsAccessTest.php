@@ -10,9 +10,7 @@ namespace Drupal\Tests\domain\Functional;
 class DomainViewsAccessTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'node', 'views', 'block'];
 

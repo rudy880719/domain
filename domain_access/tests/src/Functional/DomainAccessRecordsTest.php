@@ -14,9 +14,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessRecordsTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_access', 'field', 'field_ui'];
 

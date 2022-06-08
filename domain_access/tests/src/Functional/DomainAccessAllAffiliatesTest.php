@@ -13,9 +13,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessAllAffiliatesTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_access', 'field', 'field_ui'];
 

@@ -16,9 +16,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainReferencesTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',

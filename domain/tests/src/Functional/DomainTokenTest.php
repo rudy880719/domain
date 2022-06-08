@@ -12,9 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 class DomainTokenTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'block'];
 

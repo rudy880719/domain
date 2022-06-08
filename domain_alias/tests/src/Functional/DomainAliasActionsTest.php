@@ -10,9 +10,7 @@ namespace Drupal\Tests\domain_alias\Functional;
 class DomainAliasActionsTest extends DomainAliasTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_alias', 'user'];
 

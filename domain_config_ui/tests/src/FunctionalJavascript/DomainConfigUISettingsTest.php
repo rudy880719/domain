@@ -36,9 +36,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
   protected $defaultTheme = 'stable';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain_config_ui',

@@ -12,9 +12,7 @@ use Drupal\domain\DomainInterface;
 class DomainAliasListBuilderTest extends DomainAliasTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_alias', 'user'];
 

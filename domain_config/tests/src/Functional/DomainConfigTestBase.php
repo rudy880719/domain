@@ -29,9 +29,7 @@ abstract class DomainConfigTestBase extends DomainTestBase {
   protected $langcodes = ['es' => 'Spanish'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',

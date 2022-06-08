@@ -14,9 +14,7 @@ use Drupal\domain_source\DomainSourceElementManagerInterface;
 class DomainSourceExcludeTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_source', 'field', 'node', 'user'];
 

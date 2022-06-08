@@ -10,9 +10,7 @@ namespace Drupal\Tests\domain\Functional;
 class DomainListWeightTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'user'];
 

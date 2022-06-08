@@ -14,11 +14,15 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessContentUrlsTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected static $modules = ['domain', 'domain_access', 'field', 'node', 'user'];
+  protected static $modules = [
+    'domain',
+    'domain_access',
+    'field',
+    'node',
+    'user'
+  ];
 
   /**
    * {@inheritdoc}

@@ -15,22 +15,6 @@ use Drupal\Core\Form\FormState;
 use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
- * The name of the node access control field.
- *
- * @deprecated This constant will be replaced in the final release by
- * \Drupal\domain_access\DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD.
- */
-const DOMAIN_ACCESS_FIELD = 'field_domain_access';
-
-/**
- * The name of the all affiliates field.
- *
- * @deprecated This constant will be replaced in the final release by
- * \Drupal\domain_access\DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD.
- */
-const DOMAIN_ACCESS_ALL_FIELD = 'field_domain_all_affiliates';
-
-/**
  * Implements hook_node_grants().
  */
 function domain_access_node_grants(AccountInterface $account, $op) {
@@ -423,9 +407,10 @@ function domain_access_node_create_access(AccountInterface $account, $context, $
   $user_domains = \Drupal::service('domain_access.manager')->getAccessValues($user);
   if (($account->hasPermission('create ' . $entity_bundle . ' content on assigned domains')
       || $account->hasPermission('create domain content'))
-    && in_array($id, $user_domains)) {
+      && in_array($id, $user_domains, TRUE)) {
     // Note the cache context here!
-    return AccessResult::allowed()->addCacheContexts(['user.permissions', 'url.site']);
+    return AccessResult::allowed()
+      ->addCacheContexts(['user.permissions', 'url.site']);
   }
   // No opinion.
   return AccessResult::neutral();
@@ -731,7 +716,8 @@ function domain_access_domain_delete(EntityInterface $entity) {
  * @see domain_access_default_form_values()
  */
 function domain_access_form_alter(&$form, &$form_state, $form_id) {
-  if ($object = $form_state->getFormObject() && !empty($object) && is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
+  if ($object = $form_state->getFormObject() && !empty($object) &&
+      is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
     domain_access_default_form_values($form, $form_state, $entity);
   }
 }

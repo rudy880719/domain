@@ -12,9 +12,7 @@ use Drupal\user\RoleInterface;
 class DomainAliasEnvironmentTest extends DomainAliasTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_alias', 'user'];
 

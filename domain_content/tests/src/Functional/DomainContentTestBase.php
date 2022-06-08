@@ -11,9 +11,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 abstract class DomainContentTestBase extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_content'];
 

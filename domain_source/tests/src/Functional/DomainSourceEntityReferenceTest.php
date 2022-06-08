@@ -12,9 +12,7 @@ use Drupal\Tests\domain\Functional\DomainTestBase;
 class DomainSourceEntityReferenceTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',

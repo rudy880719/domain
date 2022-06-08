@@ -12,9 +12,7 @@ use Drupal\Component\Utility\Html;
 class DomainCSSTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain'];
 

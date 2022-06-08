@@ -42,6 +42,8 @@ class DomainAccessCommands extends DomainCommands {
   }
 
   /**
+   * On a domain delete, prompt for entity reassignment.
+   *
    * @hook option domain:delete
    */
   public function deleteOptions(Command $command, AnnotationData $annotationData) {
@@ -55,6 +57,8 @@ class DomainAccessCommands extends DomainCommands {
   }
 
   /**
+   * On a domain delete, reassign entities.
+   *
    * @hook on-event domain-delete
    */
   public function domainAccessDomainDelete($target_domain, $options) {

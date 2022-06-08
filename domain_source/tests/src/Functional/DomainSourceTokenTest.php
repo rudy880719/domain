@@ -14,9 +14,7 @@ use Drupal\domain_source\DomainSourceElementManagerInterface;
 class DomainSourceTokenTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_access', 'domain_source', 'field', 'node', 'user'];
 

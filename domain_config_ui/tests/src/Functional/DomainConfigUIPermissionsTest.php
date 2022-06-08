@@ -15,9 +15,7 @@ class DomainConfigUIPermissionsTest extends DomainConfigTestBase {
   use DomainConfigUITestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain_config_ui',

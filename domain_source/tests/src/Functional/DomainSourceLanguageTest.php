@@ -15,9 +15,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class DomainSourceLanguageTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

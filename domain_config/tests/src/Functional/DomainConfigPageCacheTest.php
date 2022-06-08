@@ -10,9 +10,7 @@ namespace Drupal\Tests\domain_config\Functional;
 class DomainConfigPageCacheTest extends DomainConfigTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',

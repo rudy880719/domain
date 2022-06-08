@@ -13,9 +13,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessSaveTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_access', 'field', 'user'];
 
@@ -61,7 +59,10 @@ class DomainAccessSaveTest extends DomainTestBase {
       'title' => 'Test node',
       'uid' => '1',
       'status' => 1,
-      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => ['example_com', 'one_example_com'],
+      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [
+        'example_com',
+        'one_example_com'
+      ],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 0,
     ]);
     $node->save();

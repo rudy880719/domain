@@ -14,9 +14,7 @@ use Drupal\domain_source\DomainSourceElementManagerInterface;
 class DomainSourceParameterTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_source', 'domain_source_test', 'field', 'node', 'user'];
 

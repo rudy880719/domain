@@ -38,9 +38,7 @@ abstract class DomainTestBase extends BrowserTestBase {
   public $baseTLD;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'node'];
 

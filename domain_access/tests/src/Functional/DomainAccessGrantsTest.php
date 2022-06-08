@@ -21,9 +21,7 @@ class DomainAccessGrantsTest extends DomainTestBase {
   protected $accessHandler;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_access', 'field', 'node'];
 

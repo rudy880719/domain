@@ -14,9 +14,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessLanguageSaveTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',
@@ -73,7 +71,10 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     // Create an Afrikaans translation assigned to domain 2.
     $translation = $node->addTranslation('af');
     $translation->title->value = $this->randomString();
-    $translation->{DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD} = ['example_com', 'one_example_com'];
+    $translation->{DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD} = [
+      'example_com',
+      'one_example_com'
+    ];
     $translation->{DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD} = 0;
     $translation->status = 1;
     $node->save();

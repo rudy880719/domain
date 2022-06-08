@@ -17,9 +17,7 @@ class DomainBlockVisibilityTest extends DomainTestBase {
   use BlockCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'block'];
 

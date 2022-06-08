@@ -13,9 +13,7 @@ use Drupal\user\RoleInterface;
 class DomainInactiveTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'node', 'views'];
 

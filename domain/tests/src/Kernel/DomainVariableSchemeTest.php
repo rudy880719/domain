@@ -15,9 +15,7 @@ class DomainVariableSchemeTest extends KernelTestBase {
   use DomainTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain'];
 

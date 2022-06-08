@@ -14,9 +14,7 @@ use Drupal\Tests\domain\Functional\DomainTestBase;
 class DomainAccessEntityFieldTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',

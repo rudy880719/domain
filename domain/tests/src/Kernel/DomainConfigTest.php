@@ -12,9 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
 class DomainConfigTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_config_schema_test'];
 

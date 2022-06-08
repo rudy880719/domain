@@ -12,9 +12,7 @@ namespace Drupal\Tests\domain_alias\Functional;
 class DomainAliasMiddlewareTest extends DomainAliasNegotiatorTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['domain', 'domain_alias', 'user', 'block', 'domain_config', 'domain_config_middleware_test'];
 

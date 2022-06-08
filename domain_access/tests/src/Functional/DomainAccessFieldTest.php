@@ -14,9 +14,7 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessFieldTest extends DomainTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'domain',
@@ -43,7 +41,8 @@ class DomainAccessFieldTest extends DomainTestBase {
     $label = 'Send to all affiliates';
 
     // Test a user who can access all domain settings.
-    $user1 = $this->drupalCreateUser(['create article content', 'publish to any domain']);
+    $perms = ['create article content', 'publish to any domain'];
+    $user1 = $this->drupalCreateUser($perms);
     $this->drupalLogin($user1);
 
     // Visit the article creation page.
@@ -58,7 +57,8 @@ class DomainAccessFieldTest extends DomainTestBase {
     $this->assertSession()->pageTextContains($label);
 
     // Test a user who can access some domain settings.
-    $user2 = $this->drupalCreateUser(['create article content', 'publish to any assigned domain']);
+    $perms = ['create article content', 'publish to any assigned domain'];
+    $user2 = $this->drupalCreateUser($perms);
     $active_domain = array_rand($domains, 1);
     $this->addDomainsToEntity('user', $user2->id(), $active_domain, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
     $this->drupalLogin($user2);
@@ -107,7 +107,8 @@ class DomainAccessFieldTest extends DomainTestBase {
     $this->assertNotNull($node, 'Node found in database.');
 
     // Test a user who can assign users to domains.
-    $user4 = $this->drupalCreateUser(['administer users', 'assign editors to any domain']);
+    $perms = ['administer users', 'assign editors to any domain'];
+    $user4 = $this->drupalCreateUser($perms);
     $this->drupalLogin($user4);
 
     // Visit the account creation page.
@@ -120,7 +121,8 @@ class DomainAccessFieldTest extends DomainTestBase {
     }
 
     // Test a user who can assign users to some domains.
-    $user5 = $this->drupalCreateUser(['administer users', 'assign domain editors']);
+    $perms = ['administer users', 'assign domain editors'];
+    $user5 = $this->drupalCreateUser($perms);
     $active_domain = array_rand($domains, 1);
     $this->addDomainsToEntity('user', $user5->id(), $active_domain, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
     $this->drupalLogin($user5);
@@ -153,7 +155,8 @@ class DomainAccessFieldTest extends DomainTestBase {
     }
 
     // Test a user who can access all domain settings.
-    $user7 = $this->drupalCreateUser(['bypass node access', 'publish to any domain']);
+    $perms = ['bypass node access', 'publish to any domain'];
+    $user7 = $this->drupalCreateUser($perms);
     $this->drupalLogin($user7);
 
     // Create a new content type and test that the fields are created.
