@@ -26,7 +26,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
    *
    * @var bool
    */
-  protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = FALSE; // phpcs:ignore
 
   /**
    * The default theme.

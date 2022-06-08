@@ -24,7 +24,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
    *
    * @var bool
    */
-  protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = FALSE; // phpcs:ignore
 
   /**
    * The default theme.
@@ -152,7 +152,10 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
    */
   private function createLanguage() {
     // Create and login user.
-    $adminUser = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $adminUser = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages'
+    ]);
     $this->drupalLogin($adminUser);
 
     // Add language.

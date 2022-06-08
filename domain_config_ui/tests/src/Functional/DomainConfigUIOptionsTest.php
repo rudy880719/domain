@@ -33,9 +33,13 @@ class DomainConfigUIOptionsTest extends DomainConfigTestBase {
     $this->createLanguageUser();
 
     $this->domainCreateTestDomains(5);
-    // Assign the adminUser and editorUser to some domains.
-    $this->addDomainsToEntity('user', $this->limitedUser->id(), ['example_com', 'one_example_com'], DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->addDomainsToEntity('user', $this->languageUser->id(), ['two_example_com', 'three_example_com'], DomainInterface::DOMAIN_ADMIN_FIELD);
+    // Assign the adminUser and languageUser to some domains.
+    $domains = ['example_com', 'one_example_com'];
+    $this->addDomainsToEntity('user', $this->limitedUser->id(),
+      $domains, DomainInterface::DOMAIN_ADMIN_FIELD);
+    $domains = ['two_example_com', 'three_example_com'];
+    $this->addDomainsToEntity('user', $this->languageUser->id(),
+      $domains, DomainInterface::DOMAIN_ADMIN_FIELD);
   }
 
   /**

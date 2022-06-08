@@ -237,7 +237,10 @@ class DomainConfigUIController {
       else {
         $list = [];
         foreach ($val as $k => $v) {
-          $list[] = t('<strong>@key</strong> : @value', ['@key' => $k, '@value' => self::formatValue($v)]);
+          $list[] = t('<strong>@key</strong> : @value', [
+            '@key' => $k,
+            '@value' => self::formatValue($v)
+          ]);
         }
         $variables = [
           '#theme' => 'item_list',
