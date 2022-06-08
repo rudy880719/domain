@@ -6,7 +6,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\domain\DomainStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
