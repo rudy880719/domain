@@ -66,7 +66,7 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $values = $manager->getAccessValues($node);
     $this->assertTrue(count($values) === 1, 'Node saved with one domain records.');
     $value = $manager->getAllValue($node);
-    $this->assertTrue($value === 1, 'Node saved to all affiliates.');
+    $this->assertTrue(intval($value) === 1, 'Node saved to all affiliates.');
 
     // Create an Afrikaans translation assigned to domain 2.
     $translation = $node->addTranslation('af');
@@ -85,7 +85,7 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $values = $manager->getAccessValues($node);
     $this->assertTrue(count($values) === 2, 'Node saved with two domain records.');
     $value = $manager->getAllValue($node);
-    $this->assertTrue($value === 0, 'Node not saved to all affiliates.');
+    $this->assertTrue(intval($value) === 0, 'Node not saved to all affiliates.');
   }
 
 }
