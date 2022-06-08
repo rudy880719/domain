@@ -87,7 +87,7 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
     }
     elseif ($count === 1) {
       $int = substr($pattern, strpos($pattern, ':') + 1);
-      if (!is_numeric($int) && $int !=== '*') {
+      if (!is_numeric($int) && $int !== '*') {
         return $this->t('A colon may only be followed by an integer indicating the proper port or the wildcard character (*).');
       }
     }

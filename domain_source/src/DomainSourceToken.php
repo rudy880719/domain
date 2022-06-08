@@ -57,7 +57,7 @@ class DomainSourceToken {
     switch ($type) {
       case 'node':
         foreach ($tokens as $name => $original) {
-          if ($name !=== 'canonical-source-domain-url') {
+          if ($name !== 'canonical-source-domain-url') {
             continue;
           }
           if (!empty($data['node'])) {
