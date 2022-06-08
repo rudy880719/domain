@@ -18,8 +18,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "access" = "Drupal\domain_alias\DomainAliasAccessControlHandler",
  *     "list_builder" = "Drupal\domain_alias\DomainAliasListBuilder",
  *     "form" = {
- *       "default" = "Drupal\domain_alias\DomainAliasForm",
- *       "edit" = "Drupal\domain_alias\DomainAliasForm",
+ *       "default" = "Drupal\domain_alias\Form\DomainAliasForm",
+ *       "edit" = "Drupal\domain_alias\Form\DomainAliasForm",
  *       "delete" = "Drupal\domain_alias\Form\DomainAliasDeleteForm"
  *     }
  *   },
@@ -132,7 +132,10 @@ class DomainAlias extends ConfigEntityBase implements DomainAliasInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
     // Invalidate cache tags relevant to domains.
-    \Drupal::service('cache_tags.invalidator')->invalidateTags(['rendered', 'url.site']);
+    \Drupal::service('cache_tags.invalidator')->invalidateTags([
+      'rendered',
+      'url.site'
+    ]);
   }
 
 }

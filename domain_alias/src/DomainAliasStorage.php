@@ -41,7 +41,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   /**
    * Sets the request stack object dependency.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
    */
   protected function setRequestStack(RequestStack $request_stack) {
@@ -85,10 +85,8 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    */
   public function loadByPattern($pattern) {
     $result = $this->loadByProperties(['pattern' => $pattern]);
-    if (empty($result)) {
-      return NULL;
-    }
-    return current($result);
+
+    return $result ? current($result) : NULL;
   }
 
   /**
@@ -96,21 +94,20 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    */
   public function loadByEnvironment($environment) {
     $result = $this->loadByProperties(['environment' => $environment]);
-    if (empty($result)) {
-      return NULL;
-    }
-    return $result;
+
+    return $result ?? [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadByEnvironmentMatch(DomainInterface $domain, $environment) {
-    $result = $this->loadByProperties(['domain_id' => $domain->id(), 'environment' => $environment]);
-    if (empty($result)) {
-      return [];
-    }
-    return $result;
+    $result = $this->loadByProperties([
+      'domain_id' => $domain->id(),
+      'environment' => $environment
+    ]);
+
+    return $result ?? [];
   }
 
   /**
@@ -203,6 +200,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
         $patterns[] = implode('.', $temp);
       }
     }
+
     return $patterns;
   }
 

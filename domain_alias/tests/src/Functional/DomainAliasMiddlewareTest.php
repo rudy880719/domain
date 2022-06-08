@@ -14,6 +14,13 @@ class DomainAliasMiddlewareTest extends DomainAliasNegotiatorTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['domain', 'domain_alias', 'user', 'block', 'domain_config', 'domain_config_middleware_test'];
+  protected static $modules = [
+    'domain',
+    'domain_alias',
+    'user',
+    'block',
+    'domain_config',
+    'domain_config_middleware_test'
+  ];
 
 }

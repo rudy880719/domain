@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\domain_alias;
+namespace Drupal\domain_alias\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -219,15 +219,23 @@ class DomainAliasForm extends EntityForm {
     /** @var \Drupal\domain_alias\DomainAliasInterface $alias */
     $alias = $this->entity;
     $edit_link = $alias->toLink($this->t('Edit'), 'edit-form')->toString();
-    if ($alias->save() == SAVED_NEW) {
+    if ($alias->save() === SAVED_NEW) {
       \Drupal::messenger()->addMessage($this->t('Created new domain alias.'));
-      $this->logger('domain_alias')->notice('Created new domain alias %name.', ['%name' => $alias->label(), 'link' => $edit_link]);
+      $this->logger('domain_alias')->notice('Created new domain alias %name.', [
+        '%name' => $alias->label(),
+        'link' => $edit_link
+      ]);
     }
     else {
       \Drupal::messenger()->addMessage($this->t('Updated domain alias.'));
-      $this->logger('domain_alias')->notice('Updated domain alias %name.', ['%name' => $alias->label(), 'link' => $edit_link]);
+      $this->logger('domain_alias')->notice('Updated domain alias %name.', [
+        '%name' => $alias->label(),
+        'link' => $edit_link
+      ]);
     }
-    $form_state->setRedirect('domain_alias.admin', ['domain' => $alias->getDomainId()]);
+    $form_state->setRedirect('domain_alias.admin', [
+      'domain' => $alias->getDomainId()
+    ]);
   }
 
 }
