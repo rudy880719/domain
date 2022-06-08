@@ -5,8 +5,6 @@
  * Install, update and uninstall hooks for this module.
  */
 
-use Drupal\domain_access\DomainAccessManagerInterface;
-
 /**
  * Implements hook_requirements().
  */
@@ -24,12 +22,14 @@ function domain_content_requirements($phase) {
     }
     // Check for required fields.
     foreach ($list as $bundle => $entity_type) {
-      $id = $entity_type . '.' . $bundle . '.' . DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD;
+      // phpcs:ignore
+      $id = $entity_type . '.' . $bundle . '.' . \Drupal\domain_access\DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD;
       if (!$field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
         $allow = FALSE;
         break;
       }
-      $id = $entity_type . '.' . $bundle . '.' . DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD;
+      // phpcs:ignore
+      $id = $entity_type . '.' . $bundle . '.' . \Drupal\domain_access\DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD;
       if (!$field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
         $allow = FALSE;
         break;
