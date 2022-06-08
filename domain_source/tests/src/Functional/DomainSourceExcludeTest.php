@@ -16,7 +16,13 @@ class DomainSourceExcludeTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['domain', 'domain_source', 'field', 'node', 'user'];
+  protected static $modules = [
+    'domain',
+    'domain_source',
+    'field',
+    'node',
+    'user'
+  ];
 
   /**
    * {@inheritdoc}

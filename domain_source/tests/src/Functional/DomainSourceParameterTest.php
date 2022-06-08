@@ -16,7 +16,14 @@ class DomainSourceParameterTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['domain', 'domain_source', 'domain_source_test', 'field', 'node', 'user'];
+  protected static $modules = [
+    'domain',
+    'domain_source',
+    'domain_source_test',
+    'field',
+    'node',
+    'user'
+  ];
 
   /**
    * {@inheritdoc}
@@ -29,13 +36,17 @@ class DomainSourceParameterTest extends DomainTestBase {
   }
 
   /**
-   *
+   * Tests the behavior of urls with query params.
    */
-  public function testDomainSourceUrls() {
+  public function testDomainSourceParams() {
     // Create a node, assigned to a source domain.
     $id = 'example_com';
 
-    $node = $this->createNode(['type' => 'page', 'title' => 'foo', DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id]);
+    $node = $this->createNode([
+      'type' => 'page',
+      'title' => 'foo',
+      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id
+    ]);
 
     // Variables for our tests.
     $path = 'domain-format-test';

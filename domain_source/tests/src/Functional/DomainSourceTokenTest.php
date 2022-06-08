@@ -16,7 +16,14 @@ class DomainSourceTokenTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['domain', 'domain_access', 'domain_source', 'field', 'node', 'user'];
+  protected static $modules = [
+    'domain',
+    'domain_access',
+    'domain_source',
+    'field',
+    'node',
+    'user'
+  ];
 
   /**
    * {@inheritdoc}
@@ -38,7 +45,11 @@ class DomainSourceTokenTest extends DomainTestBase {
     $nodes_values = [
       'type' => 'page',
       'title' => 'foo',
-      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => ['example_com', 'one_example_com', 'two_example_com'],
+      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [
+        'example_com',
+        'one_example_com',
+        'two_example_com'
+      ],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 0,
       DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => 'one_example_com',
     ];

@@ -14,14 +14,6 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
 
 /**
- * Defines the name of the source domain field.
- *
- * @deprecated This constant will be replaced in the final release by
- * Drupal\domain\DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD.
- */
-const DOMAIN_SOURCE_FIELD = 'field_domain_source';
-
-/**
  * Creates our fields for an entity bundle.
  *
  * @param string $entity_type
@@ -134,12 +126,16 @@ function domain_source_get(EntityInterface $entity) {
 function domain_source_form_alter(&$form, &$form_state, $form_id) {
   $object = $form_state->getFormObject();
   // Set up our TrustedRedirect handler for form saves.
-  if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && !empty($object) && is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
+  if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD])
+      && !empty($object) && is_callable([$object, 'getEntity'])
+      && $entity = $object->getEntity()
+     ) {
     // Validate the form.
     $form['#validate'][] = 'domain_source_form_validate';
     foreach ($form['actions'] as $key => $element) {
       // Redirect submit handlers, but not the preview button.
-      if ($key != 'preview' && isset($element['#type']) && $element['#type'] == 'submit') {
+      if ($key !== 'preview' && isset($element['#type'])
+          && $element['#type'] == 'submit') {
         $form['actions'][$key]['#submit'][] = 'domain_source_form_submit';
       }
     }
