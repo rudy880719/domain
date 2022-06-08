@@ -45,7 +45,7 @@ class DomainFormsTest extends DomainTestBase {
     // Does it load correctly?
     $storage->resetCache([$default_id]);
     $new_domain = $storage->load($default_id);
-    $this->assertTrue($new_domain->id() == $default_id, 'Domain loaded properly.');
+    $this->assertTrue($new_domain->id() === $default_id, 'Domain loaded properly.');
 
     // Has a UUID been set?
     $this->assertNotEmpty($new_domain->uuid(), 'Entity UUID set properly.');
@@ -64,7 +64,7 @@ class DomainFormsTest extends DomainTestBase {
     // Check that the update succeeded.
     $storage->resetCache([$default_id]);
     $domain = $storage->load($default_id);
-    $this->assertTrue($domain->label() == 'Foo', 'Domain record updated via form.');
+    $this->assertTrue($domain->label() === 'Foo', 'Domain record updated via form.');
 
     // Visit the delete domain administration page.
     $deleteUrl = 'admin/config/domain/delete/' . $new_domain->id();

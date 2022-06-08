@@ -40,7 +40,7 @@ class Config extends CoreConfig {
 
       // If config is new and we are saving domain specific configuration,
       // save with original name so there is always a default configuration.
-      if ($this->isNew && $domainConfigName != $originalName) {
+      if ($this->isNew && $domainConfigName !== $originalName) {
         parent::save($has_trusted_data);
       }
 

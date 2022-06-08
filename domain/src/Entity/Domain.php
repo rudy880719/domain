@@ -179,7 +179,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     if (empty($domain)) {
       return FALSE;
     }
-    return ($this->id() == $domain->id());
+    return ($this->id() === $domain->id());
   }
 
   /**
@@ -202,7 +202,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    * {@inheritdoc}
    */
   public function isHttps() {
-    return (bool) ($this->getScheme(FALSE) == 'https');
+    return (bool) ($this->getScheme(FALSE) === 'https');
   }
 
   /**
@@ -338,7 +338,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     if (!$default) {
       $this->is_default = TRUE;
     }
-    elseif ($this->is_default && $default->getDomainId() != $this->getDomainId()) {
+    elseif ($this->is_default && $default->getDomainId() !== $this->getDomainId()) {
       // Swap the current default.
       $default->is_default = FALSE;
       $default->save();
@@ -352,7 +352,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     // Do not use domain loader because it may change hostname.
     $existing = $storage->loadByProperties(['hostname' => $hostname]);
     $existing = reset($existing);
-    if ($existing && $this->getDomainId() != $existing->getDomainId()) {
+    if ($existing && $this->getDomainId() !== $existing->getDomainId()) {
       throw new ConfigValueException("The hostname ($hostname) is already registered.");
     }
   }
@@ -429,10 +429,10 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    */
   public function getScheme($add_suffix = TRUE) {
     $scheme = $this->scheme;
-    if ($scheme == 'variable') {
+    if ($scheme === 'variable') {
       $scheme = \Drupal::entityTypeManager()->getStorage('domain')->getDefaultScheme();
     }
-    elseif ($scheme != 'https') {
+    elseif ($scheme !== 'https') {
       $scheme = 'http';
     }
     $scheme .= ($add_suffix) ? '://' : '';

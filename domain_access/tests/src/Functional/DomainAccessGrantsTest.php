@@ -59,7 +59,7 @@ class DomainAccessGrantsTest extends DomainTestBase {
     foreach ($domains as $domain) {
       $path = $domain->getPath() . 'node/' . $node1->id();
       $this->drupalGet($path);
-      if ($domain->id() == $active_domain) {
+      if ($domain->id() === $active_domain) {
         $this->assertSession()->statusCodeEquals(200);
         $this->assertSession()->responseContains($node1->getTitle());
       }

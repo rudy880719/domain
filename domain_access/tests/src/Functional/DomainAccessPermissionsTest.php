@@ -56,7 +56,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
     // Clear permissions for authenticated users.
     $this->config('user.role.' . RoleInterface::AUTHENTICATED_ID)->set('permissions', [])->save();
     // Create Basic page node type.
-    if ($this->profile != 'standard') {
+    if ($this->profile !== 'standard') {
       $this->drupalCreateContentType([
         'type' => 'page',
         'name' => 'Basic page',
@@ -239,7 +239,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
       $this->domainLogin($domain, $domain_account5);
       $url = $domain->getPath() . 'node/add/page';
       $this->drupalGet($url);
-      if ($domain->id() == $two) {
+      if ($domain->id() === $two) {
         $this->assertSession()->statusCodeEquals(200);
       }
       else {
@@ -248,7 +248,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
       // The user should be allowed to create articles.
       $url = $domain->getPath() . 'node/add/article';
       $this->drupalGet($url);
-      if ($domain->id() == $two) {
+      if ($domain->id() === $two) {
         $this->assertSession()->statusCodeEquals(200);
       }
       else {
@@ -284,7 +284,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
       $this->domainLogin($domain, $domain_account6);
       $url = $domain->getPath() . 'node/add/page';
       $this->drupalGet($url);
-      if ($domain->id() == $two) {
+      if ($domain->id() === $two) {
         $this->assertSession()->statusCodeEquals(200);
       }
       else {

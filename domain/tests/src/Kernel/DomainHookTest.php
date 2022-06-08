@@ -94,7 +94,7 @@ class DomainHookTest extends KernelTestBase {
     $this->assertTrue(isset($url), new FormattableMarkup('The url property was set to %url by hook_entity_load.', ['%url' => $url]));
 
     // External hooks.
-    $this->assertTrue($domain->foo == 'bar', 'The foo property was set to <em>bar</em> by hook_domain_load.');
+    $this->assertTrue($domain->foo === 'bar', 'The foo property was set to <em>bar</em> by hook_domain_load.');
   }
 
   /**
@@ -109,7 +109,7 @@ class DomainHookTest extends KernelTestBase {
     // Test our hook implementation, which denies fail.example.com explicitly.
     $errors = $validator->validate('fail.example.com');
     $this->assertNotEmpty($errors, 'Errors returned for fail.example.com');
-    $this->assertTrue(current($errors) == 'Fail.example.com cannot be registered', 'Error message returned correctly.');
+    $this->assertTrue(current($errors) === 'Fail.example.com cannot be registered', 'Error message returned correctly.');
   }
 
   /**
@@ -122,7 +122,7 @@ class DomainHookTest extends KernelTestBase {
 
     // Check that the property was added by our hook.
     $domain = $negotiator->getActiveDomain();
-    $this->assertTrue($domain->foo1 == 'bar1', 'The foo1 property was set to <em>bar1</em> by hook_domain_request_alter');
+    $this->assertTrue($domain->foo1 === 'bar1', 'The foo1 property was set to <em>bar1</em> by hook_domain_request_alter');
   }
 
   /**
@@ -159,7 +159,7 @@ class DomainHookTest extends KernelTestBase {
 
     // Run the alteration, which should add metadata to the query for nodes.
     $this->moduleHandler->alter('domain_references', $query, $this->currentUser, $context);
-    $this->assertTrue($query->getMetaData('domain_test') == 'Test string', 'Domain test query altered.');
+    $this->assertTrue($query->getMetaData('domain_test') === 'Test string', 'Domain test query altered.');
 
     // Build a user entity selection query.
     $query = $manager->getStorage($target_type)->getQuery();

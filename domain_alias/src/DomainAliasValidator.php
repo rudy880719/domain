@@ -71,7 +71,7 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
     // 1) Check for at least one dot or the use of 'localhost'.
     // Note that localhost can specify a port.
     $localhost_check = explode(':', $pattern);
-    if (substr_count($pattern, '.') == 0 && $localhost_check[0] != 'localhost') {
+    if (substr_count($pattern, '.') === 0 && $localhost_check[0] !== 'localhost') {
       return $this->t('At least one dot (.) is required, except when using <em>localhost</em>.');
     }
 
@@ -85,9 +85,9 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
     if ($count > 1) {
       return $this->t('You may only have one colon ":" character in each alias.');
     }
-    elseif ($count == 1) {
+    elseif ($count === 1) {
       $int = substr($pattern, strpos($pattern, ':') + 1);
-      if (!is_numeric($int) && $int !== '*') {
+      if (!is_numeric($int) && $int !=== '*') {
         return $this->t('A colon may only be followed by an integer indicating the proper port or the wildcard character (*).');
       }
     }
@@ -96,27 +96,27 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
     $non_ascii = $this->configFactory->get('domain.settings')->get('allow_non_ascii');
     if (!$non_ascii) {
       $check = preg_match('/^[a-z0-9\.\+\-\*\?:]*$/', $pattern);
-      if ($check == 0) {
+      if ($check === 0) {
         return $this->t('The pattern contains invalid characters.');
       }
     }
     // 5) The alias cannot begin or end with a period.
-    if (substr($pattern, 0, 1) == '.') {
+    if (substr($pattern, 0, 1) === '.') {
       return $this->t('The pattern cannot begin with a dot.');
     }
-    if (substr($pattern, -1) == '.') {
+    if (substr($pattern, -1) === '.') {
       return $this->t('The pattern cannot end with a dot.');
     }
 
     // 6) Check that the alias is not a direct match for a registered domain.
     $check = preg_match('/[a-z0-9\.\+\-:]*$/', $pattern);
-    if ($check == 1 && $this->domainStorage->loadByHostname($pattern)) {
+    if ($check === 1 && $this->domainStorage->loadByHostname($pattern)) {
       return $this->t('The pattern matches an existing domain record.');
     }
     // 7) Check that the alias is unique across all records.
     if ($alias_check = $this->aliasStorage->loadByPattern($pattern)) {
       /** @var \Drupal\domain_alias\DomainAliasInterface $alias_check */
-      if ($alias_check->id() != $alias->id()) {
+      if ($alias_check->id() !== $alias->id()) {
         return $this->t('The pattern already exists.');
       }
     }

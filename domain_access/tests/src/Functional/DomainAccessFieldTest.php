@@ -133,7 +133,7 @@ class DomainAccessFieldTest extends DomainTestBase {
 
     // Check for the form options.
     foreach ($domains as $domain) {
-      if ($domain->id() == $active_domain) {
+      if ($domain->id() === $active_domain) {
         $this->assertSession()->responseContains('>' . $domain->label() . '</label>');
       }
       else {

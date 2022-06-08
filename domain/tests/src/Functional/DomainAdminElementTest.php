@@ -69,7 +69,7 @@ class DomainAdminElementTest extends DomainTestBase {
     // Check that two values are set.
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assertTrue(count($values) == 3, 'User saved with three domain records.');
+    $this->assertTrue(count($values) === 3, 'User saved with three domain records.');
 
     // Now login as a user with limited rights.
     $account = $this->drupalCreateUser([
@@ -80,7 +80,7 @@ class DomainAdminElementTest extends DomainTestBase {
     $this->addDomainsToEntity('user', $account->id(), $ids, DomainInterface::DOMAIN_ADMIN_FIELD);
     $tester = $storage->load($account->id());
     $values = $manager->getFieldValues($tester, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) === 2, 'User saved with two domain records.');
     $storage->resetCache([$account->id()]);
     $this->drupalLogin($account);
 
@@ -90,10 +90,10 @@ class DomainAdminElementTest extends DomainTestBase {
     foreach ($domains as $domain) {
       $locator = DomainInterface::DOMAIN_ADMIN_FIELD . '[' . $domain->id() . ']';
       $this->findField($locator);
-      if ($domain->id() == 'example_com') {
+      if ($domain->id() === 'example_com') {
         $this->checkField($locator);
       }
-      elseif ($domain->id() == 'one_example_com') {
+      elseif ($domain->id() === 'one_example_com') {
         $this->uncheckField($locator);
       }
       else {
@@ -110,7 +110,7 @@ class DomainAdminElementTest extends DomainTestBase {
     $user = $storage->load($user->id());
     // Check that two values are set.
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) === 2, 'User saved with two domain records.');
 
     // Test the case presented in https://www.drupal.org/node/2841962.
     $config = \Drupal::configFactory()->getEditable('user.settings');

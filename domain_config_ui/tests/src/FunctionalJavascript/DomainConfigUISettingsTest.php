@@ -71,7 +71,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
     foreach (['en', 'es'] as $langcode) {
       $config->save();
       $prefix = '';
-      if ($langcode == 'es') {
+      if ($langcode === 'es') {
         $prefix = '/es';
       }
       $this->drupalLogin($this->adminUser);

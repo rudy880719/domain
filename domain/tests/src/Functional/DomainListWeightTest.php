@@ -32,11 +32,11 @@ class DomainListWeightTest extends DomainTestBase {
     $domains = $this->getDomainsSorted();
     $i = 1;
     foreach ($domains as $domain) {
-      $this->assertTrue($domain->getWeight() == $i, 'Weight set to ' . $i);
+      $this->assertTrue($domain->getWeight() === $i, 'Weight set to ' . $i);
       $i++;
     }
     // The last domain should be test59_example_com.
-    $this->assertTrue($domain->id() == 'test59_example_com', 'Last domain is test59');
+    $this->assertTrue($domain->id() === 'test59_example_com', 'Last domain is test59');
     $domains_old = $domains;
 
     $admin = $this->drupalCreateUser([
@@ -62,16 +62,16 @@ class DomainListWeightTest extends DomainTestBase {
     $i = 1;
     foreach ($domains as $domain) {
       // Weights should be the same one page 1 except for the one we changed.
-      if ($domain->id() == 'one_example_com') {
-        $this->assertTrue($domain->getWeight() == 61, 'Weight set to 61 ' . $domain->getWeight());
+      if ($domain->id() === 'one_example_com') {
+        $this->assertTrue($domain->getWeight() === 61, 'Weight set to 61 ' . $domain->getWeight());
       }
       else {
-        $this->assertTrue($domain->getWeight() == $domains_old[$domain->id()]->getWeight(), 'Weights unchanged');
+        $this->assertTrue($domain->getWeight() === $domains_old[$domain->id()]->getWeight(), 'Weights unchanged');
       }
       $i++;
     }
     // The last domain should be one_example_com.
-    $this->assertTrue($domain->id() == 'one_example_com', 'Last domain is one');
+    $this->assertTrue($domain->id() === 'one_example_com', 'Last domain is one');
 
     // Go to page two.
     $this->clickLink('Next');
@@ -93,15 +93,15 @@ class DomainListWeightTest extends DomainTestBase {
     $domains = $this->getDomainsSorted();
     $i = 1;
     foreach ($domains as $domain) {
-      if ($domain->id() == 'one_example_com') {
-        $this->assertTrue($domain->getWeight() == 2, 'Weight set to 2');
+      if ($domain->id() === 'one_example_com') {
+        $this->assertTrue($domain->getWeight() === 2, 'Weight set to 2');
       }
       else {
-        $this->assertTrue($domain->getWeight() == $domains_old[$domain->id()]->getWeight(), 'Weights unchanged');
+        $this->assertTrue($domain->getWeight() === $domains_old[$domain->id()]->getWeight(), 'Weights unchanged');
       }
     }
     // The last domain should be test59_example_com.
-    $this->assertTrue($domain->id() == 'test59_example_com', 'Last domain is test59' . $domain->id());
+    $this->assertTrue($domain->id() === 'test59_example_com', 'Last domain is test59' . $domain->id());
   }
 
 }

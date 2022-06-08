@@ -61,7 +61,7 @@ function hook_domain_source_alter(DomainInterface $source, $path, array $options
 function hook_domain_source_path_alter(DomainInterface $source, $path, array $options) {
   // Always make admin links go to the primary domain.
   $parts = explode('/', $path);
-  if (isset($parts[0]) && $parts[0] == 'admin') {
+  if (isset($parts[0]) && $parts[0] === 'admin') {
     $source = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultDomain();
   }
 }

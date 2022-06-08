@@ -96,7 +96,7 @@ class DomainServerBlock extends DomainBlockBase {
       elseif ($value === FALSE) {
         $value = $this->t('FALSE');
       }
-      elseif ($key == 'status' || $key == 'is_default') {
+      elseif ($key === 'status' || $key === 'is_default') {
         $value = empty($value) ? $this->t('FALSE') : $this->t('TRUE');
       }
       $rows[] = [

@@ -86,14 +86,14 @@ class DomainAccessElementTest extends DomainTestBase {
 
     // Get node data. Note that we create one new node for each test case.
     $storage = \Drupal::entityTypeManager()->getStorage('node');
-    $nid = $node_type == 'article' ? 1 : 2;
+    $nid = $node_type === 'article' ? 1 : 2;
     $node = $storage->load($nid);
     // Check that two values are set.
     $manager = \Drupal::service('domain_access.manager');
     $values = $manager->getAccessValues($node);
-    $this->assertTrue(count($values) == 3, 'Node saved with three domain records.');
+    $this->assertTrue(count($values) === 3, 'Node saved with three domain records.');
     $value = $manager->getAllValue($node);
-    $this->assertTrue($value == 1, 'Node saved to all affiliates.');
+    $this->assertTrue($value === 1, 'Node saved to all affiliates.');
 
     // Now login as a user with limited rights.
     $account = $this->drupalCreateUser([
@@ -106,9 +106,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     $user = $user_storage->load($account->id());
     $values = $manager->getAccessValues($user);
-    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) === 2, 'User saved with two domain records.');
     $value = $manager->getAllValue($user);
-    $this->assertTrue($value == 0, 'User not saved to all affiliates.');
+    $this->assertTrue($value === 0, 'User not saved to all affiliates.');
 
     $this->drupalLogin($account);
 
@@ -118,10 +118,10 @@ class DomainAccessElementTest extends DomainTestBase {
     foreach ($domains as $domain) {
       $locator = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD . '[' . $domain->id() . ']';
       $this->findField($locator);
-      if ($domain->id() == 'example_com') {
+      if ($domain->id() === 'example_com') {
         $this->checkField($locator);
       }
-      elseif ($domain->id() == 'one_example_com') {
+      elseif ($domain->id() === 'one_example_com') {
         $this->uncheckField($locator);
       }
 
@@ -142,9 +142,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $node = $storage->load($node->id());
     // Check that two values are set.
     $values = $manager->getAccessValues($node);
-    $this->assertTrue(count($values) == 2, 'Node saved with two domain records.');
+    $this->assertTrue(count($values) === 2, 'Node saved with two domain records.');
     $value = $manager->getAllValue($node);
-    $this->assertTrue($value == 1, 'Node saved to all affiliates.');
+    $this->assertTrue($value === 1, 'Node saved to all affiliates.');
   }
 
 }

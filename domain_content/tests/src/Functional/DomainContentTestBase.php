@@ -45,7 +45,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
         $this->drupalCreateNode([
           'type' => 'article',
           DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [$id],
-          DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => ($id == 'one_example_com') ? 1 : 0,
+          DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => ($id === 'one_example_com') ? 1 : 0,
         ]);
       }
     }
@@ -69,7 +69,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
           'assign editors to any domain',
         ]);
         $this->addDomainsToEntity('user', $account[$id]->id(), $id, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
-        if ($id == 'one_example_com') {
+        if ($id === 'one_example_com') {
           $this->addDomainsToEntity('user', $account[$id]->id(), 1, DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD);
         }
       }

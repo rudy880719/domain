@@ -48,7 +48,7 @@ class DomainEntityAccessTest extends DomainTestBase {
     // Does it load correctly?
     $storage->resetCache([$default_id]);
     $new_domain = $storage->load($default_id);
-    $this->assertTrue($new_domain->id() == $default_id, 'Domain loaded properly.');
+    $this->assertTrue($new_domain->id() === $default_id, 'Domain loaded properly.');
 
     $this->drupalLogout();
     $editor = $this->drupalCreateUser([
@@ -72,7 +72,7 @@ class DomainEntityAccessTest extends DomainTestBase {
     // Does it load correctly?
     $storage->resetCache([$edit['id']]);
     $new_domain = $storage->load($edit['id']);
-    $this->assertTrue($new_domain->id() == $edit['id'], 'Domain loaded properly.');
+    $this->assertTrue($new_domain->id() === $edit['id'], 'Domain loaded properly.');
 
     $this->drupalLogout();
     $noneditor = $this->drupalCreateUser([

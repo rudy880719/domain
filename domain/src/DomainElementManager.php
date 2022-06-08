@@ -62,7 +62,7 @@ class DomainElementManager implements DomainElementManagerInterface {
     $empty = FALSE;
     $disallowed = $this->disallowedOptions($form_state, $form[$field_name]);
     if (empty($form[$field_name]['widget']['#options']) ||
-         (count($form[$field_name]['widget']['#options']) == 1 &&
+         (count($form[$field_name]['widget']['#options']) === 1 &&
           isset($form[$field_name]['widget']['#options']['_none'])
          )
        ) {

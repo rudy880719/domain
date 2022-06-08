@@ -34,7 +34,7 @@ class DomainActionsTest extends DomainTestBase {
     // Check the default domain.
     $default = $storage->loadDefaultId();
     $key = 'example_com';
-    $this->assertTrue($default == $key, 'Default domain set correctly.');
+    $this->assertTrue($default === $key, 'Default domain set correctly.');
 
     // Test some text on the page.
     foreach ($domains as $domain) {
@@ -58,7 +58,7 @@ class DomainActionsTest extends DomainTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     foreach ($storage->loadMultiple() as $domain) {
-      if ($domain->id() == 'one_example_com') {
+      if ($domain->id() === 'one_example_com') {
         $this->assertEmpty($domain->status(), 'One domain inactive.');
       }
       else {
@@ -94,7 +94,7 @@ class DomainActionsTest extends DomainTestBase {
     $storage->resetCache();
     $default = $storage->loadDefaultId();
     $key = 'one_example_com';
-    $this->assertTrue($default == $key, 'Default domain set correctly.');
+    $this->assertTrue($default === $key, 'Default domain set correctly.');
 
   }
 

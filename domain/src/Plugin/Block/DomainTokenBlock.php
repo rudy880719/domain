@@ -64,7 +64,7 @@ class DomainTokenBlock extends DomainBlockBase {
       if (isset($tokens['tokens'][$key])) {
         $data = [];
         // Pass domain data to the default handler.
-        if ($key == 'domain') {
+        if ($key === 'domain') {
           $data['domain'] = $domain;
         }
         foreach ($tokens['tokens'][$key] as $name => $info) {

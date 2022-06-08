@@ -127,7 +127,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
             if ($v >= 200 && $v <= 299) {
               $v = dt('200 - OK');
             }
-            elseif ($v == 500) {
+            elseif ($v === 500) {
               $v = dt('500 - No server');
             }
             break;
@@ -341,13 +341,13 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     }
     // Check for hostname and id uniqueness.
     foreach ($domains as $existing) {
-      if ($hostname == $existing->getHostname()) {
+      if ($hostname === $existing->getHostname()) {
         throw new DomainCommandException(
           dt('No domain created. Hostname is a duplicate of !hostname.',
            ['!hostname' => $hostname])
         );
       }
-      if ($values['id'] == $existing->id()) {
+      if ($values['id'] === $existing->id()) {
         throw new DomainCommandException(
           dt('No domain created. Id is a duplicate of !id.',
            ['!id' => $existing->id()])
@@ -951,11 +951,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     foreach ($prepared as $key => $item) {
       $hostname = mb_strtolower($item);
       $values = [
-        'name' => ($item != $primary) ? ucwords(str_replace(".$primary", '', $item)) : \Drupal::config('system.site')->get('name'),
+        'name' => ($item !== $primary) ? ucwords(str_replace(".$primary", '', $item)) : \Drupal::config('system.site')->get('name'),
         'hostname' => $hostname,
         'scheme' => $options['scheme'],
         'status' => 1,
-        'weight' => ($item != $primary) ? $key + $start_weight + 1 : -1,
+        'weight' => ($item !== $primary) ? $key + $start_weight + 1 : -1,
         'is_default' => 0,
         'id' => $this->domainStorage()->createMachineName($hostname),
       ];
@@ -1319,7 +1319,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       }
       // Multivalue fields are used, so check each one.
       foreach ($entity->get($field) as $k => $item) {
-        if ($item->target_id == $old_domain->id()) {
+        if ($item->target_id === $old_domain->id()) {
 
           if ($this->isDryRun) {
             $this->logger()->info(dt('DRYRUN: Update domain membership for entity @id to @new.',

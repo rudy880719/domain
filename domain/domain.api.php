@@ -46,7 +46,7 @@ function hook_domain_load(array $domains) {
  */
 function hook_domain_request_alter(DomainInterface $domain) {
   // Add a special case to the example domain.
-  if ($domain->getMatchType() == DomainNegotiatorInterface::DOMAIN_MATCHED_EXACT && $domain->id() == 'example_com') {
+  if ($domain->getMatchType() === DomainNegotiatorInterface::DOMAIN_MATCHED_EXACT && $domain->id() === 'example_com') {
     // Do something here.
     $domain->addProperty('foo', 'Bar');
   }
@@ -109,7 +109,7 @@ function hook_domain_operations(DomainInterface $domain, AccountInterface $accou
  */
 function hook_domain_validate_alter(array &$error_list, $hostname) {
   // Only allow TLDs to be .org for our site.
-  if (substr($hostname, -4) != '.org') {
+  if (substr($hostname, -4) !== '.org') {
     $error_list[] = t('Only .org domains may be registered.');
   }
 }
@@ -137,7 +137,7 @@ function hook_domain_validate_alter(array &$error_list, $hostname) {
  */
 function hook_domain_references_alter(QueryInterface $query, AccountInterface $account, array $context) {
   // Remove the default domain from non-admins when editing nodes.
-  if ($context['entity_type'] == 'node' && $context['field_type'] == 'editor' && !$account->hasPermission('edit assigned domains')) {
+  if ($context['entity_type'] === 'node' && $context['field_type'] === 'editor' && !$account->hasPermission('edit assigned domains')) {
     $default = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultId();
     $query->condition('id', $default, '<>');
   }

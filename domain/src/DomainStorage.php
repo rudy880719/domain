@@ -142,7 +142,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
   public function prepareHostname($hostname) {
     // Strip www. prefix off the hostname.
     $ignore_www = $this->configFactory->get('domain.settings')->get('www_prefix');
-    if ($ignore_www && substr($hostname, 0, 4) == 'www.') {
+    if ($ignore_www && substr($hostname, 0, 4) === 'www.') {
       $hostname = substr($hostname, 4);
     }
     return $hostname;

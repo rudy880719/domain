@@ -127,7 +127,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
       // So ensure that we are _not_ looking up a domain.record.*.
       $check = current($names);
       $list = explode('.', $check);
-      if (isset($list[0]) && isset($list[1]) && $list[0] == 'domain' && $list[1] == 'record') {
+      if (isset($list[0]) && isset($list[1]) && $list[0] === 'domain' && $list[1] === 'record') {
         $lookups[$key] = $overrides;
         return $overrides;
       }

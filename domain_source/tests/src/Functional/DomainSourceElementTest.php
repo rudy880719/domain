@@ -61,7 +61,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->drupalGet('node/add/article');
     $this->assertSession()->statusCodeEquals(200);
 
-    $nid = $node_type == 'article' ? 1 : 2;
+    $nid = $node_type === 'article' ? 1 : 2;
 
     // Set the title, so the node can be saved.
     $this->fillField('title[0][value]', 'Test node');

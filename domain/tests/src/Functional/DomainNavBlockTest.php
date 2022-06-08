@@ -45,7 +45,7 @@ class DomainNavBlockTest extends DomainTestBase {
     $this->drupalGet('<front>');
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
-      if ($id != 'one_example_com') {
+      if ($id !== 'one_example_com') {
         $this->findLink($domain->label());
       }
       else {

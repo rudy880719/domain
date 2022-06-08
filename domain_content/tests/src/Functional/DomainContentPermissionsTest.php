@@ -101,7 +101,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
     // Test the overview and domain-specific pages.
     foreach ($urls as $url) {
       $expected = 200;
-      if ($url == 'admin/content/domain-editors') {
+      if ($url === 'admin/content/domain-editors') {
         $expected = 403;
       }
       $this->drupalGet($url);
@@ -109,7 +109,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       // Find the links.
       $this->assertSession()->responseNotContains('All affiliates');
       foreach ($this->domains as $id => $domain) {
-        if ($expected == 200) {
+        if ($expected === 200) {
           $this->findLink($domain->label());
         }
         else {
@@ -142,7 +142,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
     // Test the overview and domain-specific pages.
     foreach ($urls as $url) {
       $expected = 200;
-      if ($url == 'admin/content/domain-content') {
+      if ($url === 'admin/content/domain-content') {
         $expected = 403;
       }
       $this->drupalGet($url);
@@ -150,7 +150,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       // Find the links.
       $this->assertSession()->responseNotContains('All affiliates');
       foreach ($this->domains as $id => $domain) {
-        if ($expected == 200 && $id == $assigned_id) {
+        if ($expected === 200 && $id === $assigned_id) {
           $this->findLink($domain->label());
         }
         else {
@@ -165,7 +165,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       // Individual domain pages.
       foreach ($this->domains as $id => $domain) {
         $this->drupalGet($url . '/' . $id);
-        if ($expected == 200 && $id == $assigned_id) {
+        if ($expected === 200 && $id === $assigned_id) {
           $this->assertSession()->statusCodeEquals(200);
         }
         else {

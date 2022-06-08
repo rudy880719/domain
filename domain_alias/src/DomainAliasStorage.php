@@ -227,7 +227,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
     foreach ($patterns as $index => $pattern) {
       // If default ports, allow exact no-port alias.
       $new_patterns[] = $pattern . ':*';
-      if (empty($port) || $port == 80 || $port == 443) {
+      if (empty($port) || $port === 80 || $port === 443) {
         $new_patterns[] = $pattern;
       }
       if (!empty($port)) {

@@ -138,7 +138,7 @@ class DomainAccessManager implements DomainAccessManagerInterface {
 
     // In the case of multiple AND permissions, assume access and then deny if
     // any check fails.
-    if ($conjunction == 'AND' && !empty($permissions)) {
+    if ($conjunction === 'AND' && !empty($permissions)) {
       $access = TRUE;
       foreach ($permissions as $permission) {
         if (!($permission_access = $account->hasPermission($permission))) {

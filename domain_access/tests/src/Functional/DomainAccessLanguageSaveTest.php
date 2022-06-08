@@ -64,9 +64,9 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     // Check that two values are set properly.
     $manager = \Drupal::service('domain_access.manager');
     $values = $manager->getAccessValues($node);
-    $this->assertTrue(count($values) == 1, 'Node saved with one domain records.');
+    $this->assertTrue(count($values) === 1, 'Node saved with one domain records.');
     $value = $manager->getAllValue($node);
-    $this->assertTrue($value == 1, 'Node saved to all affiliates.');
+    $this->assertTrue($value === 1, 'Node saved to all affiliates.');
 
     // Create an Afrikaans translation assigned to domain 2.
     $translation = $node->addTranslation('af');
@@ -83,9 +83,9 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $parent_node = $storage->load(1);
     $node = $parent_node->getTranslation('af');
     $values = $manager->getAccessValues($node);
-    $this->assertTrue(count($values) == 2, 'Node saved with two domain records.');
+    $this->assertTrue(count($values) === 2, 'Node saved with two domain records.');
     $value = $manager->getAllValue($node);
-    $this->assertTrue($value == 0, 'Node not saved to all affiliates.');
+    $this->assertTrue($value === 0, 'Node not saved to all affiliates.');
   }
 
 }

@@ -44,9 +44,9 @@ class DomainTokenTest extends DomainTestBase {
         // does not come across when making the callback outside of a request
         // context.
         $value = $domain->{$callback}();
-        if ($token == '[domain:url]') {
+        if ($token === '[domain:url]') {
           $value = str_replace('user', '', $value);
-          if (substr($value, -1) != '/') {
+          if (substr($value, -1) !== '/') {
             $value .= '/';
           }
         }

@@ -197,7 +197,7 @@ class DomainListBuilder extends DraggableListBuilder {
     $default = $this->domainStorage->loadDefaultDomain();
 
     // Deleting the site default domain is not allowed.
-    if ($default && $id == $default->id()) {
+    if ($default && $id === $default->id()) {
       unset($operations['delete']);
     }
     return $operations;
@@ -283,7 +283,7 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
-      if (isset($this->entities[$id]) && $this->entities[$id]->get($this->weightKey) != $value['weight']) {
+      if (isset($this->entities[$id]) && $this->entities[$id]->get($this->weightKey) !== $value['weight']) {
         // Reset weight properly.
         $this->entities[$id]->set($this->weightKey, $value['weight']);
         // Do not allow accidental hostname rewrites.

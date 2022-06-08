@@ -91,11 +91,11 @@ class DomainConfigOverriderTest extends DomainConfigTestBase {
 
     switch ($domain->id()) {
       case 'one_example_com':
-        $name = ($langcode == 'es') ? 'Drupal' : 'One';
+        $name = ($langcode === 'es') ? 'Drupal' : 'One';
         break;
 
       case 'two_example_com':
-        $name = ($langcode == 'es') ? 'Dos' : 'Two';
+        $name = ($langcode === 'es') ? 'Dos' : 'Two';
         break;
 
       case 'three_example_com':

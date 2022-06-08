@@ -144,7 +144,7 @@ class DomainConfigUIController {
     }
     $elements = $this->deriveElements($config_name);
     $config = \Drupal::configFactory()->get($config_name)->getRawData();
-    if ($elements['language'] == $this->t('all')->render()) {
+    if ($elements['language'] === $this->t('all')->render()) {
       $language = $this->t('all languages');
     }
     else {
@@ -184,7 +184,7 @@ class DomainConfigUIController {
       'prefix' => $items[0],
       'config' => isset($items[1]) && isset($items[2]) ? $items[1] : '',
       'domain' => isset($items[2]) && isset($items[3]) ? $items[2] : '',
-      'language' => isset($items[3]) && isset($items[4]) && strlen($items[3]) == 2 ? $items[3] : '',
+      'language' => isset($items[3]) && isset($items[4]) && strlen($items[3]) === 2 ? $items[3] : '',
     ];
 
     $elements['item'] = trim(str_replace($elements, '', $name), '.');

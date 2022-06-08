@@ -65,7 +65,7 @@ class DomainAliasListBuilderTest extends DomainAliasTestBase {
     $user = $user_storage->load($account->id());
     $manager = \Drupal::service('domain.element_manager');
     $values = $manager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
-    $this->assertTrue(count($values) == 2, 'User saved with two domain records.');
+    $this->assertTrue(count($values) === 2, 'User saved with two domain records.');
 
     $this->drupalLogin($account);
 

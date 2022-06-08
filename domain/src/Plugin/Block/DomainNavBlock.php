@@ -31,7 +31,7 @@ class DomainNavBlock extends DomainBlockBase {
   public function getCacheContexts() {
     // By default, all domain blocks are per-url. This block, though, can be
     // cached by url.site if we are printing the homepage path, not the request.
-    if ($this->getSetting('link_options') == 'home') {
+    if ($this->getSetting('link_options') === 'home') {
       return ['url.site'];
     }
     return ['url'];
@@ -112,7 +112,7 @@ class DomainNavBlock extends DomainBlockBase {
 
     // Determine the visible domain list.
     $items = [];
-    $add_path = ($this->getSetting('link_options') == 'active');
+    $add_path = ($this->getSetting('link_options') === 'active');
     /** @var \Drupal\domain\DomainInterface $domain */
     foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultipleSorted() as $domain) {
       // Set the URL.
@@ -124,15 +124,15 @@ class DomainNavBlock extends DomainBlockBase {
       }
       // Set the label text.
       $label = $domain->label();
-      if ($this->getSetting('link_label') == 'hostname') {
+      if ($this->getSetting('link_label') === 'hostname') {
         $label = $domain->getHostname();
       }
-      elseif ($this->getSetting('link_label') == 'url') {
+      elseif ($this->getSetting('link_label') === 'url') {
         $label = $domain->getPath();
       }
       // Handles menu links.
       if ($domain->status() || $account->hasPermission('access inactive domains')) {
-        if ($this->getSetting('link_theme') == 'menus') {
+        if ($this->getSetting('link_theme') === 'menus') {
           // @TODO: active trail isn't working properly, likely because this
           // isn't really a menu.
           $items[] = [
@@ -145,7 +145,7 @@ class DomainNavBlock extends DomainBlockBase {
             'in_active_trail' => $domain->isActive(),
           ];
         }
-        elseif ($this->getSetting('link_theme') == 'select') {
+        elseif ($this->getSetting('link_theme') === 'select') {
           $items[] = [
             'label' => $label,
             'url' => $url->toString(),

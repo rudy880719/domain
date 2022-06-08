@@ -41,7 +41,7 @@ class DeleteForm extends FormBase {
       '#prefix' => '<p>',
       '#suffix' => '</p>',
     ];
-    if ($elements['language'] == $this->t('all')->render()) {
+    if ($elements['language'] === $this->t('all')->render()) {
       $language = $this->t('all languages');
     }
     else {

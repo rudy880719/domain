@@ -61,15 +61,15 @@ class DomainSourceUrlTest extends DomainTestBase {
 
     // Get the link using Url::fromRoute().
     $url = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    $this->assertTrue($url == $expected, 'fromRoute');
+    $this->assertTrue($url === $expected, 'fromRoute');
 
     // Get the link using Url::fromUserInput()
     $url = Url::fromUserInput($uri_path, $options)->toString();
-    $this->assertTrue($url == $expected, 'fromUserInput');
+    $this->assertTrue($url === $expected, 'fromUserInput');
 
     // Get the link using Url::fromUri()
     $url = Url::fromUri($uri, $options)->toString();
-    $this->assertTrue($url == $expected, 'fromUri');
+    $this->assertTrue($url === $expected, 'fromUri');
   }
 
 }

@@ -27,16 +27,16 @@ class DomainAliasAccessControlHandler extends DomainAccessControlHandler {
     // If this account can administer the domain, allow access to actions based
     // on permission.
     if (!empty($domain) && $this->isDomainAdmin($domain, $account)) {
-      if ($operation == 'view' && $account->hasPermission('view domain aliases')) {
+      if ($operation === 'view' && $account->hasPermission('view domain aliases')) {
         return AccessResult::allowed();
       }
-      if ($operation == 'create' && $account->hasPermission('create domain aliases')) {
+      if ($operation === 'create' && $account->hasPermission('create domain aliases')) {
         return AccessResult::allowed();
       }
-      if ($operation == 'update' && $account->hasPermission('edit domain aliases')) {
+      if ($operation === 'update' && $account->hasPermission('edit domain aliases')) {
         return AccessResult::allowed();
       }
-      if ($operation == 'delete' && $account->hasPermission('delete domain aliases')) {
+      if ($operation === 'delete' && $account->hasPermission('delete domain aliases')) {
         return AccessResult::allowed();
       }
     }

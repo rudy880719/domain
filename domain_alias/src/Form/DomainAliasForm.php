@@ -148,7 +148,7 @@ class DomainAliasForm extends EntityForm {
       $row[] = $domain->label();
       foreach ($environments as $environment) {
         $match_output = [];
-        if ($environment == 'default') {
+        if ($environment === 'default') {
           $match_output[] = $domain->getCanonical();
         }
         $matches = $this->aliasStorage->loadByEnvironmentMatch($domain, $environment);

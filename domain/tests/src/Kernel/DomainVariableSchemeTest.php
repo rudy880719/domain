@@ -62,23 +62,23 @@ class DomainVariableSchemeTest extends KernelTestBase {
   public function testDomainScheme() {
     // Set our testing parameters.
     $default_scheme = \Drupal::request()->getScheme();
-    $alt_scheme = ($default_scheme == 'https') ? 'http' : 'https';
+    $alt_scheme = ($default_scheme === 'https') ? 'http' : 'https';
     $add_suffix = FALSE;
 
     // Our created domain should have a scheme that matches the request.
     $domain = $this->domainStorage->load($this->key);
-    $this->assertTrue($domain->getScheme($add_suffix) == $default_scheme);
+    $this->assertTrue($domain->getScheme($add_suffix) === $default_scheme);
 
     // Swtich the scheme and see if that works.
     $domain->set('scheme', $alt_scheme);
     $domain->save();
     $domain = $this->domainStorage->load($this->key);
-    $this->assertTrue($domain->getScheme($add_suffix) == $alt_scheme);
+    $this->assertTrue($domain->getScheme($add_suffix) === $alt_scheme);
 
     // Set the scheme to variable, and that should match the default.
     $domain->set('scheme', 'variable');
     $domain->save();
-    $this->assertTrue($domain->getScheme($add_suffix) == $default_scheme);
+    $this->assertTrue($domain->getScheme($add_suffix) === $default_scheme);
   }
 
 }

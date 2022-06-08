@@ -53,7 +53,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
   protected function createTestData() {
     foreach ($this->getDomains() as $domain_id => $domain) {
       $nodes_count = random_int(1, 5);
-      while ($nodes_count !== 0) {
+      while ($nodes_count !=== 0) {
         $node = $this->drupalCreateNode([
           'type' => 'article',
           'title' => $this->randomString(),

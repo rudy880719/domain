@@ -52,7 +52,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     foreach ($domains as $domain) {
       foreach (['en', 'es'] as $langcode) {
         $prefix = '';
-        if ($langcode == 'es') {
+        if ($langcode === 'es') {
           $prefix = 'es/';
         }
         $home = $this->drupalGet($domain->getPath() . $prefix);
@@ -77,7 +77,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     foreach ($domains as $domain) {
       foreach (['en', 'es'] as $langcode) {
         $prefix = '';
-        if ($langcode == 'es') {
+        if ($langcode === 'es') {
           $prefix = 'es/';
         }
         // Prime the cache to prevent a bigpipe mismatch.

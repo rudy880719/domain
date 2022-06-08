@@ -236,7 +236,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
   public function getEntityTypes() {
     if (!isset($this->entityTypes)) {
       foreach ($this->entityTypeManager->getDefinitions() as $type => $definition) {
-        if ($definition->getGroup() == 'content') {
+        if ($definition->getGroup() === 'content') {
           $this->entityTypes[$type] = $type;
         }
       }

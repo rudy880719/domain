@@ -71,7 +71,7 @@ class DomainValidator implements DomainValidatorInterface {
     // Check for at least one dot or the use of 'localhost'.
     // Note that localhost can specify a port.
     $localhost_check = explode(':', $hostname);
-    if (substr_count($hostname, '.') == 0 && $localhost_check[0] != 'localhost') {
+    if (substr_count($hostname, '.') === 0 && $localhost_check[0] !== 'localhost') {
       $error_list[] = $this->t('At least one dot (.) is required, except when using <em>localhost</em>.');
     }
     // Check for one colon only.
@@ -79,7 +79,7 @@ class DomainValidator implements DomainValidatorInterface {
       $error_list[] = $this->t('Only one colon (:) is allowed.');
     }
     // If a colon, make sure it is only followed by numbers.
-    elseif (substr_count($hostname, ':') == 1) {
+    elseif (substr_count($hostname, ':') === 1) {
       $parts = explode(':', $hostname);
       $port = (int) $parts[1];
       if (strcmp($port, $parts[1])) {
@@ -87,11 +87,11 @@ class DomainValidator implements DomainValidatorInterface {
       }
     }
     // The domain cannot begin or end with a period.
-    if (substr($hostname, 0, 1) == '.') {
+    if (substr($hostname, 0, 1) === '.') {
       $error_list[] = $this->t('The domain must not begin with a dot (.)');
     }
     // The domain cannot begin or end with a period.
-    if (substr($hostname, -1) == '.') {
+    if (substr($hostname, -1) === '.') {
       $error_list[] = $this->t('The domain must not end with a dot (.)');
     }
     // Check for valid characters, unless using non-ASCII domains.
@@ -104,14 +104,14 @@ class DomainValidator implements DomainValidatorInterface {
       }
     }
     // Check for lower case.
-    if ($hostname != mb_strtolower($hostname)) {
+    if ($hostname !== mb_strtolower($hostname)) {
       $error_list[] = $this->t('Only lower-case characters are allowed.');
     }
     // Check for 'www' prefix if redirection / handling is
     // enabled under global domain settings.
     // Note that www prefix handling must be set explicitly in the UI.
     // See http://drupal.org/node/1529316 and http://drupal.org/node/1783042
-    if ($config->get('www_prefix') && (substr($hostname, 0, strpos($hostname, '.')) == 'www')) {
+    if ($config->get('www_prefix') && (substr($hostname, 0, strpos($hostname, '.')) === 'www')) {
       $error_list[] = $this->t('WWW prefix handling: Domains must be registered without the www. prefix.');
     }
 

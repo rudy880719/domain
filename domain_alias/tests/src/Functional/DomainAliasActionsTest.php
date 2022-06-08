@@ -39,8 +39,8 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     $patterns = ['*.' . $base, 'four.' . $base, 'five.' . $base];
     $i = 0;
     foreach ($domains as $domain) {
-      $this->assertTrue($domain->getHostname() == $hostnames[$i], 'Hostnames set correctly');
-      $this->assertTrue($domain->getCanonical() == $hostnames[$i], 'Canonical domains set correctly');
+      $this->assertTrue($domain->getHostname() === $hostnames[$i], 'Hostnames set correctly');
+      $this->assertTrue($domain->getCanonical() === $hostnames[$i], 'Canonical domains set correctly');
       $values = [
         'domain_id' => $domain->id(),
         'pattern' => array_shift($patterns),
@@ -64,7 +64,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     // Check the default domain.
     $default = $domain_storage->loadDefaultId();
     $key = 'example_com';
-    $this->assertTrue($default == $key, 'Default domain set correctly.');
+    $this->assertTrue($default === $key, 'Default domain set correctly.');
 
     // Test some text on the page.
     foreach ($domains as $domain) {
@@ -88,7 +88,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     foreach ($domain_storage->loadMultiple() as $domain) {
-      if ($domain->id() == 'one_example_com') {
+      if ($domain->id() === 'one_example_com') {
         $this->assertEmpty($domain->status(), 'One domain inactive.');
       }
       else {
@@ -124,11 +124,11 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     $domain_storage->resetCache();
     $default = $domain_storage->loadDefaultId();
     $key = 'one_example_com';
-    $this->assertTrue($default == $key, 'Default domain set correctly.');
+    $this->assertTrue($default === $key, 'Default domain set correctly.');
 
     // Did the hostnames change accidentally?
     foreach ($domain_storage->loadMultiple() as $id => $domain) {
-      $this->assertTrue($domain->getHostname() == $original_domains[$id]->getHostname(), 'Hostnames match.');
+      $this->assertTrue($domain->getHostname() === $original_domains[$id]->getHostname(), 'Hostnames match.');
     }
 
   }

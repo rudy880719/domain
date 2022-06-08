@@ -187,7 +187,7 @@ class DomainForm extends EntityForm {
     // If we have already registered a hostname, make sure we don't create a
     // duplicate.
     // We cannot check id() here, as the machine name is editable.
-    if ($existing && $existing->getDomainId() != $entity->getDomainId()) {
+    if ($existing && $existing->getDomainId() !== $entity->getDomainId()) {
       $form_state->setErrorByName('hostname', $this->t('The hostname is already registered.'));
     }
 
@@ -215,7 +215,7 @@ class DomainForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $status = parent::save($form, $form_state);
-    if ($status == SAVED_NEW) {
+    if ($status === SAVED_NEW) {
       \Drupal::messenger()->addMessage($this->t('Domain record created.'));
     }
     else {
