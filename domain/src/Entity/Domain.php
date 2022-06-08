@@ -23,8 +23,8 @@ use Drupal\domain\DomainNegotiatorInterface;
  *     "access" = "Drupal\domain\DomainAccessControlHandler",
  *     "list_builder" = "Drupal\domain\DomainListBuilder",
  *     "form" = {
- *       "default" = "Drupal\domain\DomainForm",
- *       "edit" = "Drupal\domain\DomainForm",
+ *       "default" = "Drupal\domain\Form\DomainForm",
+ *       "edit" = "Drupal\domain\Form\DomainForm",
  *       "delete" = "Drupal\domain\Form\DomainDeleteForm"
  *     }
  *   },

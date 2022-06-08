@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\domain;
+namespace Drupal\domain\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
