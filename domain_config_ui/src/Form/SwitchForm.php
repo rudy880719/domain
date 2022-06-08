@@ -90,8 +90,8 @@ class SwitchForm extends FormBase {
       $user = $this->entityTypeManager->getStorage('user')->load($account->id());
       $user_domains = $this->domainElementManager->getFieldValues($user, DomainInterface::DOMAIN_ADMIN_FIELD);
     }
-    $permission = $this->currentUser()->hasPermission('use domain config ui') ||
-                  $this->currentUser()->hasPermission('administer domain config ui');
+    $permission = $this->currentUser()->hasPermission('use domain config ui')
+      || $this->currentUser()->hasPermission('administer domain config ui');
     return (!empty($user_domains) && $permission);
   }
 

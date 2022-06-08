@@ -296,9 +296,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function add($hostname,
-  $name,
-                      array $options = ['weight' => NULL, 'scheme' => NULL]) {
+  public function add($hostname, $name, array $options = [
+    'weight' => NULL,
+    'scheme' => NULL
+  ]) {
     // Validate the weight arg.
     if (!empty($options['weight']) && !is_numeric($options['weight'])) {
       throw new DomainCommandException(
@@ -432,7 +433,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     'users-assign' => NULL,
     'dryrun' => NULL,
     'chatty' => NULL
-]) {
+  ]) {
 
     if (is_null($options['users-assign'])) {
       $policy_users = 'prompt';
@@ -639,7 +640,9 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function defaultDomain($domain_id, array $options = ['validate' => NULL]) {
+  public function defaultDomain($domain_id, array $options = [
+    'validate' => NULL
+  ]) {
     // Resolve the domain.
     if (!empty($domain_id) && $domain = $this->getDomainFromArgument($domain_id)) {
       $validate = ($options['validate']) ? 1 : 0;
@@ -875,8 +878,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function generate($primary = 'example.com',
-    array $options = ['count' => NULL, 'empty' => NULL, 'scheme' => 'http']) {
+  public function generate($primary = 'example.com', array $options = [
+    'count' => NULL,
+    'empty' => NULL,
+    'scheme' => 'http'
+  ]) {
     // Check the number of domains to create.
     $count = $options['count'];
     if (is_null($count)) {
