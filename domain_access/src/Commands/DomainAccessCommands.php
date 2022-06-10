@@ -63,10 +63,10 @@ class DomainAccessCommands extends DomainCommands {
    */
   public function domainAccessDomainDelete($target_domain, $options) {
     // Run our own deletion routine here.
-    if (is_null($options['content-assign'])) {
+    if (empty($options['content-assign'])) {
       $policy_content = 'prompt';
     }
-    if (!empty($options['content-assign'])) {
+    else {
       if (in_array($options['content-assign'], $this->reassignment_policies, TRUE)) {
         $policy_content = $options['content-assign'];
       }
