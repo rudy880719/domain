@@ -8,6 +8,7 @@ use Consolidation\OutputFormatters\StructuredData\PropertyList;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -121,7 +122,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
             catch (TransferException $ex) {
               $v = dt('500 - Failed');
             }
-            catch (Exception $ex) {
+            catch (\Exception $ex) {
               $v = dt('500 - Exception');
             }
             if ($v >= 200 && $v <= 299) {
@@ -187,7 +188,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $all_domains = $this->domainStorage()->loadMultiple(NULL);
     $active_domains = [];
     foreach ($all_domains as $domain) {
-      if ($domain->status()) {
+      /** var /Drupal\domain\DomainInterface */
+      if ($domain instanceof DomainInterface && $domain->status()) {
         $active_domains[] = $domain;
       }
     }
@@ -435,15 +437,14 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     'chatty' => NULL
   ]) {
 
-    if (is_null($options['users-assign'])) {
-      $policy_users = 'prompt';
-    }
+    $message = '';
+    $messages = [];
+    $domains = [];
 
     $this->isDryRun = (bool) $options['dryrun'];
 
     // Get current domain list and perform validation checks.
-    $default_domain = $this->domainStorage()->loadDefaultDomain();
-    $all_domains = $this->domainStorage()->loadMultipleSorted(NULL);
+    $all_domains = $this->domainStorage()->loadMultipleSorted();
 
     if (empty($all_domains)) {
       throw new DomainCommandException('There are no configured domains.');
@@ -455,16 +456,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     // Determine which domains to be deleted.
     if ($domain_id === 'all') {
       $domains = $all_domains;
-      if (empty($domains)) {
-        $this->logger()->info(dt('There are no domains to delete.'));
-        return;
-      }
       $really = $this->io()->confirm(dt('This action cannot be undone. Continue?:'), FALSE);
       if (empty($really)) {
         return;
       }
-      // TODO: handle deletion of all domains.
-      $policy_users = "ignore";
       $message = dt('All domain records have been deleted.');
     }
     elseif ($domain = $this->getDomainFromArgument($domain_id)) {
@@ -478,6 +473,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       );
     }
 
+    // Set the reassignment policy.
+    $policy_users = 'prompt';
     if (!empty($options['users-assign'])) {
       if (in_array($options['users-assign'], $this->reassignmentPolicies, TRUE)) {
         $policy_users = $options['users-assign'];
@@ -491,14 +488,9 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     ];
 
     if ($policy_users !== 'ignore') {
-      $messages[] = $this->doReassign($domain, $delete_options);
-    }
-
-    // Fire any registered hooks for deletion, passing them current imput.
-    $handlers = $this->getCustomEventHandlers('domain-delete');
-    $messages = [];
-    foreach ($handlers as $handler) {
-      $messages[] = $handler($domain, $options);
+      foreach ($domains as $domain) {
+        $messages[] = $this->doReassign($domain, $delete_options);
+      }
     }
 
     $this->deleteDomain($domains, $options);
@@ -516,7 +508,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * This method includes necessary UI elements if the user is prompted to
    * choose a new domain.
    *
-   * @param Drupal\domain\DomainInterface $target_domain
+   * @param \Drupal\domain\DomainInterface $target_domain
    *   The domain selected for deletion.
    * @param array $delete_options
    *   A selection of options for deletion, defined in reassignLinkedEntities().
@@ -600,8 +592,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
         $domains = [$domain];
       }
       else {
-        throw new DomainCommandException(dt('Domain @domain not found.',
-          ['@domain' => $options['domain']]));
+        throw new DomainCommandException(dt('Domain identifier "@domain" not found.',
+          ['@domain' => $domain_id]));
       }
     }
 
@@ -898,7 +890,9 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $existing = [];
     if (!empty($domains)) {
       foreach ($domains as $domain) {
-        $existing[] = $domain->getHostname();
+        if ($domain instanceof DomainInterface) {
+          $existing[] = $domain->getHostname();
+        }
       }
     }
     // Set up one.* and so on.
@@ -966,8 +960,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
         'id' => $this->domainStorage()->createMachineName($hostname),
       ];
       $domain = $this->domainStorage()->create($values);
-      $domain->save();
-      $list[] = dt('Created @domain.', ['@domain' => $domain->getHostname()]);
+      if ($domain instanceof DomainInterface) {
+        $domain->save();
+        $list[] = dt('Created @domain.', ['@domain' => $domain->getHostname()]);
+      }
     }
 
     // If nothing created, say so.
@@ -1170,15 +1166,18 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @param \Drupal\domain\DomainInterface[] $domains
    *   The domains to delete.
+   * @param array $options
+   *   The drush options passed to delete().
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    * @throws \UnexpectedValueException
    */
-  protected function deleteDomain(array $domains) {
+  protected function deleteDomain(array $domains, array $options) {
     foreach ($domains as $domain) {
       if (!$domain instanceof DomainInterface) {
         throw new StorageException('deleting domains: value is not a domain');
       }
+
       $hostname = $domain->getHostname();
 
       if ($this->isDryRun) {
@@ -1188,6 +1187,13 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       }
 
       try {
+        // Fire any registered hooks for deletion, passing them current imput.
+        $handlers = $this->getCustomEventHandlers('domain-delete');
+        $messages = [];
+        foreach ($handlers as $handler) {
+          $messages[] = $handler($domain, $options);
+        }
+
         $domain->delete();
       }
       catch (EntityStorageException $e) {
@@ -1320,11 +1326,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     foreach ($entities as $entity) {
       $changed = FALSE;
-      if (!$entity->hasField($field)) {
+      if (!($entity instanceof FieldableEntityInterface) || !$entity->hasField($field)) {
         continue;
       }
       // Multivalue fields are used, so check each one.
-      foreach ($entity->get($field) as $k => $item) {
+      foreach ($entity->get($field)->value as $item) {
         if ($item->target_id === $old_domain->id()) {
 
           if ($this->isDryRun) {
@@ -1357,7 +1363,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *   In general one of 'prompt' | 'default' | 'ignore' or a domain entity
    *   machine name, but this function does not process 'prompt'.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\domain\DomainInterface|null
+   * @return \Drupal\domain\DomainInterface|null
    *   The requested domain or NULL if not found.
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
