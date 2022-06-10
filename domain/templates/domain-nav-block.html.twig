@@ -19,7 +19,7 @@
         <option value="#">Jump to...</option>
         {%- for item in items -%}
           {%- set selected = "" -%}
-          {%- if item.active == true -%}
+          {%- if item.active === true -%}
             {%- set selected = "selected" -%}
           {%- endif -%}
           <option value="{{ item.url }}" {{ selected }} >{{ item.label }}</option>

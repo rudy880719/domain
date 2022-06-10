@@ -86,7 +86,7 @@ function domain_source_node_type_insert(EntityInterface $entity) {
  * node types.
  */
 function domain_source_entity_form_display_insert(EntityInterface $entity) {
-  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() == 'node' && $bundle = $entity->getTargetBundle()) {
+  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() === 'node' && $bundle = $entity->getTargetBundle()) {
     domain_source_confirm_fields('node', $bundle);
   }
 }
@@ -135,7 +135,7 @@ function domain_source_form_alter(&$form, &$form_state, $form_id) {
     foreach ($form['actions'] as $key => $element) {
       // Redirect submit handlers, but not the preview button.
       if ($key !== 'preview' && isset($element['#type'])
-          && $element['#type'] == 'submit') {
+          && $element['#type'] === 'submit') {
         $form['actions'][$key]['#submit'][] = 'domain_source_form_submit';
       }
     }
@@ -162,10 +162,10 @@ function domain_source_form_validate($element, FormStateInterface $form_state) {
     foreach ($access_values as $value) {
       // Core is inconsistent depending on the field order.
       // See https://www.drupal.org/project/domain/issues/2945771#comment-12493199
-      if (is_array($value) && $value == $source_value) {
+      if (is_array($value) && $value === $source_value) {
         $source_valid = TRUE;
       }
-      elseif (is_string($value) && !empty($source_value['target_id']) && $value == $source_value['target_id']) {
+      elseif (is_string($value) && !empty($source_value['target_id']) && $value === $source_value['target_id']) {
         $source_valid = TRUE;
       }
     }
@@ -209,7 +209,7 @@ function domain_source_form_node_form_alter(&$form, FormStateInterface $form_sta
   $form = $manager->setFormOptions($form, $form_state, DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, $hide);
   // If using a select field, load the JS to show/hide options.
   if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($form[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
-    if ($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]['widget']['#type'] == 'select') {
+    if ($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]['widget']['#type'] === 'select') {
       $form['#attached']['library'][] = 'domain_source/drupal.domain_source';
     }
   }
@@ -279,7 +279,7 @@ function domain_source_presave_generate(EntityInterface $entity) {
     }
     if (isset($entity->devel_generate['domain_source'])) {
       $selection = $entity->devel_generate['domain_source'];
-      if ($selection == '_derive') {
+      if ($selection === '_derive') {
         if (!empty($selections)) {
           $values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD] = current($selections);
         }

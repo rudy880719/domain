@@ -70,7 +70,7 @@ function domain_config_ui_admin_form($op) {
           $params[$key] = $value;
         }
         $title = new TranslatableMarkup('Enable domain configuration');
-        if ($op == 'disable') {
+        if ($op === 'disable') {
           $title = new TranslatableMarkup('Disable domain configuration');
         }
         $admin_form = [

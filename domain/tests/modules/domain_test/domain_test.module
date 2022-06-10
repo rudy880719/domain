@@ -22,7 +22,7 @@ function domain_test_domain_load(array $domains) {
  */
 function domain_test_domain_validate_alter(&$error_list, $hostname) {
   // Deliberate test fail.
-  if ($hostname == 'fail.example.com') {
+  if ($hostname === 'fail.example.com') {
     $error_list[] = 'Fail.example.com cannot be registered';
   }
 }
@@ -53,7 +53,7 @@ function domain_test_domain_operations(DomainInterface $domain) {
  * Implements hook_domain_references_alter().
  */
 function domain_test_domain_references_alter($query, $account, $context) {
-  if ($context['entity_type'] == 'node') {
+  if ($context['entity_type'] === 'node') {
     $test = 'Test string';
     $query->addMetadata('domain_test', $test);
   }

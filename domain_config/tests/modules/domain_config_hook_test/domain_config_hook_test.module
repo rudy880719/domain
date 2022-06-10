@@ -16,7 +16,7 @@ function domain_config_hook_test_user_login($account) {
  * Implements hook_module_implements_alter().
  */
 function domain_config_hook_test_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'user_login') {
+  if ($hook === 'user_login') {
     // Turn off the domain_config_hook_test's hook_user_login (above).
     unset($implementations['domain_config_hook_test']);
   }

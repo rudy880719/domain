@@ -38,7 +38,7 @@ function domain_access_node_grants(AccountInterface $account, $op) {
   $user_domains = \Drupal::service('domain_access.manager')->getAccessValues($user);
   // Grants for view are simple. Use the active domain and all affiliates.
   // Note that "X to any domain" is a global permission designed for admins.
-  if ($op == 'view') {
+  if ($op === 'view') {
     $grants['domain_id'][] = $id;
     $grants['domain_site'][] = 0;
     if ($user->hasPermission('view unpublished domain content')) {
@@ -47,12 +47,12 @@ function domain_access_node_grants(AccountInterface $account, $op) {
       }
     }
   }
-  elseif ($op == 'update' && $user->hasPermission('edit domain content')) {
+  elseif ($op === 'update' && $user->hasPermission('edit domain content')) {
     if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
       $grants['domain_id'][] = $id;
     }
   }
-  elseif ($op == 'delete' && $user->hasPermission('delete domain content')) {
+  elseif ($op === 'delete' && $user->hasPermission('delete domain content')) {
     if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
       $grants['domain_id'][] = $id;
     }
@@ -170,7 +170,7 @@ function domain_access_presave_generate(EntityInterface $entity) {
     }
     if (isset($entity->devel_generate['domain_all'])) {
       $selection = $entity->devel_generate['domain_all'];
-      if ($selection == 'random-selection') {
+      if ($selection === 'random-selection') {
         $values[DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD] = rand(0, 1);
       }
       else {
@@ -279,7 +279,7 @@ function domain_access_form_user_form_alter(&$form, &$form_state, $form_id) {
  */
 function domain_access_domain_references_alter($query, $account, $context) {
   // Restrict domains by editorial assignment.
-  if ($context['field_type'] != 'editor') {
+  if ($context['field_type'] !== 'editor') {
     return;
   }
   switch ($context['entity_type']) {
@@ -348,7 +348,7 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
 
   // In order to access update or delete, the user must be able to view.
   // Domain-specific permissions are relevant only if the node is not published.
-  if ($op == 'view') {
+  if ($op === 'view') {
     if ($node->isPublished()) {
       // Explicit restatement of the condition, for clarity.
       $allowed = FALSE;
@@ -358,7 +358,7 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
     }
   }
 
-  if ($op == 'update') {
+  if ($op === 'update') {
     if ($account->hasPermission('update ' . $type . ' content on assigned domains') && $manager->checkEntityAccess($node, $account)) {
       $allowed = TRUE;
     }
@@ -367,7 +367,7 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
     }
   }
 
-  if ($op == 'delete') {
+  if ($op === 'delete') {
     if ($account->hasPermission('delete ' . $type . ' content on assigned domains') && $manager->checkEntityAccess($node, $account)) {
       $allowed = TRUE;
     }
@@ -431,7 +431,7 @@ function domain_access_entity_field_access($operation, FieldDefinitionInterface 
   // The entity the field is attached to.
   $entity = $items->getEntity();
 
-  if ($field_definition->getName() == DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD) {
+  if ($field_definition->getName() === DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD) {
     if ($entity instanceof AccountInterface) {
       $access = AccessResult::allowedIfHasPermissions($account, [
         'assign domain editors',
@@ -453,7 +453,7 @@ function domain_access_entity_field_access($operation, FieldDefinitionInterface 
     }
   }
   // Check permissions on the All Affiliates field.
-  elseif ($field_definition->getName() == DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD) {
+  elseif ($field_definition->getName() === DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD) {
     if ($entity instanceof AccountInterface) {
       return AccessResult::forbiddenIf(!$account->hasPermission('assign editors to any domain'));
     }
@@ -487,7 +487,7 @@ function domain_access_node_type_insert(EntityInterface $entity) {
  * node types.
  */
 function domain_access_entity_form_display_insert(EntityInterface $entity) {
-  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() == 'node' && $bundle = $entity->getTargetBundle()) {
+  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() === 'node' && $bundle = $entity->getTargetBundle()) {
     domain_access_confirm_fields('node', $bundle);
   }
 }

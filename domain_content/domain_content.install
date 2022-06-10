@@ -14,7 +14,7 @@ function domain_content_requirements($phase) {
 
   $requirements = [];
   $allow = TRUE;
-  if ($phase == 'install') {
+  if ($phase === 'install') {
     $list['user'] = 'user';
     $node_types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
     foreach ($node_types as $type => $info) {

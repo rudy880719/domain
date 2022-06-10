@@ -34,9 +34,9 @@
       // Based on selected domains, show/hide the selection options.
       function setOptions(domains) {
         $("#edit-field-domain-source option").each(function(index, obj) {
-          if (jQuery.inArray(obj.value, domains) == -1 && obj.value != '_none') {
+          if (jQuery.inArray(obj.value, domains) === -1 && obj.value !== '_none') {
             // If the current selection is removed, reset the selection to _none.
-            if ($("#edit-field-domain-source").val() == obj.value) {
+            if ($("#edit-field-domain-source").val() === obj.value) {
               $("#edit-field-domain-source").val('_none');
             }
             $("#edit-field-domain-source option[value=" + obj.value + "]").hide();
@@ -44,7 +44,7 @@
           else {
             $("#edit-field-domain-source option[value=" + obj.value + "]").show();
             // If we reselected the initial value, reset the select option.
-            if (obj.value == initialOption) {
+            if (obj.value === initialOption) {
               $("#edit-field-domain-source").val(obj.value);
             }
           }

@@ -107,7 +107,7 @@ function domain_alias_domain_load($entities) {
 
   // Load and rewrite environment-specific aliases.
   $alias_storage = \Drupal::entityTypeManager()->getStorage('domain_alias');
-  if (isset($active->alias) && $active->alias->getEnvironment() != 'default') {
+  if (isset($active->alias) && $active->alias->getEnvironment() !== 'default') {
     foreach ($entities as $id => $domain) {
       if ($environment_aliases = $alias_storage->loadByEnvironmentMatch($domain, $active->alias->getEnvironment())) {
         foreach ($environment_aliases as $environment_alias) {
@@ -149,7 +149,7 @@ function domain_alias_domain_load($entities) {
             }
 
             // Do not let the domain loop back on itself.
-            if ($pattern != $domain->getCanonical()) {
+            if ($pattern !== $domain->getCanonical()) {
               $domain->setHostname($pattern);
               $domain->setPath();
               $domain->setUrl();
