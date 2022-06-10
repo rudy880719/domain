@@ -50,7 +50,7 @@ class DomainAdminElementTest extends DomainTestBase {
 
     // We expect to find 5 domain options. We set two as selected.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
-    $count = 0;
+
     $ids = ['example_com', 'one_example_com', 'two_example_com'];
     foreach ($domains as $domain) {
       $locator = DomainInterface::DOMAIN_ADMIN_FIELD . '[' . $domain->id() . ']';
@@ -61,7 +61,7 @@ class DomainAdminElementTest extends DomainTestBase {
     }
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Create new account');
     $this->assertSession()->statusCodeEquals(200);
 
     $storage = \Drupal::entityTypeManager()->getStorage('user');
@@ -102,7 +102,7 @@ class DomainAdminElementTest extends DomainTestBase {
     }
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Now, check the user.
@@ -134,7 +134,7 @@ class DomainAdminElementTest extends DomainTestBase {
       $this->fillField('pass[pass2]', 'test');
     }
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Create new account');
     $this->assertSession()->statusCodeEquals(200);
   }
 

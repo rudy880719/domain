@@ -81,7 +81,7 @@ class DomainAccessElementTest extends DomainTestBase {
     $this->checkField($locator);
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Get node data. Note that we create one new node for each test case.
@@ -134,7 +134,7 @@ class DomainAccessElementTest extends DomainTestBase {
     $this->assertSession()->fieldNotExists($locator);
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Now, check the node.

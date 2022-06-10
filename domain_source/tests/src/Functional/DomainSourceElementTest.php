@@ -91,7 +91,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->selectFieldOption($locator, 'one_example_com');
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check the URL.
@@ -106,7 +106,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->selectFieldOption($locator, 'three_example_com');
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->pageTextContains('The source domain must be selected as a publishing option.');
 
     // Check the URL.
@@ -117,7 +117,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->selectFieldOption($locator, 'one_example_com');
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check the URL.
@@ -133,7 +133,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->selectFieldOption($locator, '_none');
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check the URL.

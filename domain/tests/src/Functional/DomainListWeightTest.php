@@ -56,7 +56,7 @@ class DomainListWeightTest extends DomainTestBase {
     $this->fillField($locator, 61);
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save configuration');
 
     $domains = $this->getDomainsSorted();
     $i = 1;

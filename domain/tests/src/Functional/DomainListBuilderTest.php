@@ -194,7 +194,7 @@ class DomainListBuilderTest extends DomainTestBase {
    * Checks that pagination links appear, as expected.
    */
   private function checkPagination() {
-    foreach (['?page=0', '?page=1', '?page=2'] as $href) {
+    foreach (['?page=1', '?page=2'] as $href) {
       $this->assertSession()->linkByHrefExists($href, 0, 'Link found');
     }
   }

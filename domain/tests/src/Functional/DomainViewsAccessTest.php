@@ -37,23 +37,23 @@ class DomainViewsAccessTest extends DomainTestBase {
     foreach ($domains as $domain) {
       $path = $domain->getPath() . 'domain-views-access';
       $this->DrupalGet($path);
-      if (in_array($domain->id(), $allowed)) {
+      if (in_array($domain->id(), $allowed, TRUE)) {
         $this->assertSession()->statusCodeEquals(200);
-        $this->assertSession()->responseContains('admin');
-        $this->assertSession()->responseContains($this->user->getAccountName());
+        $this->assertSession()->pageTextContains('admin');
+        $this->assertSession()->pageTextContains($this->user->getAccountName());
       }
       else {
         $this->assertSession()->statusCodeEquals(403);
-        $this->assertSession()->responseNotContains('admin');
-        $this->assertSession()->responseNotContains($this->user->getAccountName());
+        $this->assertSession()->pageTextNotContains('admin');
+        $this->assertSession()->pageTextNotContains($this->user->getAccountName());
       }
       // Test the block on another page.
       $this->drupalGet($domain->getPath());
-      if (in_array($domain->id(), $allowed)) {
-        $this->assertSession()->responseContains($this->user->getAccountName());
+      if (in_array($domain->id(), $allowed, TRUE)) {
+        $this->assertSession()->pageTextContains($this->user->getAccountName());
       }
       else {
-        $this->assertSession()->responseNotContains($this->user->getAccountName());
+        $this->assertSession()->pageTextNotContains($this->user->getAccountName());
       }
     }
   }

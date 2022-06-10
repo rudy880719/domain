@@ -82,7 +82,7 @@ class DomainReferencesTest extends DomainTestBase {
     $this->findField($locator);
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Create new account');
     $this->assertSession()->statusCodeEquals(200);
 
     // Load our test user.
@@ -138,7 +138,7 @@ class DomainReferencesTest extends DomainTestBase {
     $this->assertSession()->fieldNotExists($locator);
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Now, check the user.
@@ -204,7 +204,7 @@ class DomainReferencesTest extends DomainTestBase {
     $this->assertSession()->fieldNotExists($locator);
 
     // Save the form.
-    $this->pressButton('edit-submit');
+    $this->pressButton('Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Now, check the user.
