@@ -71,7 +71,7 @@ class DomainRouteCheck implements AccessInterface {
     $domain = $this->domainNegotiator->getActiveDomain();
     // Since only one domain can be active per request, we only suport OR logic.
     $allowed = array_filter(array_map('trim', explode('+', $string)));
-    if (!empty($domain) && in_array($domain->id(), $allowed)) {
+    if (in_array($domain->id(), $allowed, TRUE)) {
       return AccessResult::allowed()->addCacheContexts(['url.site']);
     }
     // If there is no allowed domain, give other access checks a chance.
