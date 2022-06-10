@@ -153,7 +153,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
     // One hook for entities.
     if (!empty($entity) && is_object($entity)) {
       // Ensure we send the right translation.
-      if (!empty($langcode) && method_exists($entity, 'hasTranslation') && $entity->hasTranslation($langcode) && $translation = $entity->getTranslation($langcode)) {
+      if (!empty($langcode) && method_exists($entity, 'hasTranslation') && method_exists($entity, 'getTranslation') && $entity->hasTranslation($langcode) && $translation = $entity->getTranslation($langcode)) {
         $entity = $translation;
       }
       if (isset($options['domain_target_id'])) {
