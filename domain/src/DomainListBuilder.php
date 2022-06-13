@@ -142,6 +142,10 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
+    if (!($entity instanceof DomainInterface)) {
+      return $operations;
+    }
+
     $destination = $this->destinationHandler->getAsArray();
     $default = $entity->isDefault();
     $id = $entity->id();
@@ -225,7 +229,7 @@ class DomainListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     // If the user cannot view the domain, none of these actions are permitted.
     $admin = $this->accessHandler->checkAccess($entity, 'view');
-    if ($admin->isForbidden()) {
+    if ($admin->isForbidden() || !($entity instanceof DomainInterface)) {
       return;
     }
 
@@ -283,12 +287,13 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
-      if (isset($this->entities[$id]) && $this->entities[$id]->get($this->weightKey) !== $value['weight']) {
+      $entity = $this->entities[$id] ?? NULL;
+      if ($entity instanceof DomainInterface && $entity->get($this->weightKey) !== $value['weight']) {
         // Reset weight properly.
-        $this->entities[$id]->set($this->weightKey, $value['weight']);
+        $entity->set($this->weightKey, $value['weight']);
         // Do not allow accidental hostname rewrites.
-        $this->entities[$id]->set('hostname', $this->entities[$id]->getCanonical());
-        $this->entities[$id]->save();
+        $entity->set('hostname', $entity->getCanonical());
+        $entity->save();
       }
     }
   }
