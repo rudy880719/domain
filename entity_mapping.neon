@@ -1,0 +1,5 @@
+parameters:
+    entityMapping:
+        domain:
+            class: Drupal\domain\Entity\Domain
+            storage: Drupal\domain\DomainStorage

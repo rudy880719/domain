@@ -22,6 +22,11 @@
         "domain_access/drush.services.yml": "^9",
         "domain_source/drush.services.yml": "^9"
       }
+    },
+    "phpstan": {
+      "includes": [
+        "entity_mapping.neon"
+      ]
     }
   }
 }
