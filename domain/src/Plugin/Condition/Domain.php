@@ -62,13 +62,10 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $domains = [];
     // Use the domain labels. They will be sanitized below.
     // @TODO Set the optionsList as a property.
-    $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if ($storage instanceof DomainStorageInterface) {
-      $domains = $storage->loadOptionsList();
-    }
+    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList();
+
     $form['domains'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('When the following domains are active'),
@@ -106,12 +103,10 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function summary() {
-    $domains = [];
     // Use the domain labels. They will be sanitized below.
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if ($storage instanceof DomainStorageInterface) {
-      $domains = array_intersect_key($storage->loadOptionsList(), $this->configuration['domains']);
-    }
+    $domains = array_intersect_key($storage->loadOptionsList(), $this->configuration['domains']);
+
     if (count($domains) > 1) {
       $domains = implode(', ', $domains);
     }

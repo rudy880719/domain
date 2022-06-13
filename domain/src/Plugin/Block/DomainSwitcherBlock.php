@@ -31,11 +31,7 @@ class DomainSwitcherBlock extends DomainBlockBase {
   public function build() {
     /** @var \Drupal\domain\DomainInterface $active_domain */
     $active_domain = \Drupal::service('domain.negotiator')->getActiveDomain();
-
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if (!($storage instanceof DomainStorageInterface)) {
-      return [];
-    }
 
     $items = [];
     /** @var \Drupal\domain\DomainInterface $domain */

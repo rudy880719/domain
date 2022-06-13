@@ -109,13 +109,9 @@ class DomainNavBlock extends DomainBlockBase {
     $account = \Drupal::currentUser();
 
     // Determine the visible domain list.
-    $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if (!($storage instanceof DomainStorageInterface)) {
-      return [];
-    }
-
     $items = [];
     $add_path = ($this->getSetting('link_options') === 'active');
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
     /** @var \Drupal\domain\DomainInterface $domain */
     foreach ($storage->loadMultipleSorted() as $domain) {
       // Set the URL.

@@ -33,7 +33,7 @@ class DomainServerBlock extends DomainBlockBase {
     /** @var \Drupal\domain\DomainInterface $domain */
     $domain = \Drupal::service('domain.negotiator')->getActiveDomain();
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if (!$domain || !($storage instanceof DomainStorageInterface)) {
+    if (!$domain) {
       return [
         '#markup' => $this->t('No domain record could be loaded.'),
       ];

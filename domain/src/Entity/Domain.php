@@ -158,18 +158,16 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if ($domain_storage instanceof DomainStorageInterface) {
-      $default = $domain_storage->loadDefaultId();
-      $count = $storage_controller->getQuery()->count()->execute();
-      $values += [
-        'scheme' => empty($GLOBALS['is_https']) ? 'http' : 'https',
-        'status' => 1,
-        'weight' => $count + 1,
-        'is_default' => (int) empty($default),
-      ];
-      // Note that we have not created a domain_id, which is only used for
-      // node access control and will be added on save.
-    }
+    $default = $domain_storage->loadDefaultId();
+    $count = $storage_controller->getQuery()->count()->execute();
+    $values += [
+      'scheme' => empty($GLOBALS['is_https']) ? 'http' : 'https',
+      'status' => 1,
+      'weight' => $count + 1,
+      'is_default' => (int) empty($default),
+    ];
+    // Note that we have not created a domain_id, which is only used for
+    // node access control and will be added on save.
   }
 
   /**
@@ -214,7 +212,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     if (!$this->isDefault()) {
       // Swap the current default domain.
       $storage = \Drupal::entityTypeManager()->getStorage('domain');
-      if ($storage instanceof DomainStorageInterface && $default = $storage->loadDefaultDomain()) {
+      if ($default = $storage->loadDefaultDomain()) {
         $default->set('is_default', FALSE);
         $default->setHostname($default->getCanonical());
         $default->save();
@@ -437,10 +435,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public function getScheme($add_suffix = TRUE) {
     $scheme = $this->scheme;
     if ($scheme === 'variable') {
-      $storage = \Drupal::entityTypeManager()->getStorage('domain');
-      if ($storage instanceof DomainStorageInterface) {
-        $scheme = $storage->getDefaultScheme();
-      }
+      $scheme = \Drupal::entityTypeManager()->getStorage('domain')->getDefaultScheme();
     }
     elseif ($scheme !== 'https') {
       $scheme = 'http';
