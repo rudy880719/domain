@@ -6,6 +6,7 @@ use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\domain\DomainNegotiator;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\domain\DomainStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -61,11 +62,18 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $domains = [];
+    // Use the domain labels. They will be sanitized below.
+    // @TODO Set the optionsList as a property.
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    if ($storage instanceof DomainStorageInterface) {
+      $domains = $storage->loadOptionsList();
+    }
     $form['domains'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('When the following domains are active'),
       '#default_value' => $this->configuration['domains'],
-      '#options' => array_map('\Drupal\Component\Utility\Html::escape', \Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList()),
+      '#options' => array_map('\Drupal\Component\Utility\Html::escape', $domains),
       '#description' => $this->t('If you select no domains, the condition will evaluate to TRUE for all requests.'),
       '#attached' => [
         'library' => [
@@ -98,8 +106,12 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function summary() {
+    $domains = [];
     // Use the domain labels. They will be sanitized below.
-    $domains = array_intersect_key(\Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList(), $this->configuration['domains']);
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    if ($storage instanceof DomainStorageInterface) {
+      $domains = array_intersect_key($storage->loadOptionsList(), $this->configuration['domains']);
+    }
     if (count($domains) > 1) {
       $domains = implode(', ', $domains);
     }
