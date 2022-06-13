@@ -188,7 +188,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $all_domains = $this->domainStorage()->loadMultiple(NULL);
     $active_domains = [];
     foreach ($all_domains as $domain) {
-      /** var /Drupal\domain\DomainInterface */
+      /* var /Drupal\domain\DomainInterface */
       if ($domain instanceof DomainInterface && $domain->status()) {
         $active_domains[] = $domain;
       }
