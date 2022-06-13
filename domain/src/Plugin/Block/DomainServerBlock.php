@@ -5,6 +5,7 @@ namespace Drupal\domain\Plugin\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\DomainStorageInterface;
 
 /**
  * Provides a server information block for a domain request.
@@ -31,7 +32,8 @@ class DomainServerBlock extends DomainBlockBase {
   public function build() {
     /** @var \Drupal\domain\DomainInterface $domain */
     $domain = \Drupal::service('domain.negotiator')->getActiveDomain();
-    if (!$domain) {
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    if (!$domain || !($storage instanceof DomainStorageInterface)) {
       return [
         '#markup' => $this->t('No domain record could be loaded.'),
       ];
@@ -43,7 +45,7 @@ class DomainServerBlock extends DomainBlockBase {
     ];
     // Check the response test.
     $domain->getResponse();
-    $check = \Drupal::entityTypeManager()->getStorage('domain')->loadByHostname($_SERVER['HTTP_HOST']);
+    $check = $storage->loadByHostname($_SERVER['HTTP_HOST']);
     $match = $this->t('Exact match');
     // This value is not translatable.
     $environment = 'default';
