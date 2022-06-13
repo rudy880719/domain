@@ -193,7 +193,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
   public function getDefaultScheme() {
     // Use the foundation request if possible.
     $request = \Drupal::request();
-    if (!empty($request)) {
+    if (!is_null($request)) {
       $scheme = $request->getScheme();
     }
     // Else use the server variable.
