@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -82,14 +82,13 @@ class DomainSubscriber implements EventSubscriberInterface {
    * in one of two cases: an unauthorized request to an inactive domain is made;
    * a domain alias is set to redirect to its primary domain record.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The Event to process.
    *
    * @see domain_alias_domain_request_alter
    */
-  public function onKernelRequestDomain(GetResponseEvent $event) {
+  public function onKernelRequestDomain(RequestEvent $event) {
     // Negotiate the request and set domain context.
-    /** @var \Drupal\domain\DomainInterface $domain */
     if ($domain = $this->domainNegotiator->getActiveDomain(TRUE)) {
       $hostname = $domain->getHostname();
       $domain_url = $domain->getUrl();
@@ -97,9 +96,8 @@ class DomainSubscriber implements EventSubscriberInterface {
         $redirect_status = $domain->getRedirect();
         $path = trim($event->getRequest()->getPathInfo(), '/');
         // If domain negotiation asked for a redirect, issue it.
-        if (is_null($redirect_status) && $this->accessCheck->checkPath($path)) {
+        if (is_null($redirect_status) && $this->accessCheck instanceof DomainAccessCheck && $this->accessCheck->checkPath($path)) {
           // Else check for active domain or inactive access.
-          /** @var \Drupal\Core\Access\AccessResult $access */
           $access = $this->accessCheck->access($this->account);
           // If the access check fails, reroute to the default domain.
           // Note that Allowed, Neutral, and Failed are the options here.
