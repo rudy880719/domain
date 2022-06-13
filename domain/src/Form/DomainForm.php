@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainStorageInterface;
 use Drupal\domain\DomainValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -186,15 +187,14 @@ class DomainForm extends EntityForm {
     // Do not use domain loader because it may change hostname.
     $existing = $this->domainStorage->loadByProperties(['hostname' => $hostname]);
     $existing = reset($existing);
-    // If we have already registered a hostname, make sure we don't create a
-    // duplicate.
+    // If we have already registered a hostname, don't create a duplicate.
     // We cannot check id() here, as the machine name is editable.
-    if ($existing && $existing->getDomainId() !== $entity->getDomainId()) {
+    if ($existing instanceof DomainInterface && $existing->getDomainId() !== $entity->getDomainId()) {
       $form_state->setErrorByName('hostname', $this->t('The hostname is already registered.'));
     }
 
     // Is validate_url set?
-    if ($entity->validate_url) {
+    if ($entity->get('validate_url')) {
       // Check the domain response. First, clear the path value.
       $entity->setPath();
       // Check the response.
@@ -224,6 +224,8 @@ class DomainForm extends EntityForm {
       \Drupal::messenger()->addMessage($this->t('Domain record updated.'));
     }
     $form_state->setRedirect('domain.admin');
+
+    return $status;
   }
 
 }
