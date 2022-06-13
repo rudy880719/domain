@@ -3,7 +3,7 @@
 namespace Drupal\domain;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\Core\GeneratedLink;
 
 /**
  * Provides an interface defining a domain entity.
@@ -138,8 +138,8 @@ interface DomainInterface extends ConfigEntityInterface {
    * @param bool $current_path
    *   Indicates that the link should point to the path of the current request.
    *
-   * @return \Drupal\Core\Url
-   *   A core URL object.
+   * @return \Drupal\Core\GeneratedLink
+   *   A link object.
    */
   public function getLink($current_path = TRUE);
 

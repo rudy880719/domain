@@ -4,6 +4,7 @@ namespace Drupal\domain\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\DomainStorageInterface;
 
 /**
  * Provides a block that links to all domains.
@@ -30,17 +31,21 @@ class DomainSwitcherBlock extends DomainBlockBase {
   public function build() {
     /** @var \Drupal\domain\DomainInterface $active_domain */
     $active_domain = \Drupal::service('domain.negotiator')->getActiveDomain();
+
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    if (!($storage instanceof DomainStorageInterface)) {
+      return [];
+    }
+
     $items = [];
     /** @var \Drupal\domain\DomainInterface $domain */
-    foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultipleSorted() as $domain) {
-      $string = $domain->getLink();
-      if (!$domain->status()) {
-        $string .= '*';
-      }
+    foreach ($storage->loadMultipleSorted() as $domain) {
+      $string = $domain->getLink()->__toString();
+      $marker = $domain->status() ? '' : ' * ';
       if ($domain->id() === $active_domain->id()) {
         $string = '<em>' . $string . '</em>';
       }
-      $items[] = ['#markup' => $string];
+      $items[] = ['#markup' => $string . $marker];
     }
     return [
       '#theme' => 'item_list',

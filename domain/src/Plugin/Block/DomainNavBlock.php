@@ -111,7 +111,7 @@ class DomainNavBlock extends DomainBlockBase {
     // Determine the visible domain list.
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
     if (!($storage instanceof DomainStorageInterface)) {
-      return;
+      return [];
     }
 
     $items = [];
