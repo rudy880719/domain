@@ -2,7 +2,8 @@
 
 namespace Drupal\domain;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -80,7 +81,7 @@ class DomainElementManager implements DomainElementManagerInterface {
       $form[$field_name]['#access'] = FALSE;
     }
     // Check for domains the user cannot access or the absence of any options.
-    if (!empty($disallowed) || $empty) {
+    if (count($disallowed) > 0 || $empty) {
       // @TODO: Potentially show this information to users with permission.
       $form[$field_name . '_disallowed'] = [
         '#type' => 'value',
@@ -119,8 +120,6 @@ class DomainElementManager implements DomainElementManagerInterface {
       $entity_values = [];
       $values = $form_state->getValue($field . '_disallowed');
       if (!empty($values)) {
-        $info = $form_state->getBuildInfo();
-        $node = $form_state->getFormObject()->getEntity();
         $entity_values = $form_state->getValue($field);
       }
       if (is_array($values)) {
@@ -144,11 +143,13 @@ class DomainElementManager implements DomainElementManagerInterface {
    */
   public function disallowedOptions(FormStateInterface $form_state, array $field) {
     $options = [];
-    $info = $form_state->getBuildInfo();
-    $entity = $form_state->getFormObject()->getEntity();
-    $entity_values = $this->getFieldValues($entity, $field['widget']['#field_name']);
-    if (isset($field['widget']['#options'])) {
-      $options = array_diff_key($entity_values, $field['widget']['#options']);
+    $form = $form_state->getFormObject();
+    if ($form instanceof EntityFormInterface) {
+      $entity = $form->getEntity();
+      $entity_values = $this->getFieldValues($entity, $field['widget']['#field_name']);
+      if (isset($field['widget']['#options'])) {
+        $options = array_diff_key($entity_values, $field['widget']['#options']);
+      }
     }
     return array_keys($options);
   }
@@ -167,7 +168,7 @@ class DomainElementManager implements DomainElementManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldValues(EntityInterface $entity, $field_name) {
+  public function getFieldValues(FieldableEntityInterface $entity, $field_name) {
     // @TODO: static cache.
     $list = [];
     // @TODO In tests, $entity is returning NULL.
@@ -181,7 +182,9 @@ class DomainElementManager implements DomainElementManagerInterface {
       foreach ($values as $item) {
         if ($target = $item->getValue()) {
           if ($domain = $this->domainStorage->load($target['target_id'])) {
-            $list[$domain->id()] = $domain->getDomainId();
+            if ($domain instanceof DomainInterface) {
+              $list[$domain->id()] = $domain->getDomainId();
+            }
           }
         }
       }
@@ -208,6 +211,7 @@ class DomainElementManager implements DomainElementManagerInterface {
   public function listDisallowed(array $disallowed) {
     $domains = $this->domainStorage->loadMultiple($disallowed);
     $string = $this->t('The following domains are currently assigned and cannot be changed:');
+    $items = [];
     foreach ($domains as $domain) {
       $items[] = $domain->label();
     }

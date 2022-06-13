@@ -2,7 +2,7 @@
 
 namespace Drupal\domain;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -59,6 +59,9 @@ interface DomainElementManagerInterface {
    *   The form state object.
    * @param array $field
    *   The field element being processed.
+   *
+   * @return array
+   *   An array of option keys that are not accessible to the current user.
    */
   public function disallowedOptions(FormStateInterface $form_state, array $field);
 
@@ -76,7 +79,7 @@ interface DomainElementManagerInterface {
   /**
    * Gets the domain entity reference field values from an entity.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity to retrieve field data from.
    * @param string $field_name
    *   The name of the field that holds our data.
@@ -85,7 +88,7 @@ interface DomainElementManagerInterface {
    *   The domain access field values, keyed by id (machine_name) with value of
    *   the numeric domain_id used by node access.
    */
-  public function getFieldValues(EntityInterface $entity, $field_name);
+  public function getFieldValues(FieldableEntityInterface $entity, $field_name);
 
   /**
    * Returns the default submit handler to be used for a field element.
