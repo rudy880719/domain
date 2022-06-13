@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\domain\DomainStorageInterface;
 
 /**
  * Defines the domain entity.
@@ -157,16 +158,18 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $default = $domain_storage->loadDefaultId();
-    $count = $storage_controller->getQuery()->count()->execute();
-    $values += [
-      'scheme' => empty($GLOBALS['is_https']) ? 'http' : 'https',
-      'status' => 1,
-      'weight' => $count + 1,
-      'is_default' => (int) empty($default),
-    ];
-    // Note that we have not created a domain_id, which is only used for
-    // node access control and will be added on save.
+    if ($domain_storage instanceof DomainStorageInterface) {
+      $default = $domain_storage->loadDefaultId();
+      $count = $storage_controller->getQuery()->count()->execute();
+      $values += [
+        'scheme' => empty($GLOBALS['is_https']) ? 'http' : 'https',
+        'status' => 1,
+        'weight' => $count + 1,
+        'is_default' => (int) empty($default),
+      ];
+      // Note that we have not created a domain_id, which is only used for
+      // node access control and will be added on save.
+    }
   }
 
   /**
@@ -174,9 +177,8 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    */
   public function isActive() {
     $negotiator = \Drupal::service('domain.negotiator');
-    /** @var self $domain */
     $domain = $negotiator->getActiveDomain();
-    if (empty($domain)) {
+    if (empty($domain->id())) {
       return FALSE;
     }
     return ($this->id() === $domain->id());
@@ -210,15 +212,15 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    */
   public function saveDefault() {
     if (!$this->isDefault()) {
-      // Swap the current default.
-      /** @var self $default */
-      if ($default = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultDomain()) {
-        $default->is_default = FALSE;
+      // Swap the current default domain.
+      $storage = \Drupal::entityTypeManager()->getStorage('domain');
+      if ($storage instanceof DomainStorageInterface && $default = $storage->loadDefaultDomain()) {
+        $default->set('is_default', FALSE);
         $default->setHostname($default->getCanonical());
         $default->save();
       }
       // Save the new default.
-      $this->is_default = TRUE;
+      $this->set('is_default', TRUE);
       $this->setHostname($this->getCanonical());
       $this->save();
     }
@@ -234,6 +236,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     $this->setStatus(TRUE);
     $this->setHostname($this->getCanonical());
     $this->save();
+    return $this;
   }
 
   /**
@@ -248,6 +251,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     else {
       \Drupal::messenger()->addMessage($this->t('The default domain cannot be disabled.'), 'warning');
     }
+    return $this;
   }
 
   /**
@@ -332,6 +336,9 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
+    if (!($storage instanceof DomainStorageInterface)) {
+      return;
+    }
     // Sets the default domain properly.
     /** @var self $default */
     $default = $storage->loadDefaultDomain();
@@ -352,7 +359,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     // Do not use domain loader because it may change hostname.
     $existing = $storage->loadByProperties(['hostname' => $hostname]);
     $existing = reset($existing);
-    if ($existing && $this->getDomainId() !== $existing->getDomainId()) {
+    if ($existing instanceof DomainInterface && $this->getDomainId() !== $existing->getDomainId()) {
       throw new ConfigValueException("The hostname ($hostname) is already registered.");
     }
   }
@@ -430,7 +437,10 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public function getScheme($add_suffix = TRUE) {
     $scheme = $this->scheme;
     if ($scheme === 'variable') {
-      $scheme = \Drupal::entityTypeManager()->getStorage('domain')->getDefaultScheme();
+      $storage = \Drupal::entityTypeManager()->getStorage('domain');
+      if ($storage instanceof DomainStorageInterface) {
+        $scheme = $storage->getDefaultScheme();
+      }
     }
     elseif ($scheme !== 'https') {
       $scheme = 'http';
