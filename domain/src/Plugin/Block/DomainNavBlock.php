@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\domain\DomainStorageInterface;
 
 /**
  * Provides a block that links to all active domains.
@@ -105,16 +106,18 @@ class DomainNavBlock extends DomainBlockBase {
    * Build the output.
    */
   public function build() {
-    /** @var \Drupal\domain\DomainInterface $active_domain */
-    $active_domain = \Drupal::service('domain.negotiator')->getActiveDomain();
-    $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('domain');
     $account = \Drupal::currentUser();
 
     // Determine the visible domain list.
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    if (!($storage instanceof DomainStorageInterface)) {
+      return;
+    }
+
     $items = [];
     $add_path = ($this->getSetting('link_options') === 'active');
     /** @var \Drupal\domain\DomainInterface $domain */
-    foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultipleSorted() as $domain) {
+    foreach ($storage->loadMultipleSorted() as $domain) {
       // Set the URL.
       if ($add_path) {
         $url = Url::fromUri($domain->getUrl());
