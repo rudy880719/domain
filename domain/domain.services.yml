@@ -35,4 +35,4 @@ services:
     class: Drupal\domain\Routing\DomainRouteProvider
     decorates: router.route_provider
     decoration_priority: 10
-    arguments: ['@domain.route_provider.inner', '@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
+    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
