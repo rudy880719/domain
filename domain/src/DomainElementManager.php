@@ -182,9 +182,7 @@ class DomainElementManager implements DomainElementManagerInterface {
       foreach ($values as $item) {
         if ($target = $item->getValue()) {
           if ($domain = $this->domainStorage->load($target['target_id'])) {
-            if ($domain instanceof DomainInterface) {
-              $list[$domain->id()] = $domain->getDomainId();
-            }
+            $list[$domain->id()] = $domain->getDomainId();
           }
         }
       }

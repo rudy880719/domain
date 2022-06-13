@@ -357,7 +357,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     // Do not use domain loader because it may change hostname.
     $existing = $storage->loadByProperties(['hostname' => $hostname]);
     $existing = reset($existing);
-    if ($existing instanceof DomainInterface && $this->getDomainId() !== $existing->getDomainId()) {
+    if ($this->getDomainId() !== $existing->getDomainId()) {
       throw new ConfigValueException("The hostname ($hostname) is already registered.");
     }
   }

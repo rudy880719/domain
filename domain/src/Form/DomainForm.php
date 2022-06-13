@@ -189,7 +189,7 @@ class DomainForm extends EntityForm {
     $existing = reset($existing);
     // If we have already registered a hostname, don't create a duplicate.
     // We cannot check id() here, as the machine name is editable.
-    if ($existing instanceof DomainInterface && $existing->getDomainId() !== $entity->getDomainId()) {
+    if ($existing->getDomainId() !== $entity->getDomainId()) {
       $form_state->setErrorByName('hostname', $this->t('The hostname is already registered.'));
     }
 

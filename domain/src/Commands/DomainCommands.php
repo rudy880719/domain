@@ -188,8 +188,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $all_domains = $this->domainStorage()->loadMultiple(NULL);
     $active_domains = [];
     foreach ($all_domains as $domain) {
-      /* var /Drupal\domain\DomainInterface */
-      if ($domain instanceof DomainInterface && $domain->status()) {
+      if ($domain->status()) {
         $active_domains[] = $domain;
       }
     }
@@ -890,9 +889,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $existing = [];
     if (!empty($domains)) {
       foreach ($domains as $domain) {
-        if ($domain instanceof DomainInterface) {
-          $existing[] = $domain->getHostname();
-        }
+        $existing[] = $domain->getHostname();
       }
     }
     // Set up one.* and so on.
@@ -1174,10 +1171,6 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   protected function deleteDomain(array $domains, array $options) {
     foreach ($domains as $domain) {
-      if (!$domain instanceof DomainInterface) {
-        throw new StorageException('deleting domains: value is not a domain');
-      }
-
       $hostname = $domain->getHostname();
 
       if ($this->isDryRun) {
