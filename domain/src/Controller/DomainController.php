@@ -34,6 +34,7 @@ class DomainController {
    */
   public function ajaxOperation(DomainInterface $domain, $op = NULL) {
     $success = FALSE;
+    $message = '';
     switch ($op) {
       case 'default':
         $domain->saveDefault();
