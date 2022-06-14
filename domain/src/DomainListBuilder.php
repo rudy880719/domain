@@ -12,7 +12,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\domain\DomainInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -142,6 +141,9 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
+    if (!($entity instanceof DomainInterface)) {
+      return $operations;
+    }
     $destination = $this->destinationHandler->getAsArray();
     $default = $entity->isDefault();
     $id = $entity->id();
@@ -225,7 +227,7 @@ class DomainListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     // If the user cannot view the domain, none of these actions are permitted.
     $admin = $this->accessHandler->checkAccess($entity, 'view');
-    if ($admin->isForbidden()) {
+    if ($admin->isForbidden() || !($entity instanceof DomainInterface)) {
       return;
     }
 
@@ -284,7 +286,7 @@ class DomainListBuilder extends DraggableListBuilder {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
       $entity = $this->entities[$id] ?? NULL;
-      if ($entity->get($this->weightKey) !== $value['weight']) {
+      if ($entity instanceof DomainInterface && $entity->get($this->weightKey) !== $value['weight']) {
         // Reset weight properly.
         $entity->set($this->weightKey, $value['weight']);
         // Do not allow accidental hostname rewrites.
