@@ -252,10 +252,11 @@ abstract class DomainTestBase extends BrowserTestBase {
     $url = $domain->getPath() . 'user/login';
     $this->submitForm([
       'name' => $account->getAccountName(),
-      'pass' => $account->passRaw,
+      'pass' => $account->passRaw, // @phpstan-ignore-line
     ], t('Log in'));
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
+    // @phpstan-ignore-next-line
     $account->sessionId = $this->getSession()->getCookie($this->getSessionName());
     $this->assertTrue($this->drupalUserIsLoggedIn($account), 'User successfully logged in.');
 
