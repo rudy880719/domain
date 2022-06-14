@@ -14,8 +14,8 @@ class DomainCheckResponseTest extends DomainTestBase {
    */
   public function testDomainCheckResponse() {
     $perms = ['administer domains', 'create domains'];
-    $this->admin_user = $this->drupalCreateUser($perms);
-    $this->drupalLogin($this->admin_user);
+    $admin_user = $this->drupalCreateUser($perms);
+    $this->drupalLogin($admin_user);
 
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
 

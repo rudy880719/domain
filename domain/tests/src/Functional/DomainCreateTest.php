@@ -51,7 +51,7 @@ class DomainCreateTest extends DomainTestBase {
 
     // Delete the domain.
     $domain->delete();
-    $domain = $storage->load($default_id, TRUE);
+    $domain = $storage->load($default_id);
     $this->assertEmpty($domain, 'Domain record deleted.');
 
     // No domains should exist.
