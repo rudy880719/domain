@@ -1,3 +1,4 @@
+# Plugin helper for drupal-check.
 parameters:
     entityMapping:
         domain:
