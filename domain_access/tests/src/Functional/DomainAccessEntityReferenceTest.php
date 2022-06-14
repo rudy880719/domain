@@ -20,13 +20,13 @@ class DomainAccessEntityReferenceTest extends DomainTestBase {
    * Tests that the module installed its field correctly.
    */
   public function testDomainAccessNodeField() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer content types',
       'administer node fields',
       'administer node display',
       'administer domains',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Visit the article field administration page.
     $this->drupalGet('admin/structure/types/manage/article/fields');
@@ -47,7 +47,7 @@ class DomainAccessEntityReferenceTest extends DomainTestBase {
    * Tests the storage of the domain access field.
    */
   public function testDomainAccessFieldStorage() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'bypass node access',
       'administer content types',
       'administer node fields',
@@ -55,7 +55,7 @@ class DomainAccessEntityReferenceTest extends DomainTestBase {
       'administer domains',
       'publish to any domain',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Create 5 domains.
     $this->domainCreateTestDomains(5);

@@ -19,8 +19,8 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
    */
   public function testDomainActions() {
     $perms = ['administer domains', 'access administration pages'];
-    $this->admin_user = $this->drupalCreateUser($perms);
-    $this->drupalLogin($this->admin_user);
+    $admin_user = $this->drupalCreateUser($perms);
+    $this->drupalLogin($admin_user);
 
     // Create test domains.
     $this->domainCreateTestDomains(3);

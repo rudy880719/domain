@@ -14,7 +14,7 @@ class DomainContentActionsTest extends DomainContentTestBase {
    */
   public function testDomainContentActions() {
     // This user should be able to see everything.
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer domains',
       'access administration pages',
       'access domain content',
@@ -24,7 +24,7 @@ class DomainContentActionsTest extends DomainContentTestBase {
       // Edit access is required. This is fastest.
       'bypass node access',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Create users and content.
     $this->createDomainContent();

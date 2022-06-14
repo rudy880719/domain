@@ -27,13 +27,13 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
    * Tests that the module installed its field correctly.
    */
   public function testDomainSourceNodeField() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer content types',
       'administer node fields',
       'administer node display',
       'administer domains',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Visit the article field administration page.
     $this->drupalGet('admin/structure/types/manage/article/fields');
@@ -54,7 +54,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
    * Tests the storage of the domain source field.
    */
   public function testDomainSourceFieldStorage() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer content types',
       'administer node fields',
       'administer node display',
@@ -63,7 +63,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
       'create article content',
       'edit any article content',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Create 5 domains.
     $this->domainCreateTestDomains(5);

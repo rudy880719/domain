@@ -56,7 +56,7 @@ class DomainAccessEntityFieldTest extends DomainTestBase {
       'description' => 'Make this term available on all domains.',
     ];
     domain_access_confirm_fields('taxonomy_term', 'domain_access', $text);
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'bypass node access',
       'administer content types',
       'administer node fields',
@@ -67,7 +67,7 @@ class DomainAccessEntityFieldTest extends DomainTestBase {
       'administer taxonomy_term fields',
       'administer taxonomy_term form display',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
     $this->drupalGet('admin/structure/taxonomy/manage/domain_access/overview/fields');
     $this->assertSession()->statusCodeEquals(200);
 

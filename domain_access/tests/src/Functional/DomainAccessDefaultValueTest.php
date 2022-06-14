@@ -22,7 +22,7 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
    * Test the usage of DomainAccessManager::getDefaultValue().
    */
   public function testDomainAccessDefaultValue() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'bypass node access',
       'administer content types',
       'administer node fields',
@@ -30,7 +30,7 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
       'administer domains',
       'publish to any domain',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Create 5 domains.
     $this->domainCreateTestDomains(5);

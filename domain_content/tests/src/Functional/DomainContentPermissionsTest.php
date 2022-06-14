@@ -16,7 +16,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
    */
   public function testDomainContentPermissions() {
     // This user should be able to see everything.
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer domains',
       'access administration pages',
       'access domain content',
@@ -24,7 +24,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       'publish to any domain',
       'assign editors to any domain',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Create users and content.
     $this->createDomainContent();

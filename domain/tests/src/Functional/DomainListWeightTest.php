@@ -28,6 +28,7 @@ class DomainListWeightTest extends DomainTestBase {
    * Basic test setup.
    */
   public function testDomainWeight() {
+    $domain = NULL;
     // Test the default sort values. Should be 1 to 60.
     $domains = $this->getDomainsSorted();
     $i = 1;
