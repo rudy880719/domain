@@ -90,11 +90,11 @@ class DomainHookTest extends KernelTestBase {
     // Internal hooks.
     $path = $domain->getPath();
     $url = $domain->getUrl();
-    $this->assertTrue(isset($path), new FormattableMarkup('The path property was set to %path by hook_entity_load.', ['%path' => $path]));
-    $this->assertTrue(isset($url), new FormattableMarkup('The url property was set to %url by hook_entity_load.', ['%url' => $url]));
+    $this->assertTrue(!empty($path), new FormattableMarkup('The path property was set to %path by hook_entity_load.', ['%path' => $path]));
+    $this->assertTrue(!empty($url), new FormattableMarkup('The url property was set to %url by hook_entity_load.', ['%url' => $url]));
 
     // External hooks.
-    $this->assertTrue($domain->foo === 'bar', 'The foo property was set to <em>bar</em> by hook_domain_load.');
+    $this->assertTrue($domain->get('foo') === 'bar', 'The foo property was set to <em>bar</em> by hook_domain_load.');
   }
 
   /**
@@ -122,7 +122,7 @@ class DomainHookTest extends KernelTestBase {
 
     // Check that the property was added by our hook.
     $domain = $negotiator->getActiveDomain();
-    $this->assertTrue($domain->foo1 === 'bar1', 'The foo1 property was set to <em>bar1</em> by hook_domain_request_alter');
+    $this->assertTrue($domain->get('foo1') === 'bar1', 'The foo1 property was set to <em>bar1</em> by hook_domain_request_alter');
   }
 
   /**
