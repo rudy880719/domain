@@ -18,13 +18,13 @@ class DomainEntityReferenceTest extends DomainTestBase {
    * Create, edit and delete a domain field via the user interface.
    */
   public function testDomainField() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer content types',
       'administer node fields',
       'administer node display',
       'administer domains',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Visit the article field administration page.
     $this->drupalGet('admin/structure/types/manage/article/fields');
@@ -63,14 +63,14 @@ class DomainEntityReferenceTest extends DomainTestBase {
    * Create content for a domain field.
    */
   public function testDomainFieldStorage() {
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'bypass node access',
       'administer content types',
       'administer node fields',
       'administer node display',
       'administer domains',
     ]);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
     // Create test domain field.
     $this->domainCreateTestField();
@@ -86,15 +86,16 @@ class DomainEntityReferenceTest extends DomainTestBase {
     $this->assertSession()->pageTextContains('Domain test field');
 
     // We expect to find 5 domain options.
+    $one = $two = NULL;
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
       $this->assertSession()->responseContains($string);
-      if (!isset($one)) {
+      if (empty($one)) {
         $one = $domain->id();
         continue;
       }
-      if (!isset($two)) {
+      if (empty($two)) {
         $two = $domain->id();
       }
     }
