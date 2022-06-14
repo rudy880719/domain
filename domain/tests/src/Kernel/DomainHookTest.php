@@ -66,6 +66,16 @@ class DomainHookTest extends KernelTestBase {
   public $baseHostname;
 
   /**
+   * Sets a base TLD for running tests.
+   *
+   * When creating test domains, try to use $this->baseTLD or the
+   * domainCreateTestDomains() method.
+   *
+   * @var string
+   */
+  public $baseTLD;
+
+  /**
    * Test setup.
    */
   protected function setUp(): void {

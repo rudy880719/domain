@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\domain\Traits;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
+
 /**
  * Contains helper classes for tests to set up various configuration.
  */
@@ -27,7 +29,6 @@ trait DomainTestTrait {
    *   An optional list of subdomains to apply instead of the default set.
    */
   public function domainCreateTestDomains($count = 1, $base_hostname = NULL, array $list = []) {
-    $original_domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple(NULL, TRUE);
     if (empty($base_hostname)) {
       $base_hostname = $this->baseHostname;
     }
@@ -75,7 +76,6 @@ trait DomainTestTrait {
       $domain = \Drupal::entityTypeManager()->getStorage('domain')->create($values);
       $domain->save();
     }
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple(NULL, TRUE);
   }
 
   /**
@@ -91,7 +91,8 @@ trait DomainTestTrait {
    *   The name of the domain field used to attach to the entity.
    */
   public function addDomainsToEntity($entity_type, $entity_id, $ids, $field) {
-    if ($entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id)) {
+    $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
+    if ($entity instanceof FieldableEntityInterface) {
       $entity->set($field, $ids);
       $entity->save();
     }
@@ -154,7 +155,7 @@ trait DomainTestTrait {
    * Reusable test function for checking initial / empty table status.
    */
   public function domainTableIsEmpty() {
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple(NULL, TRUE);
+    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $this->assertEmpty($domains, 'No domains have been created.');
     $default_id = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultId();
     $this->assertEmpty($default_id, 'No default domain has been set.');
