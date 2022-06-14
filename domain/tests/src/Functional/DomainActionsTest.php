@@ -14,8 +14,8 @@ class DomainActionsTest extends DomainTestBase {
    */
   public function testDomainActions() {
     $perms = ['administer domains', 'access administration pages'];
-    $this->admin_user = $this->drupalCreateUser($perms);
-    $this->drupalLogin($this->admin_user);
+    $admin_user = $this->drupalCreateUser($perms);
+    $this->drupalLogin($admin_user);
 
     $path = 'admin/config/domain';
 
