@@ -72,6 +72,10 @@ class DomainAccessCheck implements AccessCheckInterface {
    */
   public function access(AccountInterface $account) {
     $domain = $this->domainNegotiator->getActiveDomain();
+    // No domain, let it pass.
+    if (is_null($domain)) {
+      return AccessResult::allowed()->addCacheTags(['url.site']);
+    }
     // Active domain, let it pass.
     if ($domain->status()) {
       return AccessResult::allowed()->addCacheTags(['url.site']);

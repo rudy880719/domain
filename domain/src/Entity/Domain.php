@@ -176,7 +176,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public function isActive() {
     $negotiator = \Drupal::service('domain.negotiator');
     $domain = $negotiator->getActiveDomain();
-    if (empty($domain->id())) {
+    if (is_null($domain)) {
       return FALSE;
     }
     return ($this->id() === $domain->id());
@@ -357,7 +357,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     // Do not use domain loader because it may change hostname.
     $existing = $storage->loadByProperties(['hostname' => $hostname]);
     $existing = reset($existing);
-    if ($this->getDomainId() !== $existing->getDomainId()) {
+    if ($existing && $this->getDomainId() !== $existing->getDomainId()) {
       throw new ConfigValueException("The hostname ($hostname) is already registered.");
     }
   }
