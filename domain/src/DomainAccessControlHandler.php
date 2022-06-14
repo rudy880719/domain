@@ -76,6 +76,9 @@ class DomainAccessControlHandler extends EntityAccessControlHandler implements E
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account = NULL) {
+    if (!($entity instanceof DomainInterface)) {
+      return AccessResult::neutral();
+    }
     $account = $this->prepareUser($account);
     // Check the global permission.
     if ($account->hasPermission('administer domains')) {
