@@ -27,7 +27,7 @@ class DomainViewsAccessTest extends DomainTestBase {
     // configured two views. The page shows the first, admin, user, and the
     // block will show this new user name.
     $perms = ['administer domains', 'create domains'];
-    $this->user = $this->drupalCreateUser($perms);
+    $admin_user = $this->drupalCreateUser($perms);
     // Place the view block.
     $this->drupalPlaceBlock('views_block:domain_views_access-block_1');
 
@@ -40,20 +40,20 @@ class DomainViewsAccessTest extends DomainTestBase {
       if (in_array($domain->id(), $allowed, TRUE)) {
         $this->assertSession()->statusCodeEquals(200);
         $this->assertSession()->pageTextContains('admin');
-        $this->assertSession()->pageTextContains($this->user->getAccountName());
+        $this->assertSession()->pageTextContains($admin_user->getAccountName());
       }
       else {
         $this->assertSession()->statusCodeEquals(403);
         $this->assertSession()->pageTextNotContains('admin');
-        $this->assertSession()->pageTextNotContains($this->user->getAccountName());
+        $this->assertSession()->pageTextNotContains($admin_user->getAccountName());
       }
       // Test the block on another page.
       $this->drupalGet($domain->getPath());
       if (in_array($domain->id(), $allowed, TRUE)) {
-        $this->assertSession()->pageTextContains($this->user->getAccountName());
+        $this->assertSession()->pageTextContains($admin_user->getAccountName());
       }
       else {
-        $this->assertSession()->pageTextNotContains($this->user->getAccountName());
+        $this->assertSession()->pageTextNotContains($admin_user->getAccountName());
       }
     }
   }
