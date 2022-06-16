@@ -23,7 +23,7 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
    *
    * @var string
    */
-  public $value_value;
+  public $value_value; // phpcs:ignore
 
   /**
    * The options provided by the plugin.
@@ -66,7 +66,7 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
       $all_field = $all_table . '.field_domain_all_affiliates_value';
       $real_field = $this->tableAlias . '.' . $this->realField;
 
-      /** @var DomainNegotiatorInterface $domain_negotiator */
+      /** @var \Drupal\domain\DomainNegotiatorInterface $domain_negotiator */
       $domain_negotiator = \Drupal::service('domain.negotiator');
       $current_domain = $domain_negotiator->getActiveDomain();
       $current_domain_id = $current_domain->id();
