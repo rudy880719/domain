@@ -120,6 +120,8 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
         return $this->t('The pattern already exists.');
       }
     }
+
+    return NULL;
   }
 
 }
