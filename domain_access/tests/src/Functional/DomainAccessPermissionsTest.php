@@ -83,6 +83,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
     // Note that these are hook_node_access() rules. Node Access system tests
     // are in DomainAccessRecordsTest.
     // We expect to find 5 domain options. Set two for later use.
+    $one = $two = NULL;
     foreach ($this->domains as $domain) {
       if (!isset($one)) {
         $one = $domain->id();
@@ -217,6 +218,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
    * Tests domain access create permissions.
    */
   public function testDomainAccessCreatePermissions() {
+    $one = $two = NULL;
     foreach ($this->domains as $domain) {
       if (!isset($one)) {
         $one = $domain->id();
@@ -262,6 +264,7 @@ class DomainAccessPermissionsTest extends DomainTestBase {
    * Tests domain access limited create permissions.
    */
   public function testDomainAccessLimitedCreatePermissions() {
+    $one = $two = NULL;
     foreach ($this->domains as $domain) {
       if (!isset($one)) {
         $one = $domain->id();

@@ -121,7 +121,6 @@ class DomainAccessManager implements DomainAccessManagerInterface {
     }
     // When creating a new entity, populate if required.
     elseif ($entity->getFieldDefinition(DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD)->isRequired()) {
-      /** @var \Drupal\domain\DomainInterface $active */
       if ($active = \Drupal::service('domain.negotiator')->getActiveDomain()) {
         $item[0]['target_uuid'] = $active->uuid();
       }

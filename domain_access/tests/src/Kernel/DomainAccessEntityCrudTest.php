@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\domain_access\Kernel;
 
-use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Tests creation of nodes and users before and after deleting required fields.
@@ -66,7 +67,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
     ]);
     $type->save();
 
-    module_load_install('domain_access');
+    \Drupal::moduleHandler()->loadInclude('domain_access', 'install');
     domain_access_install();
   }
 
@@ -84,7 +85,11 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD
     ];
     foreach ($fields as $field_name) {
-      FieldConfig::loadByName($entity_type, $bundle, $field_name)->delete();
+      /** @var \Drupal\field\FieldConfigInterface $field */
+      $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
+      if ($field) {
+        $field->delete();
+      }
     }
   }
 

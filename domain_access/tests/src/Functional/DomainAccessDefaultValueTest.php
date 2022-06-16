@@ -67,13 +67,13 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
     $this->drupalLogout();
 
     // Create a limited value user.
-    $this->test_user = $this->drupalCreateUser([
+    $test_user = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
     ]);
 
     // Login and try to edit the created node.
-    $this->drupalLogin($this->test_user);
+    $this->drupalLogin($test_user);
 
     $this->drupalGet('node/1/edit');
     $this->assertSession()->statusCodeEquals(200);

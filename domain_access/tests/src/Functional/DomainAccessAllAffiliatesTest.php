@@ -71,6 +71,7 @@ class DomainAccessAllAffiliatesTest extends DomainTestBase {
     $this->assertSession()->pageTextContains($label);
 
     // We expect to find 5 domain options.
+    $one = $two = NULL;
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
