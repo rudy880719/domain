@@ -67,14 +67,14 @@ class DomainAccessCommands extends DomainCommands {
       $policy_content = 'prompt';
     }
     else {
-      if (in_array($options['content-assign'], $this->reassignment_policies, TRUE)) {
+      if (in_array($options['content-assign'], $this->reassignmentPolicies, TRUE)) {
         $policy_content = $options['content-assign'];
       }
     }
 
     $delete_options = [
       'entity_filter' => 'node',
-      'policy' => $policy_content,
+      'policy' => $policy_content ?? 'ignore',
       'field' => DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD,
     ];
 
