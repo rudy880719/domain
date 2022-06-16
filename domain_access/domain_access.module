@@ -10,6 +10,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\domain_access\DomainAccessManagerInterface;
@@ -22,12 +23,12 @@ function domain_access_node_grants(AccountInterface $account, $op) {
   /** @var \Drupal\domain\Entity\Domain $active */
   $active = \Drupal::service('domain.negotiator')->getActiveDomain();
 
-  if (empty($active)) {
+  if (is_null($active)) {
     $active = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultDomain();
   }
 
   // No domains means no permissions.
-  if (empty($active)) {
+  if (is_null($active)) {
     return $grants;
   }
 
@@ -70,6 +71,7 @@ function domain_access_node_access_records(NodeInterface $node) {
   // now, grants may not be the same for all languages.
   $translations = $node->getTranslationLanguages();
   foreach ($translations as $langcode => $language) {
+    /** @var \Drupal\node\NodeInterface $translation */
     $translation = $node->getTranslation($langcode);
     // If there are no domains set, use the current one.
     $domains = \Drupal::service('domain_access.manager')->getAccessValues($translation);
@@ -141,7 +143,8 @@ function domain_access_user_presave(EntityInterface $account) {
  * Handles presave operations for devel generate.
  */
 function domain_access_presave_generate(EntityInterface $entity) {
-  if (!$entity->hasField(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)) {
+  if (!($entity instanceof FieldableEntityInterface) ||
+    !$entity->hasField(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)) {
     return;
   }
 
@@ -331,7 +334,7 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
   if (!isset($active_domain)) {
     // Ensure that the loader has run. In some tests, the kernel event has not.
     $active = \Drupal::service('domain.negotiator')->getActiveDomain();
-    if (empty($active)) {
+    if (is_null($active)) {
       $active = \Drupal::service('domain.negotiator')->getActiveDomain(TRUE);
     }
     $active_domain = $active;
@@ -396,10 +399,8 @@ function domain_access_node_create_access(AccountInterface $account, $context, $
   // Check to see that we have a valid active domain.
   // Without one, we cannot assert an opinion about access.
   /** @var \Drupal\domain\DomainInterface $active */
-  if ($active = \Drupal::service('domain.negotiator')->getActiveDomain()) {
-    $id = $active->getDomainId();
-  }
-  else {
+  $active = \Drupal::service('domain.negotiator')->getActiveDomain();
+  if (!$id = $active->getDomainId()) {
     return AccessResult::neutral();
   }
   // Load the full user record.
@@ -487,7 +488,7 @@ function domain_access_node_type_insert(EntityInterface $entity) {
  * node types.
  */
 function domain_access_entity_form_display_insert(EntityInterface $entity) {
-  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() === 'node' && $bundle = $entity->getTargetBundle()) {
+  if ($entity instanceof NodeInterface && !$entity->isSyncing() && $bundle = $entity->bundle()) {
     domain_access_confirm_fields('node', $bundle);
   }
 }
@@ -716,8 +717,8 @@ function domain_access_domain_delete(EntityInterface $entity) {
  * @see domain_access_default_form_values()
  */
 function domain_access_form_alter(&$form, &$form_state, $form_id) {
-  if ($object = $form_state->getFormObject() && !empty($object) &&
-      is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
+  $object = $form_state->getFormObject();
+  if (!empty($object) && is_callable([$object, 'getEntity']) && $entity = $object->getEntity()) {
     domain_access_default_form_values($form, $form_state, $entity);
   }
 }
