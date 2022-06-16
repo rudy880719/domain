@@ -41,4 +41,15 @@ interface DomainAliasInterface extends ConfigEntityInterface {
    */
   public function getRedirect();
 
+  /**
+   * Get the current environment of the request.
+   *
+   * Aliases map be mapped to an environment property, which lets a group of
+   * aliases act as "peers" and always set URLs relative to each other.
+   *
+   * @return string
+   *   The matching environment.
+   */
+  public function getEnvironment();
+
 }
