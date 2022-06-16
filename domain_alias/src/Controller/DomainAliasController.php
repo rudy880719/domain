@@ -40,6 +40,7 @@ class DomainAliasController extends ControllerBase {
    *   A render array as expected by drupal_render().
    */
   public function listing(DomainInterface $domain) {
+    /** @var \Drupal\domain_alias\DomainAliasListBuilder $list */
     $list = $this->entityTypeManager()->getListBuilder('domain_alias');
     $list->setDomain($domain);
     return $list->render();

@@ -16,6 +16,10 @@ class DomainAliasAccessControlHandler extends DomainAccessControlHandler {
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account = NULL) {
+    // We only care about DomainAlias entities.
+    if (!($entity instanceof DomainAliasInterface)) {
+      return AccessResult::neutral();
+    }
     $account = $this->prepareUser($account);
     // Check the global permission.
     if ($account->hasPermission('administer domain aliases')) {
@@ -26,7 +30,7 @@ class DomainAliasAccessControlHandler extends DomainAccessControlHandler {
     $domain = $entity->getDomain();
     // If this account can administer the domain, allow access to actions based
     // on permission.
-    if (!empty($domain) && $this->isDomainAdmin($domain, $account)) {
+    if (!is_null($domain) && $this->isDomainAdmin($domain, $account)) {
       if ($operation === 'view' && $account->hasPermission('view domain aliases')) {
         return AccessResult::allowed();
       }
