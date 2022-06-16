@@ -58,6 +58,7 @@ class DomainAliasDomainDeleteTest extends DomainTestBase {
     ];
 
     // Create an alias.
+    $id = $domain = NULL;
     foreach ($domains as $id => $domain) {
       $values = [
         'domain_id' => $domain->id(),

@@ -33,9 +33,10 @@ class DomainAliasWildcardTest extends DomainAliasTestBase {
   public function testDomainAliasWildcards() {
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
     $alias_loader = \Drupal::entityTypeManager()->getStorage('domain_alias');
-    $domains = $domain_storage->loadMultipleSorted(NULL, TRUE);
+    $domains = $domain_storage->loadMultipleSorted();
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = ['example.*', 'four.example.*', 'five.example.*'];
+    $domain = NULL;
     foreach ($domains as $domain) {
       $values = [
         'domain_id' => $domain->id(),

@@ -42,6 +42,7 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
     // 'three.example.com'.
     $prefixes = ['two', 'three'];
     // Test the response of each home page.
+    $alias_domains = [];
     /** @var \Drupal\domain\Entity\Domain $domain */
     foreach ($domain_storage->loadMultiple() as $domain) {
       $alias_domains[] = $domain;

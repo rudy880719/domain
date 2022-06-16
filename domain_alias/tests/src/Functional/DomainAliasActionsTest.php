@@ -38,6 +38,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = ['*.' . $base, 'four.' . $base, 'five.' . $base];
     $i = 0;
+    $domain = NULL;
     foreach ($domains as $domain) {
       $this->assertTrue($domain->getHostname() === $hostnames[$i], 'Hostnames set correctly');
       $this->assertTrue($domain->getCanonical() === $hostnames[$i], 'Canonical domains set correctly');

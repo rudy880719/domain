@@ -42,7 +42,7 @@ trait DomainAliasTestTrait {
    *   An optional alias pattern.
    * @param int $redirect
    *   An optional redirect (301 or 302).
-   * @param int $environment
+   * @param string $environment
    *   An optional environment string.
    * @param bool $save
    *   Whether to save the alias or return for validation.
