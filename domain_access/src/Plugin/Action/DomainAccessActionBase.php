@@ -18,7 +18,7 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
   use DependencyTrait;
 
   /**
-   * The user role entity type.
+   * The action's entity type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
@@ -80,7 +80,7 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
    */
   public function calculateDependencies() {
     if (!empty($this->configuration['domain_id'])) {
-      $prefix = $this->entityType->getConfigPrefix() . '.';
+      $prefix = $this->entityType->getConfigDependencyKey() . '.';
       $this->addDependency('config', $prefix . $this->configuration['domain_id']);
     }
     return $this->dependencies;
