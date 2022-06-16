@@ -40,7 +40,6 @@ class DomainAccessEntityFieldTest extends DomainTestBase {
    * Tests that the fields are accessed properly.
    */
   public function testDomainAccessEntityFields() {
-    $label = 'Send to all affiliates';
     // Create a vocabulary.
     $vocabulary = Vocabulary::create([
       'name' => 'Domain vocabulary',

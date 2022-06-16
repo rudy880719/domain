@@ -31,15 +31,19 @@ class DomainAccessElementTest extends DomainTestBase {
 
     // Create 5 domains.
     $this->domainCreateTestDomains(5);
+    // Create a new content type.
+    $this->createContentType(['type' => 'test']);
   }
 
   /**
    * Test runner.
    */
   public function testDomainAccessElement() {
-    $this->runInstalledTest('article');
-    $node_type = $this->createContentType(['type' => 'test']);
-    $this->runInstalledTest('test');
+    foreach (['article', 'test'] as $type) {
+      // TODO: Something new is forcing this line for the 'test' type.
+      domain_access_confirm_fields('node', $type);
+      $this->runInstalledTest($type);
+    }
   }
 
   /**
@@ -64,7 +68,6 @@ class DomainAccessElementTest extends DomainTestBase {
 
     // We expect to find 5 domain options. We set two as selected.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
-    $count = 0;
     $ids = ['example_com', 'one_example_com', 'two_example_com'];
     foreach ($domains as $domain) {
       $locator = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD . '[' . $domain->id() . ']';

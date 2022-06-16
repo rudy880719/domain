@@ -396,11 +396,12 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
  * @link https://www.drupal.org/node/2348203
  */
 function domain_access_node_create_access(AccountInterface $account, $context, $entity_bundle) {
+  $id = NULL;
   // Check to see that we have a valid active domain.
   // Without one, we cannot assert an opinion about access.
   /** @var \Drupal\domain\DomainInterface $active */
   $active = \Drupal::service('domain.negotiator')->getActiveDomain();
-  if (!$id = $active->getDomainId()) {
+  if ($active && !$id = $active->getDomainId()) {
     return AccessResult::neutral();
   }
   // Load the full user record.
@@ -481,7 +482,7 @@ function domain_access_node_type_insert(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_entity_form_display_insert().
  *
  * In some cases, form display modes are not set when the node type is created.
  * be sure to update our field definitions on creation of form_display for
