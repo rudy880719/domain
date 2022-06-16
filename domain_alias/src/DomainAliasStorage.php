@@ -95,7 +95,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   public function loadByEnvironment($environment) {
     $result = $this->loadByProperties(['environment' => $environment]);
 
-    return $result ?? [];
+    return $result;
   }
 
   /**
@@ -107,7 +107,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
       'environment' => $environment
     ]);
 
-    return $result ?? [];
+    return $result;
   }
 
   /**
@@ -169,6 +169,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    *   An array of eligible matching patterns.
    */
   private function buildPatterns(array $parts) {
+    $patterns = [];
     $count = count($parts);
     for ($i = 0; $i < $count; $i++) {
       // Basic replacement of each value.
