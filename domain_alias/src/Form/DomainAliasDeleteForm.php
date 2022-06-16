@@ -14,8 +14,10 @@ class DomainAliasDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
+    /** @var \Drupal\domain_alias\DomainAliasInterface $alias */
+    $alias = $this->entity;
     return new Url('domain_alias.admin', [
-      'domain' => $this->entity->getDomainId(),
+      'domain' => $alias->getDomainId(),
     ]);
   }
 

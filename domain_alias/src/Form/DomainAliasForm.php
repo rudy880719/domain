@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\domain_alias\DomainAliasValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -218,7 +219,8 @@ class DomainAliasForm extends EntityForm {
     /** @var \Drupal\domain_alias\DomainAliasInterface $alias */
     $alias = $this->entity;
     $edit_link = $alias->toLink($this->t('Edit'), 'edit-form')->toString();
-    if ($alias->save() === SAVED_NEW) {
+    $result = $alias->save();
+    if ($result === SAVED_NEW) {
       \Drupal::messenger()->addMessage($this->t('Created new domain alias.'));
       $this->logger('domain_alias')->notice('Created new domain alias %name.', [
         '%name' => $alias->label(),
@@ -235,6 +237,8 @@ class DomainAliasForm extends EntityForm {
     $form_state->setRedirect('domain_alias.admin', [
       'domain' => $alias->getDomainId()
     ]);
+
+    return $result;
   }
 
 }
