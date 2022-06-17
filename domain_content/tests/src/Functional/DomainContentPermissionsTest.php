@@ -56,7 +56,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       }
     }
     // This user should be able to see everything but all affiliates.
-    $this->limited_user = $this->drupalCreateUser([
+    $limited_user = $this->drupalCreateUser([
       'administer domains',
       'access administration pages',
       'access domain content',
@@ -64,9 +64,9 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       'publish to any assigned domain',
       'assign domain editors',
     ]);
-    $this->addDomainsToEntity('user', $this->limited_user->id(), array_keys($this->domains), DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
+    $this->addDomainsToEntity('user', $limited_user->id(), array_keys($this->domains), DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
 
-    $this->drupalLogin($this->limited_user);
+    $this->drupalLogin($limited_user);
     // Test the overview and domain-specific pages.
     foreach ($urls as $url) {
       $this->drupalGet($url);
@@ -90,14 +90,14 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
 
     // This user should be able to see everything but all affiliates and nothing
     // for editor assignments.
-    $this->editor_user = $this->drupalCreateUser([
+    $editor_user = $this->drupalCreateUser([
       'access administration pages',
       'access domain content',
       'publish to any assigned domain',
     ]);
-    $this->addDomainsToEntity('user', $this->editor_user->id(), array_keys($this->domains), DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
+    $this->addDomainsToEntity('user', $editor_user->id(), array_keys($this->domains), DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
 
-    $this->drupalLogin($this->editor_user);
+    $this->drupalLogin($editor_user);
     // Test the overview and domain-specific pages.
     foreach ($urls as $url) {
       $expected = 200;
@@ -129,16 +129,16 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
     }
 
     // This user should be able to see one domain for editor assignments.
-    $this->assign_user = $this->drupalCreateUser([
+    $assigned_user = $this->drupalCreateUser([
       'access administration pages',
       'access domain content editors',
       'assign domain editors',
     ]);
     $ids = array_keys($this->domains);
     $assigned_id = end($ids);
-    $this->addDomainsToEntity('user', $this->assign_user->id(), [$assigned_id], DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
+    $this->addDomainsToEntity('user', $assigned_user->id(), [$assigned_id], DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
 
-    $this->drupalLogin($this->assign_user);
+    $this->drupalLogin($assigned_user);
     // Test the overview and domain-specific pages.
     foreach ($urls as $url) {
       $expected = 200;
