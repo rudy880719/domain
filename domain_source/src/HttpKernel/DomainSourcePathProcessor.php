@@ -41,7 +41,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
   /**
    * The path alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -153,7 +153,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
     // One hook for entities.
     if (!empty($entity) && is_object($entity)) {
       // Ensure we send the right translation.
-      if (!empty($langcode) && method_exists($entity, 'hasTranslation') && $entity->hasTranslation($langcode) && $translation = $entity->getTranslation($langcode)) {
+      if (!empty($langcode) && $entity->getEntityType()->isTranslatable() && $entity->hasTranslation($langcode) && $translation = $entity->getTranslation($langcode)) {
         $entity = $translation;
       }
       if (isset($options['domain_target_id'])) {
@@ -275,7 +275,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
       // Ensure that the loader has run.
       // In some tests, the kernel event has not.
       $active = $this->negotiator->getActiveDomain();
-      if (empty($active)) {
+      if (is_null($active)) {
         $active = $this->negotiator->getActiveDomain(TRUE);
       }
       $this->activeDomain = $active;
