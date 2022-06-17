@@ -61,11 +61,11 @@ class DomainConfigAlterHookTest extends DomainConfigTestBase {
     // Check for the count of hook implementations.
     // This varies from Drupal 9.4 onward.
     if (method_exists($this->moduleHandler, 'getImplementations')) {
-      /** @phpstan-ignore-next-line */
+      // @phpstan-ignore-next-line
       $hooks = $this->moduleHandler->getImplementations('domain_request_alter');
       $this->assertCount(1, $hooks, 'One hook implementation found.');
     }
-    else if (method_exists($this->moduleHandler, 'hasImplementations')) {
+    elseif (method_exists($this->moduleHandler, 'hasImplementations')) {
       $hooks = $this->moduleHandler->hasImplementations('domain_request_alter');
       $this->assertTrue($hooks, 'Hook implementations found.');
     }

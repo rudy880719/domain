@@ -5,7 +5,7 @@ namespace Drupal\domain_config_ui\Config;
 use Drupal\Core\Config\ConfigFactory as CoreConfigFactory;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\domain_config_ui\DomainConfigUIManager;
+use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -16,7 +16,7 @@ class ConfigFactory extends CoreConfigFactory {
   /**
    * The Domain config UI manager.
    *
-   * @var Drupal\domain_config_ui\DomainConfigUIManager
+   * @var \Drupal\domain_config_ui\DomainConfigUIManagerInterface
    */
   protected $domainConfigUIManager;
 
@@ -29,10 +29,10 @@ class ConfigFactory extends CoreConfigFactory {
    *   An event dispatcher instance to use for configuration events.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
-   * @param \Drupal\domain_config_ui\DomainConfigUIManager $domain_config_ui_manager
+   * @param \Drupal\domain_config_ui\DomainConfigUIManagerInterface $domain_config_ui_manager
    *   The domain config UI manager.
    */
-  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config, DomainConfigUIManager $domain_config_ui_manager) {
+  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config, DomainConfigUIManagerInterface $domain_config_ui_manager) {
     parent::__construct($storage, $event_dispatcher, $typed_config);
     $this->domainConfigUIManager = $domain_config_ui_manager;
   }
@@ -53,10 +53,10 @@ class ConfigFactory extends CoreConfigFactory {
   /**
    * Set the Domain config UI manager.
    *
-   * @param \Drupal\domain_config_ui\DomainConfigUIManager $domain_config_ui_manager
+   * @param \Drupal\domain_config_ui\DomainConfigUIManagerInterface $domain_config_ui_manager
    *   The Domain config UI manager.
    */
-  public function setDomainConfigUiManager(DomainConfigUIManager $domain_config_ui_manager) {
+  public function setDomainConfigUiManager(DomainConfigUIManagerInterface $domain_config_ui_manager) {
     $this->domainConfigUIManager = $domain_config_ui_manager;
   }
 
