@@ -76,6 +76,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $this->assertSession()->pageTextContains('Domain Source');
 
     // We expect to find 5 domain options + none.
+    $one = $two = $two_path = NULL;
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';

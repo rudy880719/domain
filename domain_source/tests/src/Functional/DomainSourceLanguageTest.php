@@ -3,6 +3,7 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -65,9 +66,9 @@ class DomainSourceLanguageTest extends DomainTestBase {
     // Create an Afrikaans translation assigned to domain 2.
     $id2 = 'two_example_com';
     $translation = $node->addTranslation('af');
-    $translation->title->value = $this->randomString();
-    $translation->{DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD} = $id2;
-    $translation->status = 1;
+    $translation->set('title', $this->randomString());
+    $translation->set(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, $id2);
+    $translation->set('status', 1);
     $node->save();
 
     // Variables for our tests.
