@@ -10,28 +10,28 @@ trait DomainConfigUITestTrait {
   /**
    * A user with full permissions to use the module.
    *
-   * @var Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $adminUser;
 
   /**
    * A user with access administration but not this module.
    *
-   * @var Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $editorUser;
 
   /**
    * A user with access to domains but not language.
    *
-   * @var Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $limitedUser;
 
   /**
    * A user with permission to domains and language.
    *
-   * @var Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $languageUser;
 
