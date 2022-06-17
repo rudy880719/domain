@@ -24,6 +24,13 @@ class DomainSourceToken {
   protected $configFactory;
 
   /**
+   * An array of routes to ignore.
+   *
+   * @var array
+   */
+  public $excludedRoutes;
+
+  /**
    * Constructs a DomainSourceToken object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -65,7 +72,7 @@ class DomainSourceToken {
             $node = $data['node'];
             $original = $tokens['canonical-source-domain-url'];
             if (in_array('canonical', $this->getExcludedRoutes()) && $node->hasField('field_domain_source') && !$node->field_domain_source->isEmpty()) {
-              /** @var \Drupal\domain\Domain $sourceDomain */
+              /** @var \Drupal\domain\Entity\Domain $sourceDomain */
               $sourceDomain = $node->field_domain_source->entity;
               $url = $node->toUrl('canonical')->toString();
               $replacements[$original] = $sourceDomain->buildUrl($url);
