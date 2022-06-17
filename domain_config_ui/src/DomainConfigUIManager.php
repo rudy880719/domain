@@ -53,30 +53,36 @@ class DomainConfigUIManager implements DomainConfigUIManagerInterface {
    * {@inheritdoc}
    */
   public function getSelectedDomainId() {
+    $id = NULL;
     if (!empty($this->getRequest()) && $domain = $this->currentRequest->get('domain_config_ui_domain')) {
-      return $domain;
+      $id = $domain;
     }
     elseif (isset($_SESSION['domain_config_ui_domain'])) {
-      return $_SESSION['domain_config_ui_domain'];
+      $id = $_SESSION['domain_config_ui_domain'];
     }
+
+    return $id;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getSelectedLanguageId() {
+    $id = NULL;
     if (!empty($this->getRequest()) && $language = $this->currentRequest->get('domain_config_ui_language')) {
-      return $language;
+      $id = $language;
     }
     elseif (isset($_SESSION['domain_config_ui_language'])) {
-      return $_SESSION['domain_config_ui_language'];
+      $id = $_SESSION['domain_config_ui_language'];
     }
+
+    return $id;
   }
 
   /**
    * Ensures that the currentRequest is loaded.
    *
-   * @return Symfony\Component\HttpFoundation\Request|null
+   * @return \Symfony\Component\HttpFoundation\Request|null
    *   The current request object.
    */
   private function getRequest() {

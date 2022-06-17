@@ -12,13 +12,41 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainElementManagerInterface;
-use Drupal\domain_config_ui\DomainConfigUIManager;
+use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class SwitchForm.
  */
 class SwitchForm extends FormBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The domain config UI manager.
+   *
+   * @var \Drupal\domain_config_ui\DomainConfigUIManagerInterface
+   */
+  protected $domainConfigUIManager;
+
+  /**
+   * The domain field element manager.
+   *
+   * @var \Drupal\domain\DomainElementManagerInterface
+   */
+  protected $domainElementManager;
 
   /**
    * The domain entity access control handler.
@@ -28,19 +56,26 @@ class SwitchForm extends FormBase {
   protected $accessHandler;
 
   /**
+   * The domain storage service.
+   *
+   * @var \Drupal\domain\DomainStorageInterface
+   */
+  protected $domainStorage;
+
+  /**
    * Constructs a new DevelGenerateForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\domain_config_ui\DomainConfigUIManager $domain_config_ui_manager
+   * @param \Drupal\domain_config_ui\DomainConfigUIManagerInterface $domain_config_ui_manager
    *   The domain config UI manager.
    * @param \Drupal\domain\DomainElementManagerInterface $domain_element_manager
    *   The domain field element manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, DomainConfigUIManager $domain_config_ui_manager, DomainElementManagerInterface $domain_element_manager) {
-    $this->domainConfigUiManager = $domain_config_ui_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, DomainConfigUIManagerInterface $domain_config_ui_manager, DomainElementManagerInterface $domain_element_manager) {
+    $this->domainConfigUIManager = $domain_config_ui_manager;
     $this->languageManager = $language_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->domainStorage = $this->entityTypeManager->getStorage('domain');
@@ -112,7 +147,7 @@ class SwitchForm extends FormBase {
     ];
 
     // Add domain switch select field.
-    if ($selected_domain_id = $this->domainConfigUiManager->getSelectedDomainId()) {
+    if ($selected_domain_id = $this->domainConfigUIManager->getSelectedDomainId()) {
       $selected_domain = $this->domainStorage->load($selected_domain_id);
     }
     // Get the form options.
@@ -139,7 +174,7 @@ class SwitchForm extends FormBase {
         '#type' => 'select',
         '#title' => $this->t('Language'),
         '#options' => $language_options,
-        '#default_value' => $this->domainConfigUiManager->getSelectedLanguageId(),
+        '#default_value' => $this->domainConfigUIManager->getSelectedLanguageId(),
         '#ajax' => [
           'callback' => '::switchCallback',
         ],

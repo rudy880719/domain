@@ -32,6 +32,7 @@ class DomainConfigUIController {
    */
   public function ajaxOperation($route_name, $op) {
     $success = FALSE;
+    $message = '';
     // Get the query string for the return URL.
     $query = \Drupal::requestStack()->getCurrentRequest()->getQueryString();
     $params = [];
