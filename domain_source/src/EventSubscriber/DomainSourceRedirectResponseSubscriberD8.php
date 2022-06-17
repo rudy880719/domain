@@ -11,8 +11,19 @@ use Drupal\domain\DomainRedirectResponse;
 
 /**
  * Allows manipulation of the response object when performing a redirect.
+ *
+ * This class uses Symfony < 4.3 and is deprecated.
  */
 class DomainSourceRedirectResponseSubscriberD8 extends RedirectResponseSubscriber {
+
+  /**
+   * The request context.
+   *
+   * This should be handled by the parent class.
+   *
+   * @var \Drupal\Core\Routing\RequestContext
+   */
+  public $requestContext;
 
   /**
    * Allows manipulation of the response object when performing a redirect.
@@ -20,6 +31,7 @@ class DomainSourceRedirectResponseSubscriberD8 extends RedirectResponseSubscribe
    * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
    *   The Event to process.
    */
+  //@phpstan-ignore-next-line
   public function checkRedirectUrl(FilterResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceof RedirectResponse) {
