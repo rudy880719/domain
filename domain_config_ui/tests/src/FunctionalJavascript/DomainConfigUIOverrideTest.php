@@ -26,7 +26,6 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
    */
   protected $strictConfigSchema = FALSE; // phpcs:ignore
 
-
   /**
    * The default theme.
    *
@@ -87,7 +86,7 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertWaitOnAjaxRequest();
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -111,12 +110,12 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertWaitOnAjaxRequest();
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertWaitOnAjaxRequest();
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
