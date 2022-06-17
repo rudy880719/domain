@@ -136,13 +136,13 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
           $config_name = $this->getDomainConfigName($name, $this->domain);
           // Check to see if the config storage has an appropriately named file
           // containing override data.
-          if (in_array($config_name['langcode'], $this->storage->listAll('domain.config.', TRUE))
+          if (in_array($config_name['langcode'], $this->storage->listAll('domain.config.'))
             && ($override = $this->storage->read($config_name['langcode']))
           ) {
             $overrides[$name] = $override;
           }
           // Check to see if we have a file without a specific language.
-          elseif (in_array($config_name['domain'], $this->storage->listAll('domain.config.', TRUE))
+          elseif (in_array($config_name['domain'], $this->storage->listAll('domain.config.'))
             && ($override = $this->storage->read($config_name['domain']))
           ) {
             $overrides[$name] = $override;

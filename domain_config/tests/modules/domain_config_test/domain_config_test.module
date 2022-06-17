@@ -18,10 +18,10 @@ function domain_config_test_domain_request_alter(DomainInterface $domain) {
  * Implements hook_page_attachments_alter().
  */
 function domain_config_test_page_attachments_alter(array &$attachments) {
-  /** @var \Drupal\domain\DomainNegotiatorInterface $Negotiator */
+  /** @var \Drupal\domain\DomainNegotiatorInterface $negotiator */
   $negotiator = \Drupal::service('domain.negotiator');
   $domain = $negotiator->getActiveDomain();
-  if (!empty($domain) && $domain->get('config_test') === 'aye') {
+  if (!is_null($domain) && $domain->get('config_test') === 'aye') {
     $attachments['#attached']['http_header'][] = [
       'X-Domain-Config-Test-page-attachments-hook',
       'invoked',

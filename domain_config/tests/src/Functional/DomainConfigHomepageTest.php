@@ -49,6 +49,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
       'promoted' => TRUE,
     ]);
     $homepages = $this->getHomepages();
+    $domain = NULL;
     foreach ($domains as $domain) {
       foreach (['en', 'es'] as $langcode) {
         $prefix = '';

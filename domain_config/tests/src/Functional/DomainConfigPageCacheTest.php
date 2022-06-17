@@ -30,7 +30,7 @@ class DomainConfigPageCacheTest extends DomainConfigTestBase {
     $this->domainCreateTestDomains(5);
     $expected = [];
 
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple(NULL, TRUE);
+    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $this->drupalGet($domain->getPath());
       // The page cache includes a colon at the end.
