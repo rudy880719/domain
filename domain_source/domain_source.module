@@ -5,13 +5,16 @@
  * Domain-based path rewrites for content.
  */
 
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\domain\DomainRedirectResponse;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Creates our fields for an entity bundle.
@@ -86,7 +89,7 @@ function domain_source_node_type_insert(EntityInterface $entity) {
  * node types.
  */
 function domain_source_entity_form_display_insert(EntityInterface $entity) {
-  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() === 'node' && $bundle = $entity->getTargetBundle()) {
+  if ($entity instanceof NodeInterface && !$entity->isSyncing() && $bundle = $entity->bundle()) {
     domain_source_confirm_fields('node', $bundle);
   }
 }
@@ -102,8 +105,8 @@ function domain_source_entity_form_display_insert(EntityInterface $entity) {
  */
 function domain_source_get(EntityInterface $entity) {
   $source = NULL;
-
-  if (!isset($entity->{DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD})) {
+  $field = DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD;
+  if (!($entity instanceof FieldableEntityInterface) || !isset($entity->{$field})) {
     return $source;
   }
 
@@ -147,6 +150,7 @@ function domain_source_form_alter(&$form, &$form_state, $form_id) {
  */
 function domain_source_form_validate($element, FormStateInterface $form_state) {
   $values = $form_state->getValues();
+  $access_values = [];
   // This is only run if Domain Access is present.
   if (isset($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
     $access_values = $values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD];
@@ -180,7 +184,8 @@ function domain_source_form_validate($element, FormStateInterface $form_state) {
  */
 function domain_source_form_submit(&$form, FormStateInterface $form_state) {
   // Ensure that we have saved an entity.
-  if ($object = $form_state->getFormObject()) {
+  $object = $form_state->getFormObject();
+  if ($object instanceof EntityFormInterface) {
     $urlObject = $object->getEntity()->toUrl();
   }
   // Validate that the URL will be considered "external" by Drupal, which means
@@ -265,7 +270,7 @@ function domain_source_presave_generate(EntityInterface $entity) {
   $exists = \Drupal::moduleHandler()->moduleExists('devel_generate');
   $values = [];
   $selections = [];
-  if ($exists && isset($entity->devel_generate)) {
+  if ($exists && $entity instanceof FieldableEntityInterface && $entity->get('devel_generate')) {
     // If set by the form.
     if (isset($entity->devel_generate['domain_access'])) {
       $selection = array_filter($entity->devel_generate['domain_access']);
