@@ -10,6 +10,26 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 trait DomainTestTrait {
 
   /**
+   * Sets a base hostname for running tests.
+   *
+   * When creating test domains, try to use $this->baseHostname or the
+   * domainCreateTestDomains() method.
+   *
+   * @var string
+   */
+  public $baseHostname;
+
+  /**
+   * Sets a base TLD for running tests.
+   *
+   * When creating test domains, try to use $this->baseTLD or the
+   * domainCreateTestDomains() method.
+   *
+   * @var string
+   */
+  public $baseTLD;
+
+  /**
    * Generates a list of domains for testing.
    *
    * In my environment, I use the example.local hostname as a base. Then I name

@@ -13,8 +13,8 @@ use Drupal\Tests\domain\Traits\DomainTestTrait;
  */
 class DomainConfigUIOverrideTest extends WebDriverTestBase {
 
-  use DomainConfigUITestTrait;
   use DomainTestTrait;
+  use DomainConfigUITestTrait;
 
   /**
    * Disabled config schema checking.
