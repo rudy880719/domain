@@ -30,8 +30,9 @@ class DomainSourceRedirectResponseSubscriberD8 extends RedirectResponseSubscribe
    *
    * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
    *   The Event to process.
+   *
+   * @phpstan-ignore-next-line
    */
-  //@phpstan-ignore-next-line
   public function checkRedirectUrl(FilterResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceof RedirectResponse) {
