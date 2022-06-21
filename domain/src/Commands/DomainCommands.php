@@ -6,6 +6,7 @@ use Consolidation\AnnotatedCommand\Events\CustomEventAwareInterface;
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareTrait;
 use Consolidation\OutputFormatters\StructuredData\PropertyList;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
+use Drupal\Component\DependencyInjection\Container;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -13,14 +14,94 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\domain\DomainInterface;
+use Drupal\domain\DomainValidatorInterface;
 use Drush\Commands\DrushCommands;
 use GuzzleHttp\Exception\TransferException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Drush commands for the domain module.
  */
 class DomainCommands extends DrushCommands implements CustomEventAwareInterface {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * The domain validator.
+   *
+   * @var \Drupal\domain\DomainValidatorInterface
+   */
+  protected $validator;
+
+  /**
+   * The entity Query.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryInterface
+   */
+  protected $entityQuery;
+
+  /**
+   * Constructs a DomainForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity field manager.
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *   The Config Factory object.
+   * @param \Drupal\domain\DomainValidatorInterface $validator
+   *   The domain validator.
+   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+   *   The entity query.
+   */
+  public function __construct(EntityTypeManagerInterface $entityTypeManager,
+  EntityFieldManagerInterface $entityFieldManager,
+  ConfigFactory $configFactory,
+  DomainValidatorInterface $validator,
+  QueryInterface $entity_query) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->entityFieldManager = $entityFieldManager;
+    $this->configFacotry = $configFactory;
+    $this->validator = $validator;
+    $this->entityQuery = $entity_query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+    $container->get('entity_type.manager'),
+    $container->get('entity_field.manager'),
+    $container->get('config.factory'),
+    $container->get('domain.validator'),
+    $container->get('entity.query.sql')
+    );
+  }
 
   use CustomEventAwareTrait;
 
@@ -948,7 +1029,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     foreach ($prepared as $key => $item) {
       $hostname = mb_strtolower($item);
       $values = [
-        'name' => ($item !== $primary) ? ucwords(str_replace(".$primary", '', $item)) : \Drupal::config('system.site')->get('name'),
+        'name' => ($item !== $primary) ? ucwords(str_replace(".$primary", '', $item)) : $this->configFactory->get('name'),
         'hostname' => $hostname,
         'scheme' => $options['scheme'],
         'status' => 1,
@@ -990,7 +1071,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     }
 
     try {
-      $this->domainStorage = \Drupal::entityTypeManager()->getStorage('domain');
+      $this->domainStorage = $this->entityTypeManager->getStorage('domain');
     }
     catch (PluginNotFoundException $e) {
       throw new DomainCommandException('Unable to get domain: no storage', $e);
@@ -1137,8 +1218,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   protected function checkDomain(DomainInterface $domain) {
     /** @var \Drupal\domain\DomainValidatorInterface $validator */
-    $validator = \Drupal::service('domain.validator');
-    return $validator->checkResponse($domain);
+    return $this->validator->checkResponse($domain);
   }
 
   /**
@@ -1154,8 +1234,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   protected function validateDomain(DomainInterface $domain) {
     /** @var \Drupal\domain\DomainValidatorInterface $validator */
-    $validator = \Drupal::service('domain.validator');
-    return $validator->validate($domain->getHostname());
+    return $this->validator->validate($domain->getHostname());
   }
 
   /**
@@ -1247,8 +1326,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   protected function ensureEntityFieldMap() {
     // Try to avoid repeated calls to getFieldMap() assuming it's expensive.
     if (empty($this->entityFieldMap)) {
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-      $this->entityFieldMap = $entity_field_manager->getFieldMap();
+      $this->entityFieldMap = $this->entityFieldManager->getFieldMap();
     }
   }
 
@@ -1279,7 +1357,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       return [];
     }
 
-    $efq = \Drupal::entityQuery($entity_type);
+    $efq = $this->entityQuery($entity_type);
     // Don't access check or we wont get all of the possible entities moved.
     $efq->accessCheck(FALSE);
     $efq->condition($field, $domain_id, '=');
@@ -1314,7 +1392,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function reassignEntities($entity_type, $field, DomainInterface $old_domain, DomainInterface $new_domain, array $ids) {
-    $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type);
+    $entity_storage = $this->entityTypeManager->getStorage($entity_type);
     $entities = $entity_storage->loadMultiple($ids);
 
     foreach ($entities as $entity) {
