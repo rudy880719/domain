@@ -3,16 +3,57 @@
 namespace Drupal\domain_config_ui\Form;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\Messenger;
 use Drupal\domain_config_ui\Controller\DomainConfigUIController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class DeleteForm.
  */
 class DeleteForm extends FormBase {
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
+   * Constructs a new deleteForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger.
+   */
+  public function __construct(ConfigFactoryInterface $configFactory,
+  Messenger $messenger) {
+    $this->configFactory = $configFactory;
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('messenger')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -31,7 +72,7 @@ class DeleteForm extends FormBase {
     }
 
     $elements = DomainConfigUIController::deriveElements($config_name);
-    $config = \Drupal::configFactory()->get($config_name)->getRawData();
+    $config = $this->configFactory->get($config_name)->getRawData();
 
     $form['help'] = [
       '#type' => 'item',
@@ -91,9 +132,9 @@ class DeleteForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $name = $form_state->getValue('config_name');
     $message = $this->t('Domain configuration %label has been deleted.', ['%label' => $name]);
-    \Drupal::messenger()->addMessage($message);
-    \Drupal::logger('domain_config')->notice($message);
-    \Drupal::configFactory()->getEditable($name)->delete();
+    $this->messenger->addMessage($message);
+    $this->logger('domain_config')->notice($message);
+    $this->configFactory()->getEditable($name)->delete();
     $form_state->setRedirectUrl(new Url('domain_config_ui.list'));
   }
 
