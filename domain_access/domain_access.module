@@ -56,10 +56,10 @@ function domain_access_node_grants(AccountInterface $account, $op) {
         $grants['domain_unpublished'][] = $id;
       }
     }
-    else {
+    elseif (in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
       /* @see \Drupal\domain_access\DomainAccessPermissions::nodePermissions() */
       foreach (array_keys(NodeType::loadMultiple()) as $type_id) {
-        if ($user->hasPermission("update ${type_id} content on assigned domains") && (in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value))) {
+        if ($user->hasPermission("update ${type_id} content on assigned domains")) {
           $grants['domain_id'][] = $id;
           $grants['domain_unpublished'][] = $id;
         }
@@ -72,13 +72,13 @@ function domain_access_node_grants(AccountInterface $account, $op) {
         $grants['domain_id'][] = $id;
         $grants['domain_unpublished'][] = $id;
       }
-      else {
-        /* @see \Drupal\domain_access\DomainAccessPermissions::nodePermissions() */
-        foreach (array_keys(NodeType::loadMultiple()) as $type_id) {
-          if ($user->hasPermission("delete ${type_id} content on assigned domains") && (in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value))) {
-            $grants['domain_id'][] = $id;
-            $grants['domain_unpublished'][] = $id;
-          }
+    }
+    elseif (in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+      /* @see \Drupal\domain_access\DomainAccessPermissions::nodePermissions() */
+      foreach (array_keys(NodeType::loadMultiple()) as $type_id) {
+        if ($user->hasPermission("delete ${type_id} content on assigned domains")) {
+          $grants['domain_id'][] = $id;
+          $grants['domain_unpublished'][] = $id;
         }
       }
     }
