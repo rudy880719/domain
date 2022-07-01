@@ -88,7 +88,15 @@ class DomainNavBlockTest extends DomainTestBase {
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
       $this->findLink($domain->getPath());
-      $this->assertSession()->responseContains($domain->getPath());
+      $webAssert = $this->assertSession();
+      $webAssert->responseContains($domain->getPath());
+
+      $selector = '.block-domain-nav-block a[href="http://' . $domain->getHostname() . '/"]';
+      if ($domain->isDefault()) {
+        $webAssert->elementAttributeContains('css', $selector, 'class', 'active');
+      } else {
+        $webAssert->elementAttributeNotExists('css', $selector, 'class');
+      }
     }
   }
 
