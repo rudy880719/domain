@@ -87,16 +87,14 @@ class DomainNavBlockTest extends DomainTestBase {
     $this->drupalGet('user/login');
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
-      $this->findLink($domain->getPath());
-      $webAssert = $this->assertSession();
-      $webAssert->responseContains($domain->getPath());
-
-      $selector = '.block-domain-nav-block a[href="http://' . $domain->getHostname() . '/"]';
+      $domainLink = $this->findLink($domain->getPath());
       if ($domain->isDefault()) {
-        $webAssert->elementAttributeContains('css', $selector, 'class', 'active');
+        $this->assertTrue($domainLink->getAttribute('class') == 'active');
       } else {
-        $webAssert->elementAttributeNotExists('css', $selector, 'class');
+        $this->assertFalse($domainLink->hasAttribute('class'));
       }
+
+      $this->assertSession()->responseContains($domain->getPath());
     }
   }
 
