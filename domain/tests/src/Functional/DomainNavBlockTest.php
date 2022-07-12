@@ -90,7 +90,8 @@ class DomainNavBlockTest extends DomainTestBase {
       $domainLink = $this->findLink($domain->getPath());
       if ($domain->isDefault()) {
         $this->assertTrue($domainLink->getAttribute('class') == 'active');
-      } else {
+      }
+      else {
         $this->assertFalse($domainLink->hasAttribute('class'));
       }
 
