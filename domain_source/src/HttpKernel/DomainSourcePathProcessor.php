@@ -3,7 +3,7 @@
 namespace Drupal\domain_source\HttpKernel;
 
 use Drupal\domain\DomainNegotiatorInterface;
-use Drupal\path_alias\AliasManagerInterface;
+use Drupal\path_alias\AliasManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -89,12 +89,12 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
    *   The module handler service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManager $alias_manager
    *   The path alias manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(DomainNegotiatorInterface $negotiator, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, AliasManagerInterface $alias_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(DomainNegotiatorInterface $negotiator, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, AliasManager $alias_manager, ConfigFactoryInterface $config_factory) {
     $this->negotiator = $negotiator;
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
