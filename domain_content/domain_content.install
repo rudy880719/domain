@@ -9,12 +9,22 @@
  * Implements hook_requirements().
  */
 function domain_content_requirements($phase) {
-  // Module files may not be included during install.
-  require_once __DIR__ . './../domain_access/src/DomainAccessManagerInterface.php';
-
   $requirements = [];
   $allow = TRUE;
   if ($phase === 'install') {
+
+    // Firstly we need to check whether DomainAccess module is enabled to
+    // prevent possible fatal errors because of using
+    // DomainAccessManagerInterface below.
+    if (!\Drupal::moduleHandler()->moduleExists('domain_access')) {
+      $requirements['domain_content'] = [
+        'title' => t('Domain content'),
+        'description' => t('Domain content requires a Domain access module to be enabled.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+      return $requirements;
+    }
+
     $list['user'] = 'user';
     $node_types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
     foreach ($node_types as $type => $info) {
