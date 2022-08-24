@@ -84,7 +84,7 @@ class DomainForm extends EntityForm {
     $domain = $this->entity;
 
     // Create defaults if this is the first domain.
-    $count_existing = $this->domainStorage->getQuery()->count()->execute();
+    $count_existing = $this->domainStorage->getQuery()->accessCheck(FALSE)->count()->execute();
     if (!$count_existing) {
       $domain->addProperty('hostname', $this->domainStorage->createHostname());
       $domain->addProperty('name', $this->config('system.site')->get('name'));
