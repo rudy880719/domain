@@ -197,3 +197,53 @@ point to your drupal instance. I use variants of `example.local` for local tests
 in most test cases. See `DomainTestBase::domainCreateTestDomains()` for the logic.
 
 When running tests, you normally need to be on the default domain.
+
+### Code linting
+
+We use (and recommend) [PHPCBF](https://phpqa.io/projects/phpcbf.html), [PHP Codesniffer](https://github.com/squizlabs/PHP_CodeSniffer) and [phpstan](https://phpstan.org/) for code quality review.
+
+The following commands are run before commit:
+
+* `vendor/bin/phpcbf web/modules/contrib/domain --standard="Drupal,DrupalPractice" -n --extensions="php,module,inc,install,test,profile,theme"`
+* `vendor/bin/phpcs web/modules/contrib/domain --standard="Drupal,DrupalPractice" -n --extensions="php,module,inc,install,test,profile,theme"`
+* `vendor/bin/phpstan analyse web/modules/contrib/domain`
+
+### Testing tools
+
+We are using the following composer dev dependencies for local testing:
+
+```
+  "drupal/coder": "^8.3",
+  "mglaman/drupal-check": "^1.4",
+  "squizlabs/php_codesniffer": "^3.6",
+```
+
+Note that PHPCBF is installed as part of php_codesniffer.
+
+### phpstan config
+
+We use the following phpstan.neon file:
+
+```
+parameters:
+  level: 2
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"
+    # Ignore common errors for now.
+    - "#Drupal calls should be avoided in classes, use dependency injection instead#"
+    # This check was ignored on purpose until the issues with it, which started in version 1.1.15, are solved.
+    # @see https://www.drupal.org/node/3280328
+    - "#^Missing explicit access check on entity query.#"
+  drupal:
+    entityMapping:
+      domain:
+        class: Drupal\domain\Entity\Domain
+        storage: Drupal\domain\DomainStorage
+      domain_alias:
+          class: Drupal\domain_alias\Entity\DomainAlias
+          storage: Drupal\domain_alias\DomainAliasStorage
+
+```
+
+The drupal entityMapping is also provided by `entity_mapping.neon` in the project root, for use with other tests.
