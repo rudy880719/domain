@@ -168,7 +168,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    *
    * It will be the same name with a prefix depending on domain and language:
    *
-   * @code domain.config.DOMAIN_ID.LANGCODE @endcode
+   * `domain.config.DOMAIN_ID.LANGCODE`
    *
    * @param string $name
    *   The name of the config object.
