@@ -159,7 +159,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     parent::preCreate($storage_controller, $values);
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
     $default = $domain_storage->loadDefaultId();
-    $count = $storage_controller->getQuery()->count()->execute();
+    $count = $storage_controller->getQuery()->accessCheck(FALSE)->count()->execute();
     $values += [
       'scheme' => empty($GLOBALS['is_https']) ? 'http' : 'https',
       'status' => 1,

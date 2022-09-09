@@ -232,9 +232,6 @@ parameters:
     - "#^Unsafe usage of new static#"
     # Ignore common errors for now.
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
-    # This check was ignored on purpose until the issues with it, which started in version 1.1.15, are solved.
-    # @see https://www.drupal.org/node/3280328
-    - "#^Missing explicit access check on entity query.#"
   drupal:
     entityMapping:
       domain:
