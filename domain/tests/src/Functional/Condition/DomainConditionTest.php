@@ -64,17 +64,19 @@ class DomainConditionTest extends DomainTestBase {
     // Grab the domain condition and configure it to check against one domain.
     $configuration = [
       'domains' => [$this->testDomain->id() => $this->testDomain->id()],
-      'context' => ['domain' => $this->notDomain],
     ];
+    /** @var \Drupal\domain\Plugin\Condition\Domain $condition */
     $condition = $this->manager->createInstance('domain', $configuration);
+    $condition->setContextValue('domain', $this->notDomain);
     $this->assertFalse($condition->execute(), 'Domain request condition fails on wrong domain.');
 
     // Grab the domain condition and configure it to check against itself.
     $configuration = [
       'domains' => [$this->testDomain->id() => $this->testDomain->id()],
-      'context' => ['domain' => $this->testDomain],
     ];
+    /** @var \Drupal\domain\Plugin\Condition\Domain $condition */
     $condition = $this->manager->createInstance('domain', $configuration);
+    $condition->setContextValue('domain', $this->testDomain);
     $this->assertTrue($condition->execute(), 'Domain request condition succeeds on matching domain.');
 
     // Check for the proper summary.
