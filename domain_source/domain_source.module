@@ -112,9 +112,12 @@ function domain_source_get(EntityInterface $entity) {
 
   $value = $entity->get(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD)->offsetGet(0);
   if (!empty($value)) {
-    $target_id = $value->target_id;
-    if ($domain = \Drupal::entityTypeManager()->getStorage('domain')->load($target_id)) {
-      $source = $domain->id();
+    if (isset($value->target_id)) {
+      $target_id = $value->target_id;
+
+      if ($domain = \Drupal::entityTypeManager()->getStorage('domain')->load($target_id)) {
+        $source = $domain->id();
+      }
     }
   }
   return $source;

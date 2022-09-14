@@ -23,7 +23,7 @@ class DomainSourceElementManager extends DomainElementManager implements DomainS
       $entity = $object->getEntity();
       $entity_values = $entity->get(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD)->offsetGet(0);
       if (isset($field['widget']['#options']) && !empty($entity_values)) {
-        $value = $entity_values->getValue('target_id');
+        $value = $entity_values->getValue();
         $options = array_diff_key(array_flip($value), $field['widget']['#options']);
       }
     }
