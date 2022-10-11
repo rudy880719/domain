@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Class DeleteForm.
+ * The class DeleteForm.
  */
 class DeleteForm extends FormBase {
 

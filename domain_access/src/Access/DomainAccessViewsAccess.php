@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Route;
 use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
- * Class DomainAccessViewsAccess.
+ * The class DomainAccessViewsAccess.
  *
  * @package Drupal\domain_access\Access
  */

@@ -40,7 +40,6 @@ class DomainSourceElementTest extends DomainTestBase {
    */
   public function testDomainSourceElement() {
     $this->runInstalledTest('article');
-    $node_type = $this->createContentType(['type' => 'test']);
     $this->runInstalledTest('test');
   }
 
@@ -68,7 +67,6 @@ class DomainSourceElementTest extends DomainTestBase {
 
     // We expect to find 5 domain options. We set two as selected.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
-    $count = 0;
     $ids = ['example_com', 'one_example_com', 'two_example_com'];
     foreach ($domains as $domain) {
       $locator = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD . '[' . $domain->id() . ']';

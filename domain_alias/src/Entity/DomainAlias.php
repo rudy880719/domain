@@ -134,7 +134,7 @@ class DomainAlias extends ConfigEntityBase implements DomainAliasInterface {
     // Invalidate cache tags relevant to domains.
     \Drupal::service('cache_tags.invalidator')->invalidateTags([
       'rendered',
-      'url.site'
+      'url.site',
     ]);
   }
 

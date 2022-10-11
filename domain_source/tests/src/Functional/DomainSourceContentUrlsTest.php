@@ -23,7 +23,7 @@ class DomainSourceContentUrlsTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -49,7 +49,7 @@ class DomainSourceContentUrlsTest extends DomainTestBase {
       DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [
         'example_com',
         'one_example_com',
-        'two_example_com'
+        'two_example_com',
       ],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 0,
       DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id,

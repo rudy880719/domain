@@ -297,16 +297,6 @@ class DomainListBuilder extends DraggableListBuilder {
   }
 
   /**
-   * Internal sort method for form weights.
-   */
-  private function sortByWeight($a, $b) {
-    if ($a['weight'] < $b['weight']) {
-      return 0;
-    }
-    return 1;
-  }
-
-  /**
    * {@inheritdoc}
    *
    * Builds the entity listing as a form with pagination. This method overrides

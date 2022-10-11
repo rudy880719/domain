@@ -100,7 +100,7 @@ trait DomainConfigUITestTrait {
     // Create and login user.
     $adminUser = $this->drupalCreateUser([
       'administer languages',
-      'access administration pages'
+      'access administration pages',
     ]);
     $this->drupalLogin($adminUser);
 

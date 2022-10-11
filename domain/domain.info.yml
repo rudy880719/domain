@@ -2,7 +2,6 @@ name: Domain
 description: 'Creates domain records within a Drupal installation.'
 type: module
 package: Domain
-version: VERSION
 core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:options

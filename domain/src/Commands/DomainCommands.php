@@ -6,8 +6,6 @@ use Consolidation\AnnotatedCommand\Events\CustomEventAwareInterface;
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareTrait;
 use Consolidation\OutputFormatters\StructuredData\PropertyList;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
-use Drupal\Component\DependencyInjection\Container;
-use Drupal\Core\Config\StorageException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
@@ -380,7 +378,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   public function add($hostname, $name, array $options = [
     'weight' => NULL,
-    'scheme' => NULL
+    'scheme' => NULL,
   ]) {
     // Validate the weight arg.
     if (!empty($options['weight']) && !is_numeric($options['weight'])) {
@@ -514,7 +512,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   public function delete($domain_id, array $options = [
     'users-assign' => NULL,
     'dryrun' => NULL,
-    'chatty' => NULL
+    'chatty' => NULL,
   ]) {
 
     $message = '';
@@ -618,7 +616,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       $policy = $this->io()->choice(dt('Reassign @type field @field data to:',
         [
           '@type' => $delete_options['entity_filter'],
-          '@field' => $delete_options['field']
+          '@field' => $delete_options['field'],
         ]), $reassign_list);
     }
     elseif ($policy === 'default') {
@@ -713,7 +711,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
   public function defaultDomain($domain_id, array $options = [
-    'validate' => NULL
+    'validate' => NULL,
   ]) {
     // Resolve the domain.
     if (!empty($domain_id) && $domain = $this->getDomainFromArgument($domain_id)) {
@@ -953,7 +951,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   public function generate($primary = 'example.com', array $options = [
     'count' => NULL,
     'empty' => NULL,
-    'scheme' => 'http'
+    'scheme' => 'http',
   ]) {
     // Check the number of domains to create.
     $count = $options['count'];

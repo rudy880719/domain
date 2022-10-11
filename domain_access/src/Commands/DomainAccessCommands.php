@@ -25,7 +25,7 @@ class DomainAccessCommands extends DomainCommands {
    */
   public function initDomainInfo(InputInterface $input, AnnotationData $annotationData) {
     // To add a field label, append to the 'field-labels' item.
-    // @TODO: watch https://github.com/consolidation/annotated-command/pull/174
+    // @todo watch https://github.com/consolidation/annotated-command/pull/174
     $annotationData['field-labels'] .= "\n" . 'domain_access_entities: Domain access entities';
   }
 

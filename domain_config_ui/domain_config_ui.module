@@ -49,7 +49,7 @@ function domain_config_ui_admin_form($op) {
   if (\Drupal::currentUser()->hasPermission('administer domain config ui')) {
     $route = \Drupal::routeMatch()->getRouteObject();
     // We make a special exception for the themes overview, which is unique.
-    // @TODO: make this list extensible.
+    // @todo make this list extensible.
     $special_form = FALSE;
     $special_paths = [
       '/admin/appearance',
@@ -169,7 +169,7 @@ function domain_config_ui_path_is_registered() {
 function domain_config_ui_route_is_admin() {
   $route = \Drupal::routeMatch()->getRouteObject();
   // Never allow this module's form to be added.
-  // @TODO: Allow modules to extend this list.
+  // @todo Allow modules to extend this list.
   $disallowed = [
     '/admin/config/domain/config-ui',
     '/admin/config/domain/settings',

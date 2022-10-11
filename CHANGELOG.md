@@ -62,7 +62,8 @@ marked with [x] are considered complete.
 - [x] Use domain source for path rewrites
 - [x] Finish the path alter behavior
 - [x] Catalog @TODO items as issues
-- [x] Drupal cache system makes it difficult to serve different homepage for each domain
+- [x] Drupal cache system makes it difficult to serve different homepage for
+each domain
 - [x] Provide common views support for attached fields
 - [x] Recreate the Domain Content module with bulk operations
 - [x] Add help text to domain overview screen
@@ -129,7 +130,8 @@ marked with [x] are considered complete.
 - [ ] Cache in the DomainAccessManager
 - [ ] Proper handling of default node values
 - [ ] Do not allow actions to be edited?
-- [o] Recreate the Domain Theme module -- see https://www.drupal.org/project/domain_theme_switch
+- [o] Recreate the Domain Theme module -- see
+https://www.drupal.org/project/domain_theme_switch
 
 # Final
 - [ ] Security review
@@ -138,4 +140,5 @@ marked with [x] are considered complete.
 - [x] Remove calls to deprecated methods / classes
 - [ ] Remove unnecessary use statements
 - [ ] Support Tour module
-- [ ] Views schema fails -- see https://www.drupal.org/project/drupal/issues/2834801
+- [ ] Views schema fails -- see
+https://www.drupal.org/project/drupal/issues/2834801

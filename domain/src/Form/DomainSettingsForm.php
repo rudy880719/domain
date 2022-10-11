@@ -8,7 +8,7 @@ use Drupal\domain\DomainToken;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class DomainSettingsForm.
+ * The class DomainSettingsForm.
  *
  * @package Drupal\domain\Form
  */

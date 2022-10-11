@@ -4,7 +4,6 @@ namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\domain\Functional\DomainTestBase;
-use Drupal\domain_source\DomainSourceElementManagerInterface;
 
 /**
  * Tests behavior for excluding some links from rewriting.
@@ -21,7 +20,7 @@ class DomainSourceExcludeTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -40,13 +39,6 @@ class DomainSourceExcludeTest extends DomainTestBase {
   public function testDomainSourceExclude() {
     // Create a node, assigned to a source domain.
     $id = 'one_example_com';
-
-    $node_values = [
-      'type' => 'page',
-      'title' => 'foo',
-      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id,
-    ];
-    $node = $this->createNode($node_values);
 
     // Variables for our tests.
     $path = 'node/1';

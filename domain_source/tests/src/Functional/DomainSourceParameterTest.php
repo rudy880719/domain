@@ -4,7 +4,6 @@ namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\domain\Functional\DomainTestBase;
-use Drupal\domain_source\DomainSourceElementManagerInterface;
 
 /**
  * Tests behavior for URLs that include query parameters.
@@ -22,7 +21,7 @@ class DomainSourceParameterTest extends DomainTestBase {
     'domain_source_test',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -39,15 +38,6 @@ class DomainSourceParameterTest extends DomainTestBase {
    * Tests the behavior of urls with query params.
    */
   public function testDomainSourceParams() {
-    // Create a node, assigned to a source domain.
-    $id = 'example_com';
-
-    $node = $this->createNode([
-      'type' => 'page',
-      'title' => 'foo',
-      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id
-    ]);
-
     // Variables for our tests.
     $path = 'domain-format-test';
     $options = ['query' => ['_format' => 'json']];
@@ -55,7 +45,6 @@ class DomainSourceParameterTest extends DomainTestBase {
     foreach ($domains as $domain) {
       $this->drupalGet($domain->getPath() . $path, $options);
     }
-    $source = $domains[$id];
     $uri_path = '/' . $path;
     $expected = base_path() . $path . '?_format=json';
 

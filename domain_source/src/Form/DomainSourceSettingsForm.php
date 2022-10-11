@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class DomainSourceSettingsForm.
+ * The class DomainSourceSettingsForm.
  *
  * @package Drupal\domain_source\Form
  */

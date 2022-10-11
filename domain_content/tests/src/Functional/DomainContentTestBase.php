@@ -77,7 +77,10 @@ abstract class DomainContentTestBase extends DomainTestBase {
   }
 
   /**
-   * Strips whitespace from a page response and runs assertSession()->responseContains() equivalent.
+   * Function checkContent.
+   *
+   * Strips whitespace from a page response and run
+   * assertSession()->responseContains() equivalent.
    *
    * In tests, we were having difficulty with spacing in tables. This method
    * takes some concepts from Mink and rearranges them to work for our tests.

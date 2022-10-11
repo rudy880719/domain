@@ -1,7 +1,8 @@
 Domain
 ======
 
-The Domain module suite lets you share users, content, and configuration across a group of domains from a single installation and database.
+The Domain module suite lets you share users, content, and configuration across
+a group of domains from a single installation and database.
 
 Current Status
 ------
@@ -22,35 +23,37 @@ Included modules
 -------
 
 * *Domain*
-  The core module. Domain provides means for registering multiple domains within a
-  single Drupal installation. It allows users to be assigned as domain administrators,
-  provides a Block and Views display context, and creates a default entity reference
-  field for use by other modules.
+  The core module. Domain provides means for registering multiple domains within
+  a single Drupal installation. It allows users to be assigned as domain
+  administrators, provides a Block and Views display context, and creates a
+  default entity reference field for use by other modules.
 
 * *Domain Access*
-  Provides node access controls based on domains. (This module contains much of the
-  Drupal 7 functionality). It allows users to be assigned as editors of content per-domain,
-  sets content visibility rules, and provides Views integration for content.
+  Provides node access controls based on domains. (This module contains much of
+  the Drupal 7 functionality). It allows users to be assigned as editors of
+  content per-domain, sets content visibility rules, and provides Views
+  integration for content.
 
 * *Domain Alias*
-  Allows multiple hostnames to be pointed to a single registered domain. These aliases
-  can include wildcards (such as *.example.com) and may be configured to redirect to
-  their canonical domain. Domain Alias also allows developers to register aliases per
-  `environment`, so that different hosts are used consistently across development
-  environments. See the README file for Domain Alias for more information.
+  Allows multiple hostnames to be pointed to a single registered domain. These
+  aliases can include wildcards (such as *.example.com) and may be configured to
+  redirect to their canonical domain. Domain Alias also allows developers to
+  register aliases per `environment`, so that different hosts are used
+  consistently across development environments. See the README file for Domain
+  Alias for more information.
 
 * *Domain Config*
-  Provides a means for changing configuration settings on a per-domain basis. See the
-  README for Domain Config for more information.
+  Provides a means for changing configuration settings on a per-domain basis.
+  See the README for Domain Config for more information.
 
 * *Domain Content*
-  Provides content overview pages on a per-domain basis, so that editors may review
-  content assigned to specific domains. This module is a series of Views.
+  Provides content overview pages on a per-domain basis, so that editors may
+  review content assigned to specific domains. This module is a series of Views.
 
 * *Domain Source*
-  Allows content to be assigned a canonical domain when writing URLs. Domain Source will
-  ensure that content that appears on multiple domains always links to one URL. See
-  the module's README for more information.
+  Allows content to be assigned a canonical domain when writing URLs. Domain
+  Source will ensure that content that appears on multiple domains always links
+  to one URL. See the module's README for more information.
 
 
 Implementation Notes
@@ -77,17 +80,18 @@ See https://www.drupal.org/node/2391871.
 
 Cross-Site HTTP requests (CORS)
 ------
-As of Drupal 8.2, it's possible to allow a particular site to enable CORS for responses
-served by Drupal.
+As of Drupal 8.2, it's possible to allow a particular site to enable CORS for
+responses served by Drupal.
 
-In the case of Domain, allowing CORS may remove AJAX errors caused when using some forms,
-particularly entity references, when the AJAX request goes to another domain.
+In the case of Domain, allowing CORS may remove AJAX errors caused when using
+some forms, particularly entity references, when the AJAX request goes to
+another domain.
 
-This feature is not enabled by default because there are security consequences. See
-https://www.drupal.org/node/2715637 for more information and instructions.
+This feature is not enabled by default because there are security consequences.
+See https://www.drupal.org/node/2715637 for more information and instructions.
 
-To enable CORS for all domains, copy `default.services.yml` to `services.yml` and enable
-the following lines:
+To enable CORS for all domains, copy `default.services.yml` to `services.yml`
+and enable the following lines:
 
 ```
    # Configure Cross-Site HTTP requests (CORS).
@@ -115,8 +119,8 @@ The key here is setting `enabled` to `false`.
 Trusted host settings
 ------
 
-If using the trusted host security setting in Drupal 8, be sure to add each domain
-and alias to the pattern list. For example:
+If using the trusted host security setting in Drupal 8, be sure to add each
+domain and alias to the pattern list. For example:
 
 ```
 $settings['trusted_host_patterns'] = array(
@@ -127,9 +131,9 @@ $settings['trusted_host_patterns'] = array(
 );
 ```
 
-We *strongly encourage* the use of trusted host settings. When Domain issues a redirect,
-it will check the domain hostname against these settings. Any redirect that does not
-match the trusted host settings will be denied and throw an error.
+We *strongly encourage* the use of trusted host settings. When Domain issues a
+redirect, it will check the domain hostname against these settings. Any redirect
+that does not match the trusted host settings will be denied and throw an error.
 
 See https://www.drupal.org/node/1992030 for more information.
 
@@ -173,7 +177,12 @@ To do so, clone  `default.services.yml` to `services.yml` (if you have not
 already done so) and change the `required_cache_contexts` value to:
 
 ```YAML
-    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions', 'url.site']
+    required_cache_contexts: [
+      'languages:language_interface',
+      'theme',
+      'user.permissions',
+      'url.site',
+    ]
 ```
 
 The addition of `url.site` should provide the domain context that the cache
@@ -184,16 +193,16 @@ For developers, see also the information in the Domain Alias README.
 Contributing
 ====
 
-If you file a pull request or patch, please (at a minimum) run the existing tests to check
-for failures. Writing additional tests will greatly speed completion, as I won't commit
-code without test coverage.
+If you file a pull request or patch, please (at a minimum) run the existing
+tests to check for failures. Writing additional tests will greatly speed
+completion, as I won't commit code without test coverage.
 
 New tests should be written in PHPUnit as Functional, Kernel, or Unit tests.
 
-To setup a proper environment locally, you need multiple or wilcard domains configured to
-point to your drupal instance. I use variants of `example.local` for local tests. See
-`DomainTestBase` for documentation. Domain testing should work with root hosts other than
-`example.com`, though we also expect to find the subdomains `one.*, two.*, three.*, four.*, five.*`
-in most test cases. See `DomainTestBase::domainCreateTestDomains()` for the logic.
-
+To setup a proper environment locally, you need multiple or wilcard domains
+configured to point to your drupal instance. I use variants of `example.local`
+for local tests. See `DomainTestBase` for documentation. Domain testing should
+work with root hosts other than `example.com`, though we also expect to find the
+subdomains `one.*, two.*, three.*, four.*, five.*` in most test cases. See
+`DomainTestBase::domainCreateTestDomains()` for the logic.
 When running tests, you normally need to be on the default domain.
