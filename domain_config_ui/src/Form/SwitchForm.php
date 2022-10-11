@@ -16,7 +16,7 @@ use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class SwitchForm.
+ * The class SwitchForm.
  */
 class SwitchForm extends FormBase {
 
@@ -189,7 +189,7 @@ class SwitchForm extends FormBase {
       ];
     }
 
-    // @TODO: Add cache contexts to form?
+    // @todo Add cache contexts to form?
     return $form;
   }
 

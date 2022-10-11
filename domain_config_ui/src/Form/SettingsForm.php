@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\domain_config_ui\DomainConfigUITrait;
 
 /**
- * Class SettingsForm.
+ * The class SettingsForm.
  */
 class SettingsForm extends ConfigFormBase {
 

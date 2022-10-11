@@ -2,7 +2,6 @@ name: Domain Alias
 description: 'Maps multiple host requests to a single domain record.'
 type: module
 package: Domain
-version: VERSION
 core_version_requirement: ^8 || ^9
 dependencies:
   - domain:domain

@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class DomainAccessActionBase extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   use DependencyTrait;
+  use StringTranslationTrait;
 
   /**
    * The action's entity type.
@@ -60,7 +61,7 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList();
     $form['domain_id'] = [
       '#type' => 'checkboxes',
-      '#title' => t('Domain'),
+      '#title' => $this->t('Domain'),
       '#options' => $domains,
       '#default_value' => $this->configuration['id'],
       '#required' => TRUE,
@@ -91,7 +92,7 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\user\UserInterface $object */
-    // @TODO: fix this logic.
+    // @todo fix this logic.
     $access = $object->access('update', $account, TRUE);
 
     return $return_as_object ? $access : $access->isAllowed();

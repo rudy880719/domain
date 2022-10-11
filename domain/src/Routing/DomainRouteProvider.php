@@ -28,16 +28,90 @@ use Symfony\Component\HttpFoundation\Request;
 class DomainRouteProvider extends RouteProvider {
 
   /**
-   * DomainRouteProvider constructor.
+   * The database connection from which to read route information.
    *
-   * Extends the core RouteProvider. Note that the Kernel tests load a
-   * different RouteProvider, which means we cannot declare a common interface
-   * for the $inner_service parameter.
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The name of the SQL table from which to read the routes.
    *
-   * @see Drupal\Core\Routing\RouteProvider::__construct()
+   * @var string
+   */
+  protected $tableName = 'router';
+
+  /**
+   * The state.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * The current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * The cache tag invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagInvalidator;
+
+  /**
+   * A path processor manager for resolving the system path.
+   *
+   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
+   */
+  protected $pathProcessor;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager = NULL;
+
+  /**
+   * Constructs a new PathMatcher.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   A database connection object.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
+   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
+   *   The path processor.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
+   *   The cache tag invalidator.
+   * @param string $table
+   *   The table in the database to use for matching. Defaults to 'router'.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   (Optional) The language manager.
    */
   public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL) {
-    parent::__construct($connection, $state, $current_path, $cache_backend, $path_processor, $cache_tag_invalidator, $table, $language_manager);
+    $this->connection = $connection;
+    $this->state = $state;
+    $this->currentPath = $current_path;
+    $this->cache = $cache_backend;
+    $this->cacheTagInvalidator = $cache_tag_invalidator;
+    $this->pathProcessor = $path_processor;
+    $this->tableName = $table;
+    $this->languageManager = $language_manager ?: \Drupal::languageManager();
   }
 
   /**

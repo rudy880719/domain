@@ -9,12 +9,13 @@ use Drupal\domain\DomainInterface;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
 
 /**
- * Class DomainTestBase.
+ * The abstract class DomainTestBase.
  *
  * @package Drupal\Tests\domain\Functional
  */
 abstract class DomainTestBase extends BrowserTestBase {
 
+  use Drupal\Core\StringTranslation\StringTranslationTrait;
   use DomainTestTrait;
 
   /**
@@ -203,7 +204,7 @@ abstract class DomainTestBase extends BrowserTestBase {
    *   TRUE if a given user account is logged in, or FALSE.
    */
   protected function drupalUserIsLoggedIn(AccountInterface $account) {
-    // @TODO: This is a temporary hack for the test login fails when setting $cookie_domain.
+    // @todo This is a temporary hack for the test login fails when setting $cookie_domain.
     if (!isset($account->session_id)) {
       return (bool) $account->id();
     }
@@ -229,12 +230,11 @@ abstract class DomainTestBase extends BrowserTestBase {
     }
 
     // Login.
-    $url = $domain->getPath() . 'user/login';
     $this->submitForm([
       'name' => $account->getAccountName(),
       // @phpstan-ignore-next-line
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], $this->t('Log in'));
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     // @phpstan-ignore-next-line

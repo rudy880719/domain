@@ -39,7 +39,7 @@ class DomainContentCountTest extends DomainContentTestBase {
       $this->assertSession()->statusCodeEquals(200);
       // Find the links.
       $this->findLink('All affiliates');
-      foreach ($this->domains as $id => $domain) {
+      foreach ($this->domains as $domain) {
         $this->findLink($domain->label());
         $string = $domain->label() . "</a></td><td>5</td>";
         $this->checkContent($content, $string);

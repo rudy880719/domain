@@ -40,7 +40,7 @@ class DomainAccessElementTest extends DomainTestBase {
    */
   public function testDomainAccessElement() {
     foreach (['article', 'test'] as $type) {
-      // TODO: Something new is forcing this line for the 'test' type.
+      // @todo Something new is forcing this line for the 'test' type.
       domain_access_confirm_fields('node', $type);
       $this->runInstalledTest($type);
     }

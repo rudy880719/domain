@@ -61,7 +61,7 @@ class DomainAccessSaveTest extends DomainTestBase {
       'status' => 1,
       DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [
         'example_com',
-        'one_example_com'
+        'one_example_com',
       ],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 0,
     ]);

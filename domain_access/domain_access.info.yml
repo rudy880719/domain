@@ -2,7 +2,6 @@ name: Domain Access
 description: 'Domain-based access control for content.'
 type: module
 package: Domain
-version: VERSION
 core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:node
