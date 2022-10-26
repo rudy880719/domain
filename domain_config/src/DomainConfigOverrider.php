@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\domain\DomainNegotiatorInterface;
 
 /**
  * Domain-specific config overrides.
@@ -15,13 +16,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * this might be improved.
  */
 class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
-
-  /**
-   * The domain negotiator.
-   *
-   * @var \Drupal\domain\DomainNegotiatorInterface
-   */
-  protected $domainNegotiator;
 
   /**
    * A storage controller instance for reading and writing configuration data.
@@ -52,6 +46,13 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
   protected $language;
 
   /**
+   * The domain negotiator.
+   *
+   * @var \Drupal\domain\DomainNegotiatorInterface
+   */
+  protected $domainNegotiator;
+
+  /**
    * Drupal language manager.
    *
    * Using dependency injection for this service causes a circular dependency.
@@ -74,10 +75,15 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    *   The configuration storage engine.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\domain\DomainNegotiatorInterface $domainNegotiator
+   *   The domain Negotiator.
    */
-  public function __construct(StorageInterface $storage, ModuleHandlerInterface $module_handler) {
+  public function __construct(StorageInterface $storage,
+  ModuleHandlerInterface $module_handler,
+  DomainNegotiatorInterface $domainNegotiator) {
     $this->storage = $storage;
     $this->moduleHandler = $module_handler;
+    $this->domainNegotiator = $domainNegotiator;
   }
 
   /**
@@ -236,8 +242,6 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     $this->languageManager = \Drupal::languageManager();
     $this->language = $this->languageManager->getCurrentLanguage();
 
-    // The same issue is true for the domainNegotiator.
-    $this->domainNegotiator = \Drupal::service('domain.negotiator');
     // Get the domain context.
     $this->domain = $this->domainNegotiator->getActiveDomain(TRUE);
   }

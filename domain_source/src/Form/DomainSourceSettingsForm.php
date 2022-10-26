@@ -2,8 +2,10 @@
 
 namespace Drupal\domain_source\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class DomainSourceSettingsForm.
@@ -11,6 +13,32 @@ use Drupal\Core\Form\FormStateInterface;
  * @package Drupal\domain_source\Form
  */
 class DomainSourceSettingsForm extends ConfigFormBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a DomainSourceSettingsForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(EntityTypeManagerInterface $entityTypeManager) {
+    $this->entityTypeManager = $entityTypeManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -30,7 +58,7 @@ class DomainSourceSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $manager = \Drupal::entityTypeManager();
+    $manager = $this->entityTypeManager;
     $routes = $manager->getDefinition('node')->getLinkTemplates();
 
     $options = [];
