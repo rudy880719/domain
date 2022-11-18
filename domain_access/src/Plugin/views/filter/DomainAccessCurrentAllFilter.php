@@ -2,7 +2,7 @@
 
 namespace Drupal\domain_access\Plugin\views\filter;
 
-use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -62,7 +62,8 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
   public function query() {
     $this->ensureMyTable();
     if (method_exists($this->query, 'addTable')) {
-      $all_table = $this->query->addTable('node__field_domain_all_affiliates', $this->relationship);
+      $all_table_name = str_replace(DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD, DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD, $this->table);
+      $all_table = $this->query->addTable($all_table_name, $this->relationship);
       $all_field = $all_table . '.field_domain_all_affiliates_value';
       $real_field = $this->tableAlias . '.' . $this->realField;
 
