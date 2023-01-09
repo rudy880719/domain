@@ -19,12 +19,6 @@ class Middleware implements HttpKernelInterface {
   public const MAIN_REQUEST = 1;
 
   /**
-   * @deprecated since symfony/http-kernel 5.3, use MAIN_REQUEST instead.
-   *             To ease the migration, this constant won't be removed until Symfony 7.0.
-   */
-  public const MASTER_REQUEST = self::MAIN_REQUEST;
-
-  /**
    * The decorated kernel.
    *
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
@@ -54,7 +48,7 @@ class Middleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, int $type = self::MASTER_REQUEST, bool $catch = TRUE) {
+  public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = TRUE) {
     // This line should break hooks in our code.
     // @see https://www.drupal.org/node/2896434.
     $config = $this->configFactory->get('domain_config_middleware_test.settings');
