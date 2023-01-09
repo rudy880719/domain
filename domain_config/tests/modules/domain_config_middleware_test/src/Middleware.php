@@ -4,6 +4,7 @@ namespace Drupal\domain_config_middleware_test;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -48,7 +49,7 @@ class Middleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = TRUE) {
+  public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = TRUE): Response {
     // This line should break hooks in our code.
     // @see https://www.drupal.org/node/2896434.
     $config = $this->configFactory->get('domain_config_middleware_test.settings');
