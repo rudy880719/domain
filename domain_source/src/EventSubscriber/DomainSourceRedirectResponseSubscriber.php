@@ -15,15 +15,6 @@ use Drupal\domain\DomainRedirectResponse;
 class DomainSourceRedirectResponseSubscriber extends RedirectResponseSubscriber {
 
   /**
-   * The request context.
-   *
-   * This should be handled by the parent class.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  public $requestContext;
-
-  /**
    * Allows manipulation of the response object when performing a redirect.
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
