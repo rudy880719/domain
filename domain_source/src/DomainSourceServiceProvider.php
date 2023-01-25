@@ -30,7 +30,7 @@ class DomainSourceServiceProvider extends ServiceProviderBase {
    *   The core numberic version.
    */
   private function getDrupalVersion() {
-    return (int) substr(\Drupal::VERSION, 0, 1);
+    return (int) explode('.', \Drupal::VERSION)[0];
   }
 
 }
