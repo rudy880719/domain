@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\domain\DomainRedirectResponse;
+use Drupal\Core\Routing\RequestContext;
 
 /**
  * Allows manipulation of the response object when performing a redirect.
@@ -23,7 +24,7 @@ class DomainSourceRedirectResponseSubscriberD8 extends RedirectResponseSubscribe
    *
    * @var \Drupal\Core\Routing\RequestContext
    */
-  public $requestContext;
+  public RequestContext $requestContext;
 
   /**
    * Allows manipulation of the response object when performing a redirect.
