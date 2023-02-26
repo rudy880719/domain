@@ -31,7 +31,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}

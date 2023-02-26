@@ -25,7 +25,7 @@ class DomainConfigHookTest extends BrowserTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * Test to ensure a domain_config_hook_test_user_login() does not run.
