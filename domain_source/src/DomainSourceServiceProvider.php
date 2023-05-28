@@ -27,10 +27,10 @@ class DomainSourceServiceProvider extends ServiceProviderBase {
    * Determines the Drupal version.
    *
    * @return int
-   *   The core numberic version.
+   *   The core numeric version.
    */
   private function getDrupalVersion() {
-    return (int) substr(\Drupal::VERSION, 0, 1);
+    return (int) explode('.', \Drupal::VERSION)[0];
   }
 
 }
