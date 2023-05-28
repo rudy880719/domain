@@ -49,7 +49,7 @@ class MiddlewareD9 implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, int $type = self::MASTER_REQUEST, bool $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     // This line should break hooks in our code.
     // @see https://www.drupal.org/node/2896434.
     $config = $this->configFactory->get('domain_config_middleware_test.settings');
