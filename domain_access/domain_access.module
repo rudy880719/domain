@@ -157,7 +157,7 @@ function domain_access_presave_generate(EntityInterface $entity) {
   $entity->set(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD, $value);
 
   // Handle devel module settings.
-  $exists = \Drupal::moduleHandler()->moduleExists('devel_generate');
+  $exists = \Drupal::moduleHandler()->moduleExists('devel_generate') && $entity->hasField('devel_generate');
   $values = [];
   if ($exists && isset($entity->devel_generate)) {
     // If set by the form.
