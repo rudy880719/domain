@@ -127,9 +127,7 @@ class DomainValidator implements DomainValidatorInterface {
   public function checkResponse(DomainInterface $domain) {
     $url = $domain->getPath() . \Drupal::service('extension.list.module')->getPath('domain') . '/tests/200.png';
     try {
-      // GuzzleHttp no longer allows for bogus URL calls.
-      $options = ['exceptions' => FALSE];
-      $request = $this->httpClient->request('get', $url, $options);
+      $request = $this->httpClient->get($url);
     }
     // We cannot know which Guzzle Exception class will be returned; be generic.
     catch (RequestException $e) {
