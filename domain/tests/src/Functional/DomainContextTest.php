@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\domain\Functional;
 
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
