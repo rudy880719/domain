@@ -42,7 +42,7 @@ class DomainCheckResponseTest extends DomainTestBase {
       $this->submitForm($edit, 'Save');
     }
     catch (\Exception $e) {
-        // Ensure no test errors.
+      // Ensure no test errors.
     }
     // The domain should not save.
     $this->assertSession()->responseContains('The server request to');
