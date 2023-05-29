@@ -36,6 +36,20 @@ class DomainCheckResponseTest extends DomainTestBase {
     // Set a hostname that does not exist on the server.
     $edit['hostname'] = 'foo.bar';
     $edit['id'] = $storage->createMachineName($edit['hostname']);
+    $edit['validate_url'] = 1;
+    try {
+      $this->drupalGet('admin/config/domain/add');
+      $this->submitForm($edit, 'Save');
+    }
+    catch (\Exception $e) {
+        // Ensure no test errors.
+    }
+    // The domain should not save.
+    $this->assertSession()->responseContains('The server request to');
+    $domains = $storage->loadMultiple();
+    $this->assertCount(1, $domains, 'Domain record not saved via form.');
+
+    // Bypass the check.
     $edit['validate_url'] = 0;
     $this->drupalGet('admin/config/domain/add');
     $this->submitForm($edit, 'Save');

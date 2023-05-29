@@ -26,7 +26,16 @@ class DomainGetResponseTest extends DomainTestBase {
 
     // Our testing server should be able to access the test PNG file.
     $this->assertTrue($domain->getResponse() === 200, 'Server returned a 200 response.');
-    // Guzzle will no longer test invalid domains.
+
+    // Now create a bad domain.
+    $values = [
+      'hostname' => 'foo.bar',
+      'id' => 'foo_bar',
+      'name' => 'Foo',
+    ];
+    $domain = \Drupal::entityTypeManager()->getStorage('domain')->create($values);
+    $domain->save();
+    $this->assertTrue($domain->getResponse() === 500, 'Server test returned a 500 response.');
   }
 
 }
