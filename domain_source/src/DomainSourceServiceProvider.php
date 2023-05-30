@@ -15,7 +15,7 @@ class DomainSourceServiceProvider extends ServiceProviderBase {
    */
   public function alter(ContainerBuilder $container) {
     $definition = $container->getDefinition('redirect_response_subscriber');
-    if ($this->getDrupalVersion() > 8) {
+    if ($this->getDrupalVersion() > 9) {
       $definition->setClass('Drupal\domain_source\EventSubscriber\DomainSourceRedirectResponseSubscriber');
     }
     else {
