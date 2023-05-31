@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -82,12 +82,12 @@ class DomainSubscriber implements EventSubscriberInterface {
    * in one of two cases: an unauthorized request to an inactive domain is made;
    * a domain alias is set to redirect to its primary domain record.
    *
-   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    *
    * @see domain_alias_domain_request_alter
    */
-  public function onKernelRequestDomain(RequestEvent $event) {
+  public function onKernelRequestDomain(GetResponseEvent $event) {
     // Negotiate the request and set domain context.
     if ($domain = $this->domainNegotiator->getActiveDomain(TRUE)) {
       $hostname = $domain->getHostname();
