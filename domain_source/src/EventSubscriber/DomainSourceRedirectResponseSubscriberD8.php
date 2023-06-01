@@ -2,12 +2,13 @@
 
 namespace Drupal\domain_source\EventSubscriber;
 
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\domain\DomainRedirectResponse;
+use Drupal\Core\Routing\RequestContext;
 
 /**
  * Allows manipulation of the response object when performing a redirect.
@@ -23,17 +24,17 @@ class DomainSourceRedirectResponseSubscriberD8 extends RedirectResponseSubscribe
    *
    * @var \Drupal\Core\Routing\RequestContext
    */
-  public $requestContext;
+  public RequestContext $requestContext;
 
   /**
    * Allows manipulation of the response object when performing a redirect.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The Event to process.
    *
    * @phpstan-ignore-next-line
    */
-  public function checkRedirectUrl(FilterResponseEvent $event) {
+  public function checkRedirectUrl(ResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceof RedirectResponse) {
       $request = $event->getRequest();
