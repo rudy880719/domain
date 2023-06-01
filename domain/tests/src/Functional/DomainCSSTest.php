@@ -35,7 +35,7 @@ class DomainCSSTest extends DomainTestBase {
     $this->domainCreateTestDomains(4);
 
     // The test runner doesn't use a theme that contains the preprocess hook,
-    // so set to use Bartik.
+    // so set to use Olivero.
     $config = $this->config('system.theme');
     $config->set('default', 'olivero')->save();
 
