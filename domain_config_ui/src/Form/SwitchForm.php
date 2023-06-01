@@ -211,6 +211,7 @@ class SwitchForm extends FormBase {
   public static function switchCallback(array &$form, FormStateInterface $form_state) {
     // Extract requesting page URI from ajax URI.
     // Copied from Drupal\Core\Form\FormBuilder::buildFormAction().
+    // Note that this service was renamed in Drupal 9.5 and deprecated in 10.
     $version = (int) explode('.', \Drupal::VERSION)[0];
     if ($version < 10) {
       $request = \Drupal::service('request_stack')->getMasterRequest();
