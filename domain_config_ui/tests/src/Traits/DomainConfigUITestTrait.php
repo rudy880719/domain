@@ -128,10 +128,20 @@ trait DomainConfigUITestTrait {
 
   /**
    * Creates a readable instance of assertWaitOnAjaxRequest.
+   *
+   * PHPStan is not calculating the inheritance correctly, so we fake it.
+   * We are combining WebDriverTestBase::assertSession() and
+   * JSWebAssert::assertWaitOnAjaxRequest.
+   *
+   * @param string $name
+   *   The name of the current session.
+   *
+   * @throws \RuntimeException
+   *   When the request is not completed.
    */
-  public function waitOnAjaxRequest() {
-    $assertSession = $this->assertSession();
-    $assertSession->waitForElement('css', '#edit-domain');
+  public function waitOnAjaxRequest($name = NULL) {
+    $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
+    $driver->assertWaitOnAjaxRequest();
   }
-
+  
 }
