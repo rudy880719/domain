@@ -357,7 +357,7 @@ class DomainListBuilder extends DraggableListBuilder {
     if ($this->limit) {
       $query->pager($this->limit);
     }
-    return $query->execute();
+    return $query->accessCheck(FALSE)->execute();
   }
 
 }

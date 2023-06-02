@@ -78,7 +78,7 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
     if ($this->limit) {
       $query->pager($this->limit);
     }
-    return $query->execute();
+    return $query->accessCheck(FALSE)->execute();
   }
 
   /**
