@@ -42,7 +42,7 @@ class CurrentDomainContext implements ContextProviderInterface {
     // Load the current domain.
     $current_domain = $this->negotiator->getActiveDomain();
     // Set the context, if we have a domain.
-    if (!empty($current_domain->id())) {
+    if (!empty($current_domain) && !empty($current_domain->id())) {
       $context = EntityContext::fromEntity($current_domain, $this->t('Active domain'));
       // Allow caching.
       $cacheability = new CacheableMetadata();
