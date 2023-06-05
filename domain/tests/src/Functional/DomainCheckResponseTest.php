@@ -19,7 +19,7 @@ class DomainCheckResponseTest extends DomainTestBase {
 
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
 
-    // Make a POST request on admin/config/domain/add.
+    // We can no longer test this with Guzzle, so we only test the bypass.
     $edit = $this->domainPostValues();
     // Use hostname with dot (.) to avoid validation error.
     $edit['hostname'] = 'example.com';
