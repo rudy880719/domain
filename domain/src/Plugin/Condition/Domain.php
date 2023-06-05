@@ -130,9 +130,13 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
       return TRUE;
     }
     // If the context did not load, derive from the request.
-    if (!$domain = $this->getContextValue('domain')) {
-      $domain = $this->domainNegotiator->getActiveDomain();
+    if (!$this->getContext('domain')->hasContextValue()) {
+      $this->setContextValue(
+          'domain',
+          $this->domainNegotiator->getActiveDomain()
+      );
     }
+    $domain = $this->getContextValue('domain');
     // No context found?
     if (empty($domain)) {
       return FALSE;
