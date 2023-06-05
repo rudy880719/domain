@@ -86,7 +86,7 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest();
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -110,12 +110,12 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest();
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest();
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
