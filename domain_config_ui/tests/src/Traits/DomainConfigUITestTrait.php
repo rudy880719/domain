@@ -143,5 +143,5 @@ trait DomainConfigUITestTrait {
     $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
     $driver->assertWaitOnAjaxRequest();
   }
-  
+
 }
