@@ -14,6 +14,7 @@ Submit bug reports and feature suggestions, or track changes in the
 
 This module requires no modules outside of Drupal core.
 
+The 2.0 version requires Drupal 9.5 and higher and is Drupal 10 compatible.
 
 ## Installation
 
