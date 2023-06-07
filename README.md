@@ -25,7 +25,7 @@ information, see
 
 The module has no menu or modifiable settings. There is no configuration. When
 enabled, the module will prevent the links from appearing. To get the links
-back, disable the module and clear caches.
+back, disable the module and clear caches.  Keep in mind that you may need to rebuild permissions (/admin/reports/status/rebuild) to see each of these changes.
 
 
 ## Current Status
