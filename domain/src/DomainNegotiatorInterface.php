@@ -71,7 +71,9 @@ interface DomainNegotiatorInterface {
    * Gets the id of the active domain.
    *
    * @return string
-   *   The id of the active domain.
+   *   The id of the active domain, empty string if it cannot be determined.
+   *
+   * @see \Drupal\domain\DomainNegotiatorInterface::getActiveDomain()
    */
   public function getActiveId();
 
