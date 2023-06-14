@@ -7,6 +7,7 @@
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
@@ -48,14 +49,38 @@ function domain_access_node_grants(AccountInterface $account, $op) {
       }
     }
   }
-  elseif ($op === 'update' && $user->hasPermission('edit domain content')) {
-    if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
-      $grants['domain_id'][] = $id;
+  elseif ($op === 'update') {
+    if ($user->hasPermission('edit domain content')) {
+      if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+        $grants['domain_id'][] = $id;
+        $grants['domain_unpublished'][] = $id;
+      }
+    }
+    elseif (in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+      /* @see \Drupal\domain_access\DomainAccessPermissions::nodePermissions() */
+      foreach (array_keys(NodeType::loadMultiple()) as $type_id) {
+        if ($user->hasPermission("update ${type_id} content on assigned domains")) {
+          $grants['domain_id'][] = $id;
+          $grants['domain_unpublished'][] = $id;
+        }
+      }
     }
   }
-  elseif ($op === 'delete' && $user->hasPermission('delete domain content')) {
-    if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
-      $grants['domain_id'][] = $id;
+  elseif ($op === 'delete') {
+    if ($user->hasPermission('delete domain content')) {
+      if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+        $grants['domain_id'][] = $id;
+        $grants['domain_unpublished'][] = $id;
+      }
+    }
+    elseif (in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+      /* @see \Drupal\domain_access\DomainAccessPermissions::nodePermissions() */
+      foreach (array_keys(NodeType::loadMultiple()) as $type_id) {
+        if ($user->hasPermission("delete ${type_id} content on assigned domains")) {
+          $grants['domain_id'][] = $id;
+          $grants['domain_unpublished'][] = $id;
+        }
+      }
     }
   }
   return $grants;
