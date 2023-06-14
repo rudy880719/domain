@@ -63,6 +63,13 @@ class DomainNegotiator implements DomainNegotiatorInterface {
   protected $configFactory;
 
   /**
+   * Indicates that the active domain has been looked up.
+   *
+   * @var bool
+   */
+  protected $negotiated = FALSE;
+
+  /**
    * Constructs a DomainNegotiator object.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
@@ -131,16 +138,16 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    * Determine the active domain.
    */
   protected function negotiateActiveDomain() {
+    $this->negotiated = TRUE;
     $httpHost = $this->negotiateActiveHostname();
     $this->setRequestDomain($httpHost);
-    return $this->domain;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getActiveDomain($reset = FALSE) {
-    if ($reset) {
+    if ($reset || (empty($this->domain) && !$this->negotiated)) {
       $this->negotiateActiveDomain();
     }
     return $this->domain;
@@ -150,7 +157,8 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    * {@inheritdoc}
    */
   public function getActiveId() {
-    return $this->domain->id();
+    $active_domain = $this->getActiveDomain();
+    return $active_domain ? $active_domain->id() : '';
   }
 
   /**

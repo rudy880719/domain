@@ -332,12 +332,7 @@ function domain_access_domain_references_alter($query, $account, $context) {
 function domain_access_node_access(NodeInterface $node, $op, AccountInterface $account) {
   static $active_domain;
   if (!isset($active_domain)) {
-    // Ensure that the loader has run. In some tests, the kernel event has not.
-    $active = \Drupal::service('domain.negotiator')->getActiveDomain();
-    if (is_null($active)) {
-      $active = \Drupal::service('domain.negotiator')->getActiveDomain(TRUE);
-    }
-    $active_domain = $active;
+    $active_domain = \Drupal::service('domain.negotiator')->getActiveDomain();
   }
   // Check to see that we have a valid active domain.
   // Without one, we cannot assert an opinion about access.

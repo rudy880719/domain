@@ -272,13 +272,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
    */
   public function getActiveDomain() {
     if (!isset($this->activeDomain)) {
-      // Ensure that the loader has run.
-      // In some tests, the kernel event has not.
-      $active = $this->negotiator->getActiveDomain();
-      if (is_null($active)) {
-        $active = $this->negotiator->getActiveDomain(TRUE);
-      }
-      $this->activeDomain = $active;
+      $this->activeDomain = $this->negotiator->getActiveDomain();
     }
     return $this->activeDomain;
   }
