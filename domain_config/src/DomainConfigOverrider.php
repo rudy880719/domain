@@ -2,6 +2,8 @@
 
 namespace Drupal\domain_config;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Session\AccountProxy;
 use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
@@ -68,16 +70,26 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
   protected $contextSet;
 
   /**
+   * Current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxy
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a DomainConfigSubscriber object.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The configuration storage engine.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Session\AccountProxy $current_user
+   *   The current user.
    */
-  public function __construct(StorageInterface $storage, ModuleHandlerInterface $module_handler) {
+  public function __construct(StorageInterface $storage, ModuleHandlerInterface $module_handler, AccountProxy $current_user) {
     $this->storage = $storage;
     $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -234,7 +246,10 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     // into the service created a circular dependency error, so we load from
     // the core service manager.
     $this->languageManager = \Drupal::languageManager();
-    $this->language = $this->languageManager->getCurrentLanguage();
+
+    // Set the language based on interface context.
+    $language_type = $this->currentUser->isAnonymous() ? LanguageInterface::TYPE_CONTENT : LanguageInterface::TYPE_INTERFACE;
+    $this->language = $this->languageManager->getCurrentLanguage($language_type);
 
     // The same issue is true for the domainNegotiator.
     $this->domainNegotiator = \Drupal::service('domain.negotiator');
