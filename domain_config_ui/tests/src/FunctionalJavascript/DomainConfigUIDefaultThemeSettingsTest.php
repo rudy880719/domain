@@ -17,6 +17,16 @@ class DomainConfigUIDefaultThemeSettingsTest extends WebDriverTestBase {
   use DomainConfigUITestTrait;
 
   /**
+   * Disabled config schema checking.
+   *
+   * Domain Config actually duplicates schemas provided by other modules,
+   * so it cannot define its own.
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE; // phpcs:ignore
+
+  /**
    * The default theme.
    *
    * @var string
