@@ -60,6 +60,7 @@ class DomainConfigUIDefaultThemeSettingsTest extends WebDriverTestBase {
    * Tests set as default links.
    */
   public function testDomainAppearanceSettings() {
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('/admin/appearance');
     $page = $this->getSession()->getPage();
 
