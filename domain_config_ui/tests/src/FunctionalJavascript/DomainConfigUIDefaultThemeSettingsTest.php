@@ -72,7 +72,7 @@ class DomainConfigUIDefaultThemeSettingsTest extends WebDriverTestBase {
     $this->assertWaitOnAjaxRequest();
 
     // Check if href contains correct domain_config_ui_domain param.
-    $this->assertSession()->elementAttributeContains('xpath', "//*[@id=\"system-themes-page\"]//a[contains(text(),'Set as default')]", 'href', 'domain_config_ui_domain=base.host_name');
+    $this->assertSession()->elementAttributeContains('xpath', "//*[@id=\"system-themes-page\"]//a[contains(text(),'Set as default')]", 'href', 'domain_config_ui_domain=one_example_com');
   }
 
 }
