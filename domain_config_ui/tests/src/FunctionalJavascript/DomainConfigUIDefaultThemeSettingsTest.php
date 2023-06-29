@@ -28,6 +28,8 @@ class DomainConfigUIDefaultThemeSettingsTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'domain_config_ui',
+    'domain_config_test',
+    'language',
   ];
 
   /**
