@@ -37,21 +37,25 @@ class DomainConfigUIDefaultThemeSettingsTest extends WebDriverTestBase {
     parent::setUp();
 
     $this->createAdminUser();
-    $this->domainCreateTestDomains(2, 'base.host_name');
+
+    $this->setBaseHostname();
+    $this->domainCreateTestDomains(5);
+
+    $this->createLanguage();
   }
 
   /**
    * Tests set as default links.
    */
-  public function testFormOptions() {
-    $this->drupalLogin($this->adminUser);
-
-    // Visit the domain config ui administration page.
+  public function testDomainAppearanceSettings() {
     $this->drupalGet('/admin/appearance');
-    $this->assertSession()->statusCodeEquals(200);
+    $page = $this->getSession()->getPage();
 
+    // Test our form.
+    $page->findField('domain');
+    $page->findField('language');
     // Select domain.
-    $this->assertSession()->selectExists('Domain')->selectOption('Example');
+    $page->selectFieldOption('domain', 'one_example_com');
     $this->assertWaitOnAjaxRequest();
 
     // Check if href contains correct domain_config_ui_domain param.
