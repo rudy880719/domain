@@ -236,6 +236,9 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     $this->languageManager = \Drupal::languageManager();
     $this->language = $this->languageManager->getCurrentLanguage();
 
+    // Clear the static cache, as we want it populated with overrides.
+    $this->languageManager->reset();
+
     // The same issue is true for the domainNegotiator.
     $this->domainNegotiator = \Drupal::service('domain.negotiator');
     // Get the domain context.
