@@ -236,9 +236,12 @@ class DomainAccessPermissionsTest extends DomainTestBase {
     $assigned = $this->manager->getAccessValues($domain_user5);
     $this->assertCount(1, $assigned, 'User assigned to one domain.');
     $this->assertArrayHasKey($two, $assigned, 'User assigned to proper test domain.');
+
+    // Single login is enough, as the test run on subdomain
+    $this->drupalLogin($domain_account5);
+
     // This test is domain sensitive.
     foreach ($this->domains as $domain) {
-      $this->domainLogin($domain, $domain_account5);
       $url = $domain->getPath() . 'node/add/page';
       $this->drupalGet($url);
       if ($domain->id() === $two) {
@@ -258,6 +261,12 @@ class DomainAccessPermissionsTest extends DomainTestBase {
       }
     }
 
+    $this->addDomainsToEntity('user', $domain_user5->id(), 1, DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD);
+    foreach ($this->domains as $domain) {
+      $url = $domain->getPath() . 'node/add/page';
+      $this->drupalGet($url);
+      $this->assertSession()->statusCodeEquals(200);
+    }
   }
 
   /**

@@ -397,25 +397,29 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
  */
 function domain_access_node_create_access(AccountInterface $account, $context, $entity_bundle) {
   $id = NULL;
+  $result = AccessResult::neutral();
+  // Load the full user record.
+  $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
   // Check to see that we have a valid active domain.
   // Without one, we cannot assert an opinion about access.
   /** @var \Drupal\domain\DomainInterface $active */
   $active = \Drupal::service('domain.negotiator')->getActiveDomain();
-  if ($active && !$id = $active->getDomainId()) {
-    return AccessResult::neutral();
+  $is_active_domain = $active && $id = $active->getDomainId();
+  if ($is_active_domain) {
+    /** @var \Drupal\domain_access\DomainAccessManagerInterface $manager */
+    $manager = \Drupal::service('domain_access.manager');
+    $user_domains = $manager->getAccessValues($user);
+    $user_access_all_domains = $manager->getAllValue($user);
+
+    if (($account->hasPermission('create ' . $entity_bundle . ' content on assigned domains')
+        || $account->hasPermission('create domain content'))
+        && (in_array($id, $user_domains, TRUE) || $user_access_all_domains)) {
+      $result = AccessResult::allowed();
+    }
   }
-  // Load the full user record.
-  $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
-  $user_domains = \Drupal::service('domain_access.manager')->getAccessValues($user);
-  if (($account->hasPermission('create ' . $entity_bundle . ' content on assigned domains')
-      || $account->hasPermission('create domain content'))
-      && in_array($id, $user_domains, TRUE)) {
-    // Note the cache context here!
-    return AccessResult::allowed()
-      ->addCacheContexts(['user.permissions', 'url.site']);
-  }
-  // No opinion.
-  return AccessResult::neutral();
+  return $result
+    ->addCacheableDependency($user)
+    ->addCacheContexts(['url.site', 'user.permissions']);
 }
 
 /**
