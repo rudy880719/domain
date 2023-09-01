@@ -31,6 +31,7 @@ class DomainCheckResponseTest extends DomainTestBase {
     $this->assertCount(1, $domains, 'Domain record saved via form.');
 
     // Make an invalid POST request on admin/config/domain/add.
+    // We can no longer test this with Guzzle, so we only test the bypass.
     $edit = $this->domainPostValues();
     // Set a hostname that does not exist on the server.
     $edit['hostname'] = 'foo.bar';

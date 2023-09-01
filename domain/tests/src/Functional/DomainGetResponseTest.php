@@ -34,7 +34,6 @@ class DomainGetResponseTest extends DomainTestBase {
       'name' => 'Foo',
     ];
     $domain = \Drupal::entityTypeManager()->getStorage('domain')->create($values);
-
     $domain->save();
     $this->assertTrue($domain->getResponse() === 500, 'Server test returned a 500 response.');
   }

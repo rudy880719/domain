@@ -57,17 +57,15 @@ This behavior is covered by the *DomainConfigUIOverrideTest*.
 
 # Limitations
 
-As noted above, some administrative forms have complex handling that cannot be covered by this module. The color settings for the Bartik theme are a good example. Default language handling is another. Due to the extra processing required by these settings, we do not recommend using Domain Config UI for these settings.
+As noted above, some administrative forms have complex handling that cannot be covered by this module. The color settings for the Olivero theme are a good example. Default language handling is another. Due to the extra processing required by these settings, we do not recommend using Domain Config UI for these settings.
 
 The proper function of any settings is *at the administrator's own risk*. Always test before deploying configuration to the live site. If a configuration override does not work, there may be numerous core reasons why. The most common is caching, addressed below.
 
 # Installation
 
-If some variable changes are not picked up when the page renders, you may need
-add domain-sensitivity to the site's cache.
+If some variable changes are not picked up when the page renders, you may need to add domain-sensitivity to the site's cache.
 
-To do so, clone  `default.services.yml` to `services.yml` and change the
-`required_cache_contexts` value to add the *url.site* context:
+To do so, clone  `default.services.yml` to `services.yml` and change the `required_cache_contexts` value to add the *url.site* context:
 
 ```YAML
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions', 'url.site']

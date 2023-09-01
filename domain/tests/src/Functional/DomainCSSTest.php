@@ -21,7 +21,7 @@ class DomainCSSTest extends DomainTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    \Drupal::service('theme_installer')->install(['bartik']);
+    \Drupal::service('theme_installer')->install(['olivero']);
   }
 
   /**
@@ -35,9 +35,9 @@ class DomainCSSTest extends DomainTestBase {
     $this->domainCreateTestDomains(4);
 
     // The test runner doesn't use a theme that contains the preprocess hook,
-    // so set to use Bartik.
+    // so set to use Olivero.
     $config = $this->config('system.theme');
-    $config->set('default', 'bartik')->save();
+    $config->set('default', 'olivero')->save();
 
     // Test the response of the default home page.
     foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultiple() as $domain) {

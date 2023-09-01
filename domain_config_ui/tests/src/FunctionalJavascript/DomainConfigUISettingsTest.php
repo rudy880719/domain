@@ -33,7 +33,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -87,7 +87,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $page->findLink('Enable domain configuration');
       $page->clickLink('Enable domain configuration');
 
-      $this->assertWaitOnAjaxRequest();
+      $this->waitOnAjaxRequest();
 
       $this->drupalGet($path);
       $config2 = $this->config('domain_config_ui.settings');
@@ -101,7 +101,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $page->findLink('Disable domain configuration');
       $page->clickLink('Disable domain configuration');
 
-      $this->assertWaitOnAjaxRequest();
+      $this->waitOnAjaxRequest();
 
       $path = $prefix . '/admin/config/system/site-information';
       $this->drupalGet($path);
@@ -109,7 +109,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $page->findLink('Disable domain configuration');
       $page->clickLink('Disable domain configuration');
 
-      $this->assertWaitOnAjaxRequest();
+      $this->waitOnAjaxRequest();
 
       $expected3 = $this->explodePathSettings("/admin/appearance");
       $config3 = $this->config('domain_config_ui.settings');

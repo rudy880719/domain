@@ -26,7 +26,7 @@ class DomainValidator implements DomainValidatorInterface {
   /**
    * The HTTP client.
    *
-   * @var \GuzzleHttp\Client
+   * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
@@ -127,17 +127,30 @@ class DomainValidator implements DomainValidatorInterface {
   public function checkResponse(DomainInterface $domain) {
     $url = $domain->getPath() . \Drupal::service('extension.list.module')->getPath('domain') . '/tests/200.png';
     try {
-      // GuzzleHttp no longer allows for bogus URL calls.
-      $request = $this->httpClient->get($url);
+      // Guzzle will not work for items without DNS. If we replace
+      // Guzzle with file_get_contents(), then we have an API change.
+      if (dns_check_record($domain->getHostname())) {
+        $request = $this->httpClient->get($url);
+        // Expected result (i.e. no exception thrown.)
+        $domain->setResponse($request->getStatusCode());
+      }
+      else {
+        // file_get_contents() will error on unregistered domains.
+        $request = @file_get_contents($url);
+        if ($request === FALSE) {
+          // File a general server failure.
+          $domain->setResponse(500);
+        }
+        else {
+          $domain->setResponse(200);
+        }
+      }
     }
     // We cannot know which Guzzle Exception class will be returned; be generic.
     catch (RequestException $e) {
       // File a general server failure.
       $domain->setResponse(500);
-      return $domain->getResponse();
     }
-    // Expected result (i.e. no exception thrown.)
-    $domain->setResponse($request->getStatusCode());
 
     return $domain->getResponse();
   }
