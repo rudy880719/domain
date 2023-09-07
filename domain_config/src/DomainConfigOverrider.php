@@ -242,4 +242,13 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     $this->domain = $this->domainNegotiator->getActiveDomain(TRUE);
   }
 
+  /**
+   * Explicitly sets the domain.
+   *
+   * @param \Drupal\domain\DomainInterface $domain
+   */
+  public function setDomain($domain) {
+    $this->domain = $domain;
+  }
+
 }
