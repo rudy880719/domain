@@ -30,3 +30,6 @@ view domain list:
 view domain information:
   title: 'View debugging information for domain handling'
   restrict access: true
+view active domains:
+  title: 'View all active domains'
+  description: 'View active domains without having an administrative permission'
