@@ -88,6 +88,8 @@ class DomainAccessControlHandler extends EntityAccessControlHandler implements E
     $is_admin = $this->isDomainAdmin($entity, $account);
     if ($operation === 'view' && ($entity->status() || $account->hasPermission('access inactive domains')) && ($is_admin || $account->hasPermission('view domain list'))) {
       return AccessResult::allowed();
+    } elseif ($operation == 'view' && ($entity->status() && $account->hasPermission('view active domains'))) {
+      return AccessResult::allowed();
     }
     // For other operations, check that the user is a domain admin.
     if ($operation === 'update' && $account->hasPermission('edit assigned domains') && $is_admin) {
