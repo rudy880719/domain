@@ -68,6 +68,20 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
   protected $contextSet;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The loaded domain config entities.
+   *
+   * @var \Drupal\domain\Entity\Domain[]
+   */
+  protected $domains = [];
+
+  /**
    * Constructs a DomainConfigSubscriber object.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
@@ -212,6 +226,17 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     if (!empty($this->domain)) {
       $metadata->addCacheContexts(['url.site', 'languages:language_interface']);
     }
+    if (empty($this->entityTypeManager)) {
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+      $this->domains = $this->entityTypeManager->getStorage('domain')->loadMultipleSorted();
+    }
+    if (!empty($this->domains)) {
+      foreach($this->domains as $domain) {
+        $config_name = $this->getDomainConfigName($name, $domain);
+        $metadata->addCacheTags([$config_name['domain']]);
+      }
+    }
+
     return $metadata;
   }
 
