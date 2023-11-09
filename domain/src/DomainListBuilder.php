@@ -341,6 +341,7 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(FALSE)
       ->sort($this->entityType->getKey('weight'));
 
     // If the user cannot administer domains, we must filter the query further
