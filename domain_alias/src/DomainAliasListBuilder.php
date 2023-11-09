@@ -71,6 +71,7 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(FALSE)
       ->condition('domain_id', $this->getDomainId())
       ->sort($this->entityType->getKey('id'));
 
