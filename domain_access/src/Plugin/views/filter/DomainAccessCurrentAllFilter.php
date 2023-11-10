@@ -17,24 +17,6 @@ use Drupal\views\ViewExecutable;
 class DomainAccessCurrentAllFilter extends BooleanOperator {
 
   /**
-   * The label value for the plugin.
-   *
-   * This should be defined by the parent but is not.
-   *
-   * @var string
-   */
-  public string $value_value; // phpcs:ignore
-
-  /**
-   * The options provided by the plugin.
-   *
-   * This should be defined by the parent but is not.
-   *
-   * @var array
-   */
-  public ?array $valueOptions;
-
-  /**
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
