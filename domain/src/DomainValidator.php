@@ -98,9 +98,9 @@ class DomainValidator implements DomainValidatorInterface {
     $config = $this->configFactory->get('domain.settings');
     $non_ascii = $config->get('allow_non_ascii');
     if (!$non_ascii) {
-      $pattern = '/^[a-z0-9\.\-:]*$/i';
+      $pattern = '/^[a-z0-9\.\-_:]*$/i';
       if (!preg_match($pattern, $hostname)) {
-        $error_list[] = $this->t('Only alphanumeric characters, dashes, and a colon are allowed.');
+        $error_list[] = $this->t('Only alphanumeric characters, dashes, underscores and colons are allowed.');
       }
     }
     // Check for lower case.
