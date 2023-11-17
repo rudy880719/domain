@@ -29,6 +29,7 @@ use Drupal\domain\DomainStorageInterface;
  *       "delete" = "Drupal\domain\Form\DomainDeleteForm"
  *     }
  *   },
+ *   static_cache = TRUE,
  *   config_prefix = "record",
  *   admin_permission = "administer domains",
  *   entity_keys = {
