@@ -2,6 +2,7 @@
 
 namespace Drupal\domain_config;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
@@ -61,6 +62,15 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
   protected $languageManager;
 
   /**
+   * Domain entity storage.
+   *
+   * The domain entity storage.
+   *
+   * @var \Drupal\domain\DomainStorageInterface
+   */
+  protected $domainStorage;
+
+  /**
    * Indicates that the request context is set.
    *
    * @var bool
@@ -74,10 +84,16 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    *   The configuration storage engine.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(StorageInterface $storage, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    StorageInterface $storage,
+    ModuleHandlerInterface $module_handler,
+    EntityTypeManagerInterface $entity_type_manager) {
     $this->storage = $storage;
     $this->moduleHandler = $module_handler;
+    $this->domainStorage = $entity_type_manager->getStorage('domain');
   }
 
   /**
@@ -161,6 +177,42 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
 
       return $overrides;
     }
+  }
+
+  /**
+   * Return config overrides across all ( or ony active ) domains.
+   *
+   * @param array $names
+   *   A list of configuration names that are being loaded.
+   * @param bool $only_active
+   *   Whether to load overrides only for active domains or all.
+   *
+   * @return array
+   *   An array keyed by domain name, then configuration name of override data.
+   *   Override data contains a nested array structure of overrides.
+   */
+  public function loadAllDomainOverrides($names, $only_active = FALSE): array {
+
+    $result = [];
+
+    if ($only_active) {
+      $domains = $this->domainStorage->loadByProperties(['active' => 1]);
+    }
+    else {
+      $domains = $this->domainStorage->loadMultiple();
+    }
+
+    foreach ($names as $name) {
+      $result[$name] = [];
+      foreach ($domains as $domain) {
+        $configName = $this->getDomainConfigName($name, $domain);
+        if ($this->storage->exists($configName['domain'])) {
+          $result[$name][$domain->id()] = $this->storage->read($configName['domain']);
+        }
+      }
+    }
+
+    return $result;
   }
 
   /**
