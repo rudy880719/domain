@@ -160,7 +160,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
     }
     $values += [
       'scheme' => $this->getDefaultScheme(),
-      'status' => 1,
+      'status' => '1',
       'weight' => count($domains) + 1,
       'is_default' => (int) empty($default),
     ];

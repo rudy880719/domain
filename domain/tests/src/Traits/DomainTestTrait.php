@@ -191,9 +191,11 @@ trait DomainTestTrait {
     foreach ($required as $key) {
       $edit[$key] = $domain->get($key);
     }
-    // URL validation has issues on Travis, so only do it when requested.
-    $edit['validate_url'] = 0;
     $edit['id'] = \Drupal::entityTypeManager()->getStorage('domain')->createMachineName($edit['hostname']);
+
+    // Validation requires extra test steps, so do not do it by default.
+    $edit['validate_url'] = 0;
+
     return $edit;
   }
 
