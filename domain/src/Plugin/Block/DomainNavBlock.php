@@ -4,10 +4,9 @@ namespace Drupal\domain\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\domain\DomainStorageInterface;
 
 /**
  * Provides a block that links to all active domains.
@@ -49,7 +48,7 @@ class DomainNavBlock extends DomainBlockBase {
       '#required' => TRUE,
       '#options' => [
         'active' => $this->t('Link to active url'),
-        'home' => $this->t('Link to site home page')
+        'home' => $this->t('Link to site home page'),
       ],
       '#default_value' => !empty($this->configuration['link_options']) ? $this->configuration['link_options'] : $defaults['link_options'],
       '#description' => $this->t('Determines how links to each domain will be written. Note that some paths may not be accessible on all domains.'),
@@ -61,7 +60,7 @@ class DomainNavBlock extends DomainBlockBase {
     ];
     $elements['link_theme'] = [
       '#type' => 'radios',
-      '#title' => t('Link theme'),
+      '#title' => $this->t('Link theme'),
       '#default_value' => !empty($this->configuration['link_theme']) ? $this->configuration['link_theme'] : $defaults['link_theme'],
       '#options' => $options,
       '#description' => $this->t('Select how to display the block output.'),
@@ -132,7 +131,7 @@ class DomainNavBlock extends DomainBlockBase {
       // Handles menu links.
       if ($domain->status() || $account->hasPermission('access inactive domains')) {
         if ($this->getSetting('link_theme') === 'menus') {
-          // @TODO: active trail isn't working properly, likely because this
+          // @todo active trail isn't working properly, likely because this
           // isn't really a menu.
           $items[] = [
             'title' => $label,

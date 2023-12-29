@@ -2,9 +2,8 @@
 
 namespace Drupal\domain_access\Plugin\views\filter;
 
-use Drupal\domain\DomainNegotiatorInterface;
-use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -39,7 +38,7 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
-    $this->value_value = t('Available on current domain');
+    $this->value_value = $this->t('Available on current domain');
   }
 
   /**

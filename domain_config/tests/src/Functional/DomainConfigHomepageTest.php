@@ -33,12 +33,12 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     $this->domainCreateTestDomains(5);
     // Get the domain list.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
-    $node1 = $this->drupalCreateNode([
+    $this->drupalCreateNode([
       'type' => 'article',
       'title' => 'Node 1',
       'promoted' => TRUE,
     ]);
-    $node2 = $this->drupalCreateNode([
+    $this->drupalCreateNode([
       'type' => 'article',
       'title' => 'Node 2',
       'promoted' => TRUE,

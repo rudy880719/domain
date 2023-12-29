@@ -2,9 +2,9 @@
 
 namespace Drupal\domain_alias\Entity;
 
-use Drupal\domain_alias\DomainAliasInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\domain_alias\DomainAliasInterface;
 
 /**
  * Defines the domain alias entity.
@@ -134,7 +134,7 @@ class DomainAlias extends ConfigEntityBase implements DomainAliasInterface {
     // Invalidate cache tags relevant to domains.
     \Drupal::service('cache_tags.invalidator')->invalidateTags([
       'rendered',
-      'url.site'
+      'url.site',
     ]);
   }
 

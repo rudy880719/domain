@@ -37,7 +37,8 @@ Drupal 5.
 
 As of Drupal 9.5 and higher, the 8.x-1.x branch is deprecated in favor of 2.0.x.
 
-No new releases are expected for the 8.x-1.x branch. Upgrading should be seamless if you are on Drupal 9.5 or higher.
+No new releases are expected for the 8.x-1.x branch. Upgrading should be
+seamless if you are on Drupal 9.5 or higher.
 
 The following feature sets are considered critical for each release stage. Items
 marked with [x] are considered complete.
@@ -70,7 +71,8 @@ marked with [x] are considered complete.
 - [x] Use domain source for path rewrites
 - [x] Finish the path alter behavior
 - [x] Catalog @TODO items as issues
-- [x] Drupal cache system makes it difficult to serve different homepage for each domain
+- [x] Drupal cache system makes it difficult to serve different homepage
+  for each domain
 - [x] Provide common views support for attached fields
 - [x] Recreate the Domain Content module with bulk operations
 - [x] Add help text to domain overview screen
@@ -137,7 +139,8 @@ marked with [x] are considered complete.
 - [ ] Cache in the DomainAccessManager
 - [ ] Proper handling of default node values
 - [ ] Do not allow actions to be edited?
-- [o] Recreate the Domain Theme module -- see https://www.drupal.org/project/domain_theme_switch
+- [o] Recreate the Domain Theme module -- see
+  https://www.drupal.org/project/domain_theme_switch
 
 # Final
 - [ ] Security review

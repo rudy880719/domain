@@ -2,7 +2,6 @@ name: Domain Configuration
 description: 'Allows domain specific configuration.'
 type: module
 package: Domain
-version: VERSION
 core_version_requirement: ^9 || ^10
 dependencies:
   - domain:domain

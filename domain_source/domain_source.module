@@ -71,7 +71,7 @@ function domain_source_confirm_fields($entity_type, $bundle) {
  *
  * Creates our fields when new node types are created.
  *
- * @TODO: Make this possible for all entity types.
+ * @todo Make this possible for all entity types.
  */
 function domain_source_node_type_insert(EntityInterface $entity) {
   /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
@@ -131,7 +131,6 @@ function domain_source_form_alter(&$form, &$form_state, $form_id) {
   // Set up our TrustedRedirect handler for form saves.
   if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD])
       && !empty($object) && is_callable([$object, 'getEntity'])
-      && $entity = $object->getEntity()
      ) {
     // Validate the form.
     $form['#validate'][] = 'domain_source_form_validate';

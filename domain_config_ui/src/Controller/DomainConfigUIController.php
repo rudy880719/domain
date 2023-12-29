@@ -3,8 +3,8 @@
 namespace Drupal\domain_config_ui\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Url;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\domain_config_ui\DomainConfigUITrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -54,7 +54,7 @@ class DomainConfigUIController {
       switch ($op) {
         case 'enable':
           // Check to see if we already registered this form.
-          if (!$exists = \Drupal::service('path.matcher')->matchPath($new_path, $path_pages)) {
+          if (\Drupal::service('path.matcher')->matchPath($new_path, $path_pages)) {
             $this->addPath($new_path);
             $message = $this->t('Form added to domain configuration interface.');
             $success = TRUE;
@@ -62,7 +62,7 @@ class DomainConfigUIController {
           break;
 
         case 'disable':
-          if ($exists = \Drupal::service('path.matcher')->matchPath($new_path, $path_pages)) {
+          if (\Drupal::service('path.matcher')->matchPath($new_path, $path_pages)) {
             $this->removePath($new_path);
             $message = $this->t('Form removed from domain configuration interface.');
             $success = TRUE;
@@ -89,14 +89,14 @@ class DomainConfigUIController {
     $page['table'] = [
       '#type' => 'table',
       '#header' => [
-        'name' => t('Configuration key'),
-        'item' => t('Item'),
-        'domain' => t('Domain'),
-        'language' => t('Language'),
-        'actions' => t('Actions'),
+        'name' => $this->t('Configuration key'),
+        'item' => $this->t('Item'),
+        'domain' => $this->t('Domain'),
+        'language' => $this->t('Language'),
+        'actions' => $this->t('Actions'),
       ],
     ];
-    // @TODO: inject services.
+    // @todo inject services.
     $storage = \Drupal::service('config.storage');
     foreach ($storage->listAll('domain.config') as $name) {
       $elements[] = $this->deriveElements($name);
@@ -240,7 +240,7 @@ class DomainConfigUIController {
         foreach ($val as $k => $v) {
           $list[] = t('<strong>@key</strong> : @value', [
             '@key' => $k,
-            '@value' => self::formatValue($v)
+            '@value' => self::formatValue($v),
           ]);
         }
         $variables = [

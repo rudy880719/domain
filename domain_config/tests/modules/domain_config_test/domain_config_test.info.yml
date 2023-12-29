@@ -2,10 +2,9 @@ name: "Domain config module tests"
 description: "Support module for domain config testing."
 type: module
 package: Testing
-version: VERSION
 core_version_requirement: ^9 || ^10
 hidden: TRUE
 
 dependencies:
-  - domain
-  - domain_config
+  - drupal:domain
+  - drupal:domain_config

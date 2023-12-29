@@ -4,9 +4,8 @@ namespace Drupal\domain\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\domain\DomainNegotiator;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\domain\DomainStorageInterface;
+use Drupal\domain\DomainNegotiator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -63,7 +62,7 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     // Use the domain labels. They will be sanitized below.
-    // @TODO Set the optionsList as a property.
+    // @todo Set the optionsList as a property.
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList();
 
     $form['domains'] = [

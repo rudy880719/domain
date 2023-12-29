@@ -2,14 +2,13 @@ name: "Domain Source module tests"
 description: "Support module for domain source testing."
 type: module
 package: Testing
-version: VERSION
 core_version_requirement: ^9 || ^10
 hidden: TRUE
 
 dependencies:
-  - domain
-  - domain_source
-  - node
-  - rest
-  - serialization
-  - user
+  - 'drupal:domain'
+  - 'drupal:domain_source'
+  - 'drupal:node'
+  - 'drupal:rest'
+  - 'drupal:serialization'
+  - 'drupal:user'

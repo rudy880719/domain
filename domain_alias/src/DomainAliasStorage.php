@@ -3,8 +3,8 @@
 namespace Drupal\domain_alias;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\domain\DomainInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -104,7 +104,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   public function loadByEnvironmentMatch(DomainInterface $domain, $environment) {
     $result = $this->loadByProperties([
       'domain_id' => $domain->id(),
-      'environment' => $environment
+      'environment' => $environment,
     ]);
 
     return $result;
@@ -225,7 +225,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
     }
 
     $new_patterns = [];
-    foreach ($patterns as $index => $pattern) {
+    foreach ($patterns as $pattern) {
       // If default ports, allow exact no-port alias.
       $new_patterns[] = $pattern . ':*';
       if (empty($port) || intval($port) === 80 || intval($port) === 443) {

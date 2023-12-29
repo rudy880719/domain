@@ -2,14 +2,14 @@
 
 namespace Drupal\domain_source\HttpKernel;
 
-use Drupal\domain\DomainNegotiatorInterface;
-use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
+use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

@@ -1,6 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Provides hook implementations for the Domain Content module.
+ */
+
 use Drupal\domain_access\DomainAccessManagerInterface;
+
 /**
  * @file
  * Install, update and uninstall hooks for this module.
@@ -25,13 +31,13 @@ function domain_content_requirements($phase) {
     foreach ($list as $bundle => $entity_type) {
       // phpcs:ignore
       $id = $entity_type . '.' . $bundle . '.' . DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD;
-      if (!$field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
+      if (\Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
         $allow = FALSE;
         break;
       }
       // phpcs:ignore
       $id = $entity_type . '.' . $bundle . '.' . DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD;
-      if (!$field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
+      if (\Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
         $allow = FALSE;
         break;
       }

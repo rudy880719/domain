@@ -133,7 +133,7 @@ class DomainHookTest extends KernelTestBase {
    * Tests domain references alter hook.
    */
   public function testHookDomainReferencesAlter() {
-    $domain = $this->domainStorage->load($this->key);
+    $this->domainStorage->load($this->key);
 
     // Set the request.
     $manager = \Drupal::service('entity_type.manager');

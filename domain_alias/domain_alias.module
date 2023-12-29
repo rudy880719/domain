@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
 
@@ -109,7 +109,7 @@ function domain_alias_domain_load($entities) {
   // Load and rewrite environment-specific aliases.
   $alias_storage = \Drupal::entityTypeManager()->getStorage('domain_alias');
   if (isset($active->alias) && $active->alias->getEnvironment() !== 'default') {
-    foreach ($entities as $id => $domain) {
+    foreach ($entities as $domain) {
       if ($environment_aliases = $alias_storage->loadByEnvironmentMatch($domain, $active->alias->getEnvironment())) {
         foreach ($environment_aliases as $environment_alias) {
           $pattern = $environment_alias->getPattern();

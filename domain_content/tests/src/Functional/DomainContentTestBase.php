@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\domain_content\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Base class and helper methods for testing domain content.
@@ -77,7 +77,9 @@ abstract class DomainContentTestBase extends DomainTestBase {
   }
 
   /**
-   * Strips whitespace from a page response and runs assertSession()->responseContains() equivalent.
+   * Strips whitespace from a page response.
+   *
+   * And runs assertSession()->responseContains() equivalent.
    *
    * In tests, we were having difficulty with spacing in tables. This method
    * takes some concepts from Mink and rearranges them to work for our tests.

@@ -2,11 +2,11 @@
 
 namespace Drupal\domain_config;
 
-use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\domain\DomainInterface;
 
 /**
  * Domain-specific config overrides.
