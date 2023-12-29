@@ -3,6 +3,7 @@
 namespace Drupal\domain_config;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
@@ -201,13 +202,21 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     else {
       $domains = $this->domainStorage->loadMultiple();
     }
+    $languages = $this->languageManager->getLanguages();
 
     foreach ($names as $name) {
       $result[$name] = [];
+      /** @var DomainInterface $domain */
       foreach ($domains as $domain) {
         $configName = $this->getDomainConfigName($name, $domain);
         if ($this->storage->exists($configName['domain'])) {
-          $result[$name][$domain->id()] = $this->storage->read($configName['domain']);
+          $result[$name][$domain->id()]['default'] = $this->storage->read($configName['domain']);
+        }
+        foreach ($languages as $language) {
+          $configName = $this->getDomainConfigName($name,$domain,$language);
+          if ($this->storage->exists($configName['langcode'])) {
+            $result[$name][$domain->id()][$language->getId()] = $this->storage->read($configName['langcode']);
+          }
         }
       }
     }
@@ -224,15 +233,22 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    *
    * @param string $name
    *   The name of the config object.
-   * @param \Drupal\domain\DomainInterface $domain
+   * @param DomainInterface $domain
    *   The domain object.
+   * @param LanguageInterface|null $language
+   *   The language object.
    *
    * @return array
    *   The domain-language, and domain-specific config names.
    */
-  protected function getDomainConfigName($name, DomainInterface $domain) {
+  protected function getDomainConfigName($name, DomainInterface $domain, LanguageInterface $language = NULL ) {
+
+    if ($language == NULL) {
+      $language = $this->language;
+    }
+
     return [
-      'langcode' => 'domain.config.' . $domain->id() . '.' . $this->language->getId() . '.' . $name,
+      'langcode' => 'domain.config.' . $domain->id() . '.' . $language->getId() . '.' . $name,
       'domain' => 'domain.config.' . $domain->id() . '.' . $name,
     ];
   }
