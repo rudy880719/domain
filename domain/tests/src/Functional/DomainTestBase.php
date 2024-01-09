@@ -48,7 +48,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     // Ensure that $this->baseTLD is set.
     $this->setBaseDomain();
 
-    $this->database = $this->getDatabaseConnection();
+    $this->database = $this->container->get('database');
   }
 
   /**
