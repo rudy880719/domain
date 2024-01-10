@@ -2,6 +2,7 @@
 
 namespace Drupal\domain_config;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
@@ -133,7 +134,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
       }
       if (!empty($this->domain)) {
         foreach ($names as $name) {
-          $config_name = $this->getDomainConfigName($name, $this->domain);
+          $config_name = $this->getDomainConfigName($name, $this->domain, $this->language);
           // Check to see if the config storage has an appropriately named file
           // containing override data.
           if (in_array($config_name['langcode'], $this->storage->listAll('domain.config.'))
@@ -178,9 +179,9 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    * @return array
    *   The domain-language, and domain-specific config names.
    */
-  protected function getDomainConfigName($name, DomainInterface $domain) {
+  public static function getDomainConfigName($name, DomainInterface $domain, LanguageInterface $language) {
     return [
-      'langcode' => 'domain.config.' . $domain->id() . '.' . $this->language->getId() . '.' . $name,
+      'langcode' => 'domain.config.' . $domain->id() . '.' . $language->getId() . '.' . $name,
       'domain' => 'domain.config.' . $domain->id() . '.' . $name,
     ];
   }
