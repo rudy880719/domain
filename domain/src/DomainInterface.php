@@ -3,7 +3,6 @@
 namespace Drupal\domain;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\GeneratedLink;
 
 /**
  * Provides an interface defining a domain entity.

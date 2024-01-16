@@ -85,7 +85,7 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    * {@inheritdoc}
    */
   public function setRequestDomain($httpHost, $reset = FALSE) {
-    // @TODO: Investigate caching methods.
+    // @todo Investigate caching methods.
     $this->setHttpHost($httpHost);
     // Try to load a direct match.
     if ($domain = $this->domainStorage()->loadByHostname($httpHost)) {
@@ -123,7 +123,7 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    * {@inheritdoc}
    */
   public function setActiveDomain(DomainInterface $domain) {
-    // @TODO: caching
+    // @todo Investigate caching methods.
     $this->domain = $domain;
   }
 

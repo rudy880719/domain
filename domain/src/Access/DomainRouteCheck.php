@@ -5,8 +5,8 @@ namespace Drupal\domain\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 use Drupal\domain\DomainNegotiatorInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Determines access to routes based on domains.

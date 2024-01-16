@@ -2,9 +2,9 @@
 
 namespace Drupal\domain\Plugin\EntityReferenceSelection;
 
-use Drupal\user\Entity\User;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Provides entity reference selections for the domain entity type.

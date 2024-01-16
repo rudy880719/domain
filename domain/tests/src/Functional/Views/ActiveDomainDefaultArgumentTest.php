@@ -28,7 +28,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
     'node',
     'domain',
     'domain_access',
-    'domain_test_views'
+    'domain_test_views',
   ];
 
   /**

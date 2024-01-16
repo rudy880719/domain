@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainStorageInterface;
 use Drupal\domain\DomainValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -118,15 +117,13 @@ class DomainForm extends EntityForm {
       '#default_value' => $domain->label(),
       '#description' => $this->t('The human-readable name is shown in domain lists and may be used as the title tag.'),
     ];
-    // Do not use the :// suffix when storing data.
-    $add_suffix = FALSE;
     $form['scheme'] = [
       '#type' => 'radios',
       '#title' => $this->t('Domain URL scheme'),
       '#options' => [
-        'http' => 'http://',
-        'https' => 'https://',
-        'variable' => 'Variable',
+        'http' => $this->t('http://'),
+        'https' => $this->t('https://'),
+        'variable' => $this->t('Variable'),
       ],
       '#default_value' => $domain->getRawScheme(),
       '#description' => $this->t('This URL scheme will be used when writing links and redirects to this domain and its resources. Selecting <strong>Variable</strong> will inherit the current scheme of the web request.'),
@@ -206,7 +203,7 @@ class DomainForm extends EntityForm {
         }
         $form_state->setErrorByName('hostname', $this->t('The server request to @url returned a @response response. To proceed, disable the <em>Test server response</em> in the form.', [
           '@url' => $entity->getPath(),
-          '@response' => $response
+          '@response' => $response,
         ]));
       }
     }
