@@ -104,7 +104,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   public function loadByEnvironmentMatch(DomainInterface $domain, $environment) {
     $result = $this->loadByProperties([
       'domain_id' => $domain->id(),
-      'environment' => $environment
+      'environment' => $environment,
     ]);
 
     return $result;

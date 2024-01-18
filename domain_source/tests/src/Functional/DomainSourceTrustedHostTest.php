@@ -21,7 +21,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**

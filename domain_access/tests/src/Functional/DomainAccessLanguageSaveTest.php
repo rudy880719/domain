@@ -73,7 +73,7 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $translation->set('title', $this->randomString());
     $translation->set(DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD, [
       'example_com',
-      'one_example_com'
+      'one_example_com',
     ]);
     $translation->set(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD, 0);
     $translation->set('status', 1);

@@ -22,7 +22,7 @@ class DomainSourceParameterTest extends DomainTestBase {
     'domain_source_test',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -45,7 +45,7 @@ class DomainSourceParameterTest extends DomainTestBase {
     $node = $this->createNode([
       'type' => 'page',
       'title' => 'foo',
-      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id
+      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id,
     ]);
 
     // Variables for our tests.

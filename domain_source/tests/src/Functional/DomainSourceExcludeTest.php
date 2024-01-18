@@ -21,7 +21,7 @@ class DomainSourceExcludeTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**

@@ -21,7 +21,7 @@ class DomainAccessContentUrlsTest extends DomainTestBase {
     'domain_access',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**

@@ -99,7 +99,7 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
    *   The domain that is context for this list.
    */
   public function getDomainId() {
-    // @TODO: check for a use-case where we might need to derive the id?
+    // @todo check for a use-case where we might need to derive the id?
     return !empty($this->domain) ? $this->domain->id() : NULL;
   }
 
