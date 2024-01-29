@@ -135,13 +135,20 @@ trait DomainConfigUITestTrait {
    *
    * @param string $name
    *   The name of the current session.
+   * @param string $element_name
+   *   The name of the clicked element.
    *
    * @throws \RuntimeException
    *   When the request is not completed.
    */
-  public function waitOnAjaxRequest($name = NULL) {
+  public function waitOnAjaxRequest($name = NULL, $element_name = NULL) {
     $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
-    $driver->assertWaitOnAjaxRequest();
+    if (is_string($element_name)) {
+      $driver->waitForElementVisible('css', "[name=\"{$element_name}\"]");
+    }
+    else {
+      $driver->assertExpectedAjaxRequest(1);
+    }
   }
 
 }

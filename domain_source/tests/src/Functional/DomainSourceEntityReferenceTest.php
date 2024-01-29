@@ -135,7 +135,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Create a third node that is assigned to a menu.
     $edit = [

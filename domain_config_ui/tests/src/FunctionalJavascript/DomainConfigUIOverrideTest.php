@@ -86,7 +86,7 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->waitOnAjaxRequest();
+    $this->waitOnAjaxRequest(NULL, 'domain');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -95,7 +95,6 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $this->htmlOutput($page->getHtml());
     $page->pressButton('Save configuration');
     $this->htmlOutput($page->getHtml());
-    $this->waitOnAjaxRequest();
 
     // We did not save a language prefix, so none will be present.
     $config_name = 'domain.config.one_example_com.system.site';
@@ -111,12 +110,12 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->waitOnAjaxRequest();
+    $this->waitOnAjaxRequest(NULL, 'domain');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->waitOnAjaxRequest();
+    $this->waitOnAjaxRequest(NULL, 'language');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();

@@ -78,6 +78,7 @@ function domain_config_ui_admin_form($op) {
           '#url' => Url::fromRoute('domain_config_ui.inline_action', $params),
           '#title' => $title,
           '#attributes' => [
+            'name' => 'domain-configuration',
             'class' => [
               'button',
               'button--primary',

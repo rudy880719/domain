@@ -3,6 +3,7 @@
 namespace Drupal\Tests\domain\Functional;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\domain\DomainInterface;
@@ -48,7 +49,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     // Ensure that $this->baseTLD is set.
     $this->setBaseDomain();
 
-    $this->database = $this->getDatabaseConnection();
+    $this->database = SimpletestTestRunResultsStorage::getConnection();
   }
 
   /**
