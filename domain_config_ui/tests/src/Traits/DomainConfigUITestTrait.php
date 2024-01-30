@@ -144,7 +144,7 @@ trait DomainConfigUITestTrait {
   public function waitOnAjaxRequest($name = NULL, $element_name = NULL) {
     $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
     if (is_string($element_name)) {
-      $driver->waitForElementVisible('css', "[name=\"{$element_name}\"]");
+      $driver->waitForElement('css', "[name=\"{$element_name}\"]");
     }
     else {
       $driver->assertExpectedAjaxRequest(1);
