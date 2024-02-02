@@ -107,12 +107,12 @@ trait DomainConfigUITestTrait {
       'predefined_langcode' => 'es',
     ];
     $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, t('Add language'));
+    $this->submitForm($edit, t('Add language')->render());
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, t('Save settings'));
+    $this->submitForm($edit, t('Save settings')->render());
 
     $this->drupalLogout();
 

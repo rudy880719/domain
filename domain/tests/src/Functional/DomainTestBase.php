@@ -235,7 +235,7 @@ abstract class DomainTestBase extends BrowserTestBase {
       'name' => $account->getAccountName(),
       // @phpstan-ignore-next-line
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], t('Log in')->render());
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     // @phpstan-ignore-next-line
