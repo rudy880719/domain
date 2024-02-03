@@ -113,7 +113,6 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $this->waitOnAjaxRequest($this->assertSession(), 'domain');
     $this->htmlOutput($page->getHtml());
 
-    $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
     $this->waitOnAjaxRequest($this->assertSession(), 'language');
     $this->htmlOutput($page->getHtml());
