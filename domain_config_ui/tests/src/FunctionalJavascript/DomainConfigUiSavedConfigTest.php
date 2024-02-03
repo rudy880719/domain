@@ -89,7 +89,6 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $this->waitOnAjaxRequest($this->assertSession(), 'domain');
     $page->selectFieldOption('language', 'es');
     $this->waitOnAjaxRequest($this->assertSession(), 'language');
-    $this->htmlOutput($page->getHtml());
 
     $page->fillField('site_name', 'Neuvo nombre');
     $page->fillField('site_frontpage', '/user');
