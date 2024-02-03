@@ -72,9 +72,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
     $this->waitOnAjaxRequest($this->assertSession(), 'domain');
-    $this->htmlOutput($page->getHtml());
 
-    $page = $this->getSession()->getPage();
     $page->fillField('site_name', 'New name');
     $page->fillField('site_frontpage', '/user');
     $this->htmlOutput($page->getHtml());
@@ -89,13 +87,10 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
     $this->waitOnAjaxRequest($this->assertSession(), 'domain');
-    $this->htmlOutput($page->getHtml());
-
     $page->selectFieldOption('language', 'es');
     $this->waitOnAjaxRequest($this->assertSession(), 'language');
     $this->htmlOutput($page->getHtml());
 
-    $page = $this->getSession()->getPage();
     $page->fillField('site_name', 'Neuvo nombre');
     $page->fillField('site_frontpage', '/user');
     $this->htmlOutput($page->getHtml());

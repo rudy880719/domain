@@ -137,7 +137,7 @@ trait DomainConfigUITestTrait {
    */
   public function waitOnAjaxRequest($assert_session, $element_name = NULL) {
     if (is_string($element_name)) {
-      $assert_session->waitForElement('css', "[name=\"{$element_name}\"]");
+      $assert_session->waitForElementVisible('css', "[name=\"{$element_name}\"]");
     }
     else {
       $assert_session->assertExpectedAjaxRequest(1);

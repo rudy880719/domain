@@ -261,7 +261,7 @@ class SwitchForm extends FormBase {
 
     // Reload the page to get new form values.
     $response = new AjaxResponse();
-    $response->addCommand(new RedirectCommand($request_uri));
+    $response->addCommand(new RedirectCommand($request->getSchemeAndHttpHost() . $request_uri));
     return $response;
   }
 
