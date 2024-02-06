@@ -3,6 +3,7 @@
 namespace Drupal\domain\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\domain\Access\DomainAccessCheck;
@@ -55,6 +56,13 @@ class DomainSubscriber implements EventSubscriberInterface {
   protected $account;
 
   /**
+   * The route provider to load routes by name.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
    * Constructs a DomainSubscriber object.
    *
    * @param \Drupal\domain\DomainNegotiatorInterface $negotiator
@@ -66,12 +74,13 @@ class DomainSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
    */
-  public function __construct(DomainNegotiatorInterface $negotiator, EntityTypeManagerInterface $entity_type_manager, DomainAccessCheck $access_check, AccountInterface $account) {
+  public function __construct(DomainNegotiatorInterface $negotiator, EntityTypeManagerInterface $entity_type_manager, DomainAccessCheck $access_check, AccountInterface $account, RouteProviderInterface $route_provider) {
     $this->domainNegotiator = $negotiator;
     $this->entityTypeManager = $entity_type_manager;
     $this->domainStorage = $this->entityTypeManager->getStorage('domain');
     $this->accessCheck = $access_check;
     $this->account = $account;
+    $this->routeProvider = $route_provider;
   }
 
   /**
@@ -92,6 +101,7 @@ class DomainSubscriber implements EventSubscriberInterface {
     // Negotiate the request and set domain context.
     $domain = $this->domainNegotiator->getActiveDomain(TRUE);
     if ($domain instanceof DomainInterface) {
+      $this->routeProvider->addExtraCacheKeyPart('domain', $domain->id());
       $hostname = $domain->getHostname();
       $domain_url = $domain->getUrl();
       $redirect_status = $domain->getRedirect();
