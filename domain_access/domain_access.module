@@ -290,12 +290,20 @@ function domain_access_domain_references_alter($query, $account, $context) {
       if ($account->hasPermission('publish to any domain')) {
         break;
       }
-      elseif ($account->hasPermission('publish to any assigned domain')) {
+      $allowed_ids_condition = [];
+      if ($account->hasPermission('publish to default domain')) {
+        $default_domain = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultDomain();
+        $allowed_ids_condition[$default_domain->id()] = $default_domain->getDomainId();
+      }
+      if ($account->hasPermission('publish to any assigned domain')) {
         if (!empty($account->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
           break;
         }
         $allowed = \Drupal::service('domain_access.manager')->getAccessValues($account);
-        $query->condition('id', array_keys($allowed), 'IN');
+        $allowed_ids_condition = array_unique(array_merge($allowed_ids_condition, $allowed));
+      }
+      if (!empty($allowed_ids_condition)) {
+        $query->condition('id', array_keys($allowed_ids_condition), 'IN');
       }
       else {
         // Remove all options.
@@ -436,6 +444,7 @@ function domain_access_entity_field_access($operation, FieldDefinitionInterface 
   if ($field_definition->getName() === DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD) {
     if ($entity instanceof AccountInterface) {
       $access = AccessResult::allowedIfHasPermissions($account, [
+        'publish to default domain',
         'assign domain editors',
         'assign editors to any domain',
       ], 'OR');
