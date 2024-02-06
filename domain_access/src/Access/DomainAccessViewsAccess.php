@@ -10,7 +10,9 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Class DomainAccessViewsAccess.
+ * Provides access check for view.
+ *
+ * @see \Drupal\domain_access\Plugin\views\access\DomainAccessContent::alterRouteDefinition
  *
  * @package Drupal\domain_access\Access
  */

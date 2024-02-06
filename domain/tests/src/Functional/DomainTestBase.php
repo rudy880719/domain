@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
 
 /**
- * Class DomainTestBase.
+ * Provides an abstract class for browser based tests.
  *
  * @package Drupal\Tests\domain\Functional
  */

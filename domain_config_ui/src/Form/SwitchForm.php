@@ -16,7 +16,9 @@ use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class SwitchForm.
+ * Provides a form to switch the domain for configuration.
+ *
+ * @see \domain_config_ui_preprocess_page
  */
 class SwitchForm extends FormBase {
 

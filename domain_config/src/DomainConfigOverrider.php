@@ -123,7 +123,8 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
       // Prepare our overrides.
       $overrides = [];
       // loadOverrides() runs on config entities, which means that if we try
-      // to run this routine on our own data, then we end up in an infinite loop.
+      // to run this routine on our own data, then we end up in an
+      // infinite loop.
       // So ensure that we are _not_ looking up a domain.record.*.
       $check = current($names);
       $list = explode('.', $check);

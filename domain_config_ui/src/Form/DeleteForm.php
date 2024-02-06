@@ -10,7 +10,7 @@ use Drupal\domain_config_ui\Controller\DomainConfigUIController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Class DeleteForm.
+ * Provides the form to delete the configuration for a domain.
  */
 class DeleteForm extends FormBase {
 

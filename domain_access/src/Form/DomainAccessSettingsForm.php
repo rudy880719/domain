@@ -6,7 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class DomainAccessSettingsForm.
+ * Provides the settings form for domain access module.
  *
  * @package Drupal\domain_access\Form
  */

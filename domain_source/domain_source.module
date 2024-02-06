@@ -152,7 +152,10 @@ function domain_source_form_validate($element, FormStateInterface $form_state) {
   $values = $form_state->getValues();
   $access_values = [];
   // This is only run if Domain Access is present.
-  if (isset($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
+  if (isset($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD],
+      $values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])
+    && \Drupal::moduleHandler()->moduleExists('domain_access')
+    ) {
     $access_values = $values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD];
     $source_value = current($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]);
   }
