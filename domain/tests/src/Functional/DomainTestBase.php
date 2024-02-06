@@ -4,6 +4,7 @@ namespace Drupal\Tests\domain\Functional;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
@@ -48,7 +49,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     // Ensure that $this->baseTLD is set.
     $this->setBaseDomain();
 
-    $this->database = $this->getDatabaseConnection();
+    $this->database = \Drupal::database();
   }
 
   /**
@@ -227,14 +228,13 @@ abstract class DomainTestBase extends BrowserTestBase {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
-
+    $this->drupalGet(Url::fromRoute('user.login'));
     // Login.
-    $url = $domain->getPath() . 'user/login';
     $this->submitForm([
       'name' => $account->getAccountName(),
       // @phpstan-ignore-next-line
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     // @phpstan-ignore-next-line

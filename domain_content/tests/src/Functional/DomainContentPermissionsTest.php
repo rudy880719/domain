@@ -108,12 +108,12 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
       $this->assertSession()->statusCodeEquals($expected);
       // Find the links.
       $this->assertSession()->responseNotContains('All affiliates');
-      foreach ($this->domains as $id => $domain) {
+      foreach ($this->domains as $domain) {
         if ($expected === 200) {
-          $this->findLink($domain->label());
+          $this->findLink((string) $domain->label());
         }
         else {
-          $this->findNoLink($domain->label());
+          $this->findNoLink( (string) $domain->label());
         }
       }
 
