@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\domain_content\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Base class and helper methods for testing domain content.

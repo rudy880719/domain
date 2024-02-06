@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_access\Plugin\views\filter;
 
-use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\ViewExecutable;
 
 /**

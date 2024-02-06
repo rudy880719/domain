@@ -10,8 +10,8 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainElementManagerInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

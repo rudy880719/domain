@@ -5,10 +5,10 @@
  * Defines a Domain concept for use with Drupal.
  */
 
-use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 
 /**

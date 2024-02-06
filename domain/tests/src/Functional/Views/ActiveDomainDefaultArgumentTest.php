@@ -3,9 +3,9 @@
 namespace Drupal\Tests\domain\Functional\Views;
 
 use Drupal\Core\Url;
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
-use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
  * Tests the active_domain default argument.

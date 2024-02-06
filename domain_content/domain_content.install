@@ -2,14 +2,10 @@
 
 /**
  * @file
+ * Install, update and uninstall hooks for this module.
  */
 
 use Drupal\domain_access\DomainAccessManagerInterface;
-
-/**
- * @file
- * Install, update and uninstall hooks for this module.
- */
 
 /**
  * Implements hook_requirements().

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_access\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests the domain access integration with node_access records.

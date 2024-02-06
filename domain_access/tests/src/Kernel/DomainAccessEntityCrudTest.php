@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\domain_access\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests creation of nodes and users before and after deleting required fields.

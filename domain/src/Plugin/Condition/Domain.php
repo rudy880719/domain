@@ -4,7 +4,6 @@ namespace Drupal\domain\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\domain\DomainNegotiator;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\domain\DomainNegotiator;
 use Symfony\Component\DependencyInjection\ContainerInterface;

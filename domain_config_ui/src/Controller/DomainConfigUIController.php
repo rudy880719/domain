@@ -3,8 +3,8 @@
 namespace Drupal\domain_config_ui\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Url;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\domain_config_ui\DomainConfigUITrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 

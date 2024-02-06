@@ -2,9 +2,9 @@
 
 namespace Drupal\domain_alias;
 
-use Drupal\domain\DomainInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\domain\DomainInterface;
 
 /**
  * User interface for the domain alias overview screen.

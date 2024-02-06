@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\domain\Functional\DomainTestBase;
-use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
  * Tests saving the domain access field elements in multiple languages.

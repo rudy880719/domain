@@ -5,15 +5,15 @@
  * Domain-based access control for content.
  */
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().

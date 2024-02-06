@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for saving the domain access field elements.

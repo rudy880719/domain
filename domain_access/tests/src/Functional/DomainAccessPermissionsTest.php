@@ -3,10 +3,10 @@
 namespace Drupal\Tests\domain_access\Functional;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\NodeInterface;
-use Drupal\user\RoleInterface;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the domain access integration with node_access callbacks.
