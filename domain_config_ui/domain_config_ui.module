@@ -8,6 +8,7 @@
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_preprocess_page().
@@ -178,4 +179,26 @@ function domain_config_ui_route_is_admin() {
     return FALSE;
   }
   return \Drupal::service('router.admin_context')->isAdminRoute($route);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function domain_config_ui_form_system_site_maintenance_mode_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $config = \Drupal::service('config.factory')->get('domain_config_ui.domain_settings');
+
+  // Override the default value by taking it from this module's configuration setting object.
+  $form['maintenance_mode']['#default_value'] = $config->get('maintenance_mode');
+  $form['maintenance_mode']['#description'] .= t(' This setting is overridden by the Domain Access module.');
+
+  $form['#submit'][] = 'domain_config_ui_system_site_maintenance_mode_submit';
+}
+
+/**
+ * Form submission handler for system_site_maintenance_mode form.
+ */
+function domain_config_ui_system_site_maintenance_mode_submit($form, FormStateInterface $form_state) {
+  $config = \Drupal::service('config.factory')->getEditable('domain_config_ui.domain_settings');
+  $config->set('maintenance_mode', $form_state->getValue('maintenance_mode'))
+    ->save();
 }
