@@ -444,7 +444,6 @@ function domain_access_entity_field_access($operation, FieldDefinitionInterface 
   if ($field_definition->getName() === DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD) {
     if ($entity instanceof AccountInterface) {
       $access = AccessResult::allowedIfHasPermissions($account, [
-        'publish to default domain',
         'assign domain editors',
         'assign editors to any domain',
       ], 'OR');
@@ -452,6 +451,7 @@ function domain_access_entity_field_access($operation, FieldDefinitionInterface 
     elseif ($entity instanceof NodeInterface) {
       // Treat any other entity as content.
       $access = AccessResult::allowedIfHasPermissions($account, [
+        'publish to default domain',
         'publish to any domain',
         'publish to any assigned domain',
       ], 'OR');
