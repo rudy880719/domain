@@ -66,12 +66,12 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     // Visit the site information page.
     $this->drupalGet($path);
     $page = $this->getSession()->getPage();
-
+    $assert_session = $this->assertSession();
     // Test our form.
-    $page->findField('domain');
-    $page->findField('language');
+    $assert_session->fieldExists('domain');
+    $assert_session->fieldExists('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->waitOnAjaxRequest();
+    //$assert_session->assertExpectedAjaxRequest(1);
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -88,12 +88,12 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->waitOnAjaxRequest();
+    // $assert_session->assertExpectedAjaxRequest(1);
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->waitOnAjaxRequest();
+    //$assert_session->assertExpectedAjaxRequest(1);
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
