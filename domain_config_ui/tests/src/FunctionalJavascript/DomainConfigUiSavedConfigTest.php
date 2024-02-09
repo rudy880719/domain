@@ -71,7 +71,9 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $assert_session->fieldExists('domain');
     $assert_session->fieldExists('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    //$assert_session->assertExpectedAjaxRequest(1);
+    $assert_session->waitForText('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
+    $assert_session->pageTextContainsOnce('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
+    $assert_session->addressEquals($path . '?domain_config_ui_domain=one_example_com&domain_config_ui_language=');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -79,6 +81,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $page->fillField('site_frontpage', '/user');
     $this->htmlOutput($page->getHtml());
     $page->pressButton('Save configuration');
+    $assert_session->pageTextContainsOnce('The configuration options have been saved.');
     $this->htmlOutput($page->getHtml());
 
     // Now let's save a language.
@@ -88,12 +91,16 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    // $assert_session->assertExpectedAjaxRequest(1);
+    $assert_session->waitForText('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
+    $assert_session->pageTextContainsOnce('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
+    $assert_session->addressEquals($path . '?domain_config_ui_domain=one_example_com&domain_config_ui_language=');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    //$assert_session->assertExpectedAjaxRequest(1);
+    $assert_session->waitForText('This configuration will be saved for the Test One domain and displayed in Spanish.');
+    $assert_session->pageTextContainsOnce('This configuration will be saved for the Test One domain and displayed in Spanish');
+    $assert_session->addressEquals($path . '?domain_config_ui_domain=one_example_com&domain_config_ui_language=es');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
