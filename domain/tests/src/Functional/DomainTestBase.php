@@ -4,6 +4,7 @@ namespace Drupal\Tests\domain\Functional;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
@@ -225,7 +226,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     if ($this->loggedInUser !== FALSE) {
       $this->drupalLogout();
     }
-
+    $this->drupalGet(Url::fromRoute('user.login'));
     // Login.
     $this->submitForm([
       'name' => $account->getAccountName(),
