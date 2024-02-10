@@ -6,7 +6,9 @@ use Drupal\Core\Asset\LibraryDiscoveryCollector;
 use Drupal\domain\DomainNegotiatorInterface;
 
 /**
- * Decorates the library.discovery.collector to add the domain id to the cache id.
+ * Decorates the library.discovery.collector service.
+ *
+ * The decorated service adds the domain id to the cache id.
  *
  * @package Drupal\domain_config
  */
