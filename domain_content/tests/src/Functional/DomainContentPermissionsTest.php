@@ -113,7 +113,7 @@ class DomainContentPermissionsTest extends DomainContentTestBase {
           $this->findLink((string) $domain->label());
         }
         else {
-          $this->findNoLink( (string) $domain->label());
+          $this->findNoLink((string) $domain->label());
         }
       }
 
