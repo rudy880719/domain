@@ -52,7 +52,6 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
 
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('node');
