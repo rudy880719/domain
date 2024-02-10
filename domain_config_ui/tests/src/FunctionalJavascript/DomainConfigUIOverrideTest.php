@@ -88,8 +88,8 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $assert_session->waitForText('This configuration will be saved for the One domain and displayed in all languages.');
-    $assert_session->pageTextContainsOnce('This configuration will be saved for the One domain and displayed in all languages.');
+    $assert_session->waitForText('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
+    $assert_session->pageTextContainsOnce('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
     $assert_session->addressEquals($path . '?domain_config_ui_domain=one_example_com&domain_config_ui_language=');
     $this->htmlOutput($page->getHtml());
 
@@ -115,8 +115,8 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $assert_session->waitForText('This configuration will be saved for the Test One domain and displayed in Spanish');
-    $assert_session->pageTextContainsOnce('This configuration will be saved for the Test One domain and displayed in Spanish');
+    $assert_session->waitForText('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
+    $assert_session->pageTextContainsOnce('This configuration will be saved for the Test One domain and displayed in all languages without custom configuration.');
     $assert_session->addressEquals($path . '?domain_config_ui_domain=one_example_com&domain_config_ui_language=');
     $this->htmlOutput($page->getHtml());
 
