@@ -5,15 +5,15 @@
  * Domain-based access control for content.
  */
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().
@@ -43,18 +43,24 @@ function domain_access_node_grants(AccountInterface $account, $op) {
     $grants['domain_id'][] = $id;
     $grants['domain_site'][] = 0;
     if ($user->hasPermission('view unpublished domain content')) {
-      if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+      if ($user->hasPermission('publish to any domain') ||
+        in_array($id, $user_domains) ||
+        !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
         $grants['domain_unpublished'][] = $id;
       }
     }
   }
   elseif ($op === 'update' && $user->hasPermission('edit domain content')) {
-    if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+    if ($user->hasPermission('publish to any domain') ||
+      in_array($id, $user_domains)
+      || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
       $grants['domain_id'][] = $id;
     }
   }
   elseif ($op === 'delete' && $user->hasPermission('delete domain content')) {
-    if ($user->hasPermission('publish to any domain') || in_array($id, $user_domains) || !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
+    if ($user->hasPermission('publish to any domain') ||
+      in_array($id, $user_domains) ||
+      !empty($user->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value)) {
       $grants['domain_id'][] = $id;
     }
   }

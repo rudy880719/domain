@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\domain_config_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
-use Drupal\Tests\domain\Traits\DomainTestTrait;
 use Drupal\domain_config_ui\DomainConfigUITrait;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\domain\Traits\DomainTestTrait;
+use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 
 /**
  * Tests the domain config settings interface.
@@ -87,8 +87,6 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $page->findLink('Enable domain configuration');
       $page->clickLink('Enable domain configuration');
 
-      $this->waitOnAjaxRequest();
-
       $this->drupalGet($path);
       $config2 = $this->config('domain_config_ui.settings');
       $expected2 = $this->explodePathSettings("/admin/appearance\r\n/admin/config/system/site-information\r\n/admin/appearance/settings/stark");
@@ -101,15 +99,11 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $page->findLink('Disable domain configuration');
       $page->clickLink('Disable domain configuration');
 
-      $this->waitOnAjaxRequest();
-
       $path = $prefix . '/admin/config/system/site-information';
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
       $page->findLink('Disable domain configuration');
       $page->clickLink('Disable domain configuration');
-
-      $this->waitOnAjaxRequest();
 
       $expected3 = $this->explodePathSettings("/admin/appearance");
       $config3 = $this->config('domain_config_ui.settings');

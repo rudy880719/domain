@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for the rewriting links using core URL methods.
@@ -21,7 +21,7 @@ class DomainSourceUrlTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**

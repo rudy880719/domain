@@ -82,7 +82,7 @@ function domain_update_8002() {
     return t('Updated @count blocks: @blocks',
       [
         '@count' => count($update_list),
-        '@blocks' => implode(', ', $update_list)
+        '@blocks' => implode(', ', $update_list),
       ]
     );
   }

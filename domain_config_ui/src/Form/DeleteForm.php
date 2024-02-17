@@ -3,14 +3,14 @@
 namespace Drupal\domain_config_ui\Form;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\domain_config_ui\Controller\DomainConfigUIController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Class DeleteForm.
+ * Provides the form to delete the configuration for a domain.
  */
 class DeleteForm extends FormBase {
 

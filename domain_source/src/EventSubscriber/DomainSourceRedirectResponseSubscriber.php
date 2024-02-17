@@ -6,9 +6,9 @@ use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\domain\DomainRedirectResponse;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * Allows manipulation of the response object when performing a redirect.

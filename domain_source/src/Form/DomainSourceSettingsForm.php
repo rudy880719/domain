@@ -6,7 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class DomainSourceSettingsForm.
+ * Provides the settings form for the Domain Source module.
  *
  * @package Drupal\domain_source\Form
  */

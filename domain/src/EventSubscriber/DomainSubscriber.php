@@ -2,16 +2,16 @@
 
 namespace Drupal\domain\EventSubscriber;
 
-use Drupal\domain\Access\DomainAccessCheck;
-use Drupal\domain\DomainNegotiatorInterface;
-use Drupal\domain\DomainRedirectResponse;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\Access\DomainAccessCheck;
+use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\domain\DomainRedirectResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Sets the domain context for an http request.

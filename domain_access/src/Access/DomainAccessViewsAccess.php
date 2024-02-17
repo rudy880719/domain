@@ -6,11 +6,13 @@ use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Symfony\Component\Routing\Route;
 
 /**
- * Class DomainAccessViewsAccess.
+ * Provides access check for view.
+ *
+ * @see \Drupal\domain_access\Plugin\views\access\DomainAccessContent::alterRouteDefinition
  *
  * @package Drupal\domain_access\Access
  */

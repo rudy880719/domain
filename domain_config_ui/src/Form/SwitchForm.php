@@ -10,13 +10,15 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainElementManagerInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class SwitchForm.
+ * Provides a form to switch the domain for configuration.
+ *
+ * @see \domain_config_ui_preprocess_page
  */
 class SwitchForm extends FormBase {
 
@@ -189,7 +191,7 @@ class SwitchForm extends FormBase {
       ];
     }
 
-    // @TODO: Add cache contexts to form?
+    // @todo Add cache contexts to form?
     return $form;
   }
 

@@ -2,12 +2,11 @@
 
 namespace Drupal\Tests\domain_access\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\FieldConfigInterface;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests creation of nodes and users before and after deleting required fields.
@@ -42,7 +41,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
     'user',
     'node',
     'domain',
-    'domain_access'
+    'domain_access',
   ];
 
   /**
@@ -53,7 +52,6 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
 
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('node');
@@ -63,7 +61,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
 
     $type = $this->entityTypeManager->getStorage('node_type')->create([
       'type' => 'page',
-      'name' => 'page'
+      'name' => 'page',
     ]);
     $type->save();
 
@@ -82,7 +80,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
   protected function deleteDomainAccessFields($entity_type, $bundle) {
     $fields = [
       DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD,
-      DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD
+      DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD,
     ];
     foreach ($fields as $field_name) {
       /** @var \Drupal\field\FieldConfigInterface $field */

@@ -71,7 +71,7 @@ function domain_source_confirm_fields($entity_type, $bundle) {
  *
  * Creates our fields when new node types are created.
  *
- * @TODO: Make this possible for all entity types.
+ * @todo Make this possible for all entity types.
  */
 function domain_source_node_type_insert(EntityInterface $entity) {
   /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
@@ -151,8 +151,9 @@ function domain_source_form_alter(&$form, &$form_state, $form_id) {
 function domain_source_form_validate($element, FormStateInterface $form_state) {
   $values = $form_state->getValues();
   $access_values = [];
+  $domain_access_installed = \Drupal::moduleHandler()->moduleExists('domain_access');
   // This is only run if Domain Access is present.
-  if (isset($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
+  if ($domain_access_installed && isset($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD], $values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
     $access_values = $values[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD];
     $source_value = current($values[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]);
   }

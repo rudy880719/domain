@@ -2,9 +2,9 @@
 
 namespace Drupal\domain;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\CacheableSecuredRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Site\Settings;
 
 /**

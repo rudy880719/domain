@@ -2,14 +2,15 @@
 
 namespace Drupal\Tests\domain\Functional;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
 
 /**
- * Class DomainTestBase.
+ * Provides an abstract class for browser based tests.
  *
  * @package Drupal\Tests\domain\Functional
  */
@@ -48,7 +49,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     // Ensure that $this->baseTLD is set.
     $this->setBaseDomain();
 
-    $this->database = $this->getDatabaseConnection();
+    $this->database = \Drupal::database();
   }
 
   /**
@@ -203,7 +204,7 @@ abstract class DomainTestBase extends BrowserTestBase {
    *   TRUE if a given user account is logged in, or FALSE.
    */
   protected function drupalUserIsLoggedIn(AccountInterface $account) {
-    // @TODO: This is a temporary hack for the test login fails when setting $cookie_domain.
+    // @todo This is a temporary hack for the test login fails when setting $cookie_domain.
     if (!isset($account->session_id)) {
       return (bool) $account->id();
     }
@@ -227,14 +228,13 @@ abstract class DomainTestBase extends BrowserTestBase {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
-
+    $this->drupalGet(Url::fromRoute('user.login'));
     // Login.
-    $url = $domain->getPath() . 'user/login';
     $this->submitForm([
       'name' => $account->getAccountName(),
       // @phpstan-ignore-next-line
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     // @phpstan-ignore-next-line

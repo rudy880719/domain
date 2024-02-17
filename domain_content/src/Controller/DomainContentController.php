@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_content\Controller;
 
-use Drupal\Core\Link;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;

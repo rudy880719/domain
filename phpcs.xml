@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="domain">
+  <description>Default PHP CodeSniffer configuration for Domain.</description>
+  <arg name="colors"/>
+  <rule ref="Drupal">
+    <properties>
+      <property name="lineLimit" value="120"/>
+    </properties>
+  </rule>
+
+  <exclude-pattern>/.ddev</exclude-pattern>
+  <exclude-pattern>/.lando</exclude-pattern>
+  <arg name="extensions" value="php,module,inc,install,test,profile,theme"/>
+</ruleset>
