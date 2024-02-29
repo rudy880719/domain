@@ -5,6 +5,7 @@ namespace Drupal\domain\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainStorageInterface;
@@ -45,6 +46,13 @@ class DomainForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
+   * Provides the Drupal messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a DomainForm object.
    *
    * @param \Drupal\domain\DomainStorageInterface $domain_storage
@@ -53,14 +61,22 @@ class DomainForm extends EntityForm {
    *   The renderer.
    * @param \Drupal\domain\DomainValidatorInterface $validator
    *   The domain validator.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   Provides the Drupal messenger service.
    */
-  public function __construct(DomainStorageInterface $domain_storage, RendererInterface $renderer, DomainValidatorInterface $validator, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+  DomainStorageInterface $domain_storage,
+  RendererInterface $renderer,
+  DomainValidatorInterface $validator,
+  EntityTypeManagerInterface $entityTypeManager,
+  MessengerInterface $messenger) {
     $this->domainStorage = $domain_storage;
     $this->renderer = $renderer;
     $this->validator = $validator;
-    $this->entityTypeManager = $entity_type_manager;
+    $this->entityTypeManager = $entityTypeManager;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -71,7 +87,8 @@ class DomainForm extends EntityForm {
       $container->get('entity_type.manager')->getStorage('domain'),
       $container->get('renderer'),
       $container->get('domain.validator'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('messenger')
     );
   }
 
@@ -218,10 +235,10 @@ class DomainForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $status = parent::save($form, $form_state);
     if ($status === SAVED_NEW) {
-      \Drupal::messenger()->addMessage($this->t('Domain record created.'));
+      $this->messenger->addMessage($this->t('Domain record created.'));
     }
     else {
-      \Drupal::messenger()->addMessage($this->t('Domain record updated.'));
+      $this->messenger->addMessage($this->t('Domain record updated.'));
     }
     $form_state->setRedirect('domain.admin');
 

@@ -6,6 +6,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\domain_alias\DomainAliasValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -57,21 +60,56 @@ class DomainAliasForm extends EntityForm {
   protected $aliasStorage;
 
   /**
+   * Turns a render array into an HTML string.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * Provides the Drupal messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * Logger channel factory service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructs a DomainAliasForm object.
    *
    * @param \Drupal\domain_alias\DomainAliasValidatorInterface $validator
    *   The domain alias validator.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The configuration factory service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service interface.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   Provides the Drupal messenger service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
+   *   Logger channel factory service.
    */
-  public function __construct(DomainAliasValidatorInterface $validator, ConfigFactoryInterface $config, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(DomainAliasValidatorInterface $validator,
+    ConfigFactoryInterface $config,
+    EntityTypeManagerInterface $entityTypeManager,
+    RendererInterface $renderer,
+    MessengerInterface $messenger,
+    LoggerChannelFactoryInterface $loggerFactory) {
     $this->validator = $validator;
     $this->config = $config;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->aliasStorage = $entity_type_manager->getStorage('domain_alias');
-    $this->domainStorage = $entity_type_manager->getStorage('domain');
+    $this->entityTypeManager = $entityTypeManager;
+    $this->renderer = $renderer;
+    $this->messenger = $messenger;
+    $this->loggerFactory = $loggerFactory;
+    $this->aliasStorage = $entityTypeManager->getStorage('domain_alias');
+    $this->domainStorage = $entityTypeManager->getStorage('domain');
     // Not loaded directly since it is not an interface.
     $this->accessHandler = $this->entityTypeManager->getAccessControlHandler('domain');
   }
@@ -83,7 +121,10 @@ class DomainAliasForm extends EntityForm {
     return new static(
       $container->get('domain_alias.validator'),
       $container->get('config.factory'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('renderer'),
+      $container->get('messenger'),
+      $container->get('logger.factory')
     );
   }
 
@@ -159,7 +200,7 @@ class DomainAliasForm extends EntityForm {
           '#items' => $match_output,
           '#theme' => 'item_list',
         ];
-        $row[] = \Drupal::service('renderer')->render($output);
+        $row[] = $this->renderer->render($output);
       }
       $rows[] = $row;
     }
@@ -221,15 +262,15 @@ class DomainAliasForm extends EntityForm {
     $edit_link = $alias->toLink($this->t('Edit'), 'edit-form')->toString();
     $result = $alias->save();
     if ($result === SAVED_NEW) {
-      \Drupal::messenger()->addMessage($this->t('Created new domain alias.'));
-      $this->logger('domain_alias')->notice('Created new domain alias %name.', [
+      $this->messenger->addMessage($this->t('Created new domain alias.'));
+      $this->loggerFactory->get('domain_alias')->notice('Created new domain alias %name.', [
         '%name' => $alias->label(),
         'link' => $edit_link
       ]);
     }
     else {
-      \Drupal::messenger()->addMessage($this->t('Updated domain alias.'));
-      $this->logger('domain_alias')->notice('Updated domain alias %name.', [
+      $this->messenger->addMessage($this->t('Updated domain alias.'));
+      $this->loggerFactory->get('domain_alias')->notice('Updated domain alias %name.', [
         '%name' => $alias->label(),
         'link' => $edit_link
       ]);

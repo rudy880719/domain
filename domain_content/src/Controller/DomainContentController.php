@@ -4,14 +4,53 @@ namespace Drupal\domain_content\Controller;
 
 use Drupal\Core\Link;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines domain content pages.
  */
 class DomainContentController extends ControllerBase {
+
+  /**
+   * Checks the access status of entities based on domain settings.
+   *
+   * @var \Drupal\domain_access\DomainAccessManagerInterface
+   * */
+  protected $domainAccessManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a DomainContentController object.
+   *
+   * @param \Drupal\domain_access\DomainAccessManagerInterface $domainAccessManager
+   *   Checks the access status of entities based on domain settings.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(DomainAccessManagerInterface $domainAccessManager, EntityTypeManagerInterface $entityTypeManager) {
+    $this->domainAccessManager = $domainAccessManager;
+    $this->entityTypeManager = $entityTypeManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('domain_access.manager'),
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * Builds the list of domains and relevant entities.
@@ -37,8 +76,8 @@ class DomainContentController extends ControllerBase {
       ];
     }
     // Loop through domains.
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultipleSorted();
-    $manager = \Drupal::service('domain_access.manager');
+    $domains = $this->entityTypeManager->getStorage('domain')->loadMultipleSorted();
+    $manager = $this->domainAccessManager;
     /** @var \Drupal\domain\DomainInterface $domain */
     foreach ($domains as $domain) {
       if ($account->hasPermission($options['all_permission']) || $manager->hasDomainPermissions($account, $domain, [$options['permission']])) {
@@ -103,7 +142,8 @@ class DomainContentController extends ControllerBase {
       $value = $domain->id();
     }
     // Note that we ignore node access so these queries work on any domain.
-    $query = \Drupal::entityQuery($entity_type)
+    $query = $this->entityTypeManager->getStorage($entity_type)
+      ->getQuery()
       ->condition($field, $value)
       ->accessCheck(FALSE);
 
@@ -119,7 +159,7 @@ class DomainContentController extends ControllerBase {
   protected function getUser() {
     $account = $this->currentUser();
     // Advanced grants for edit/delete require permissions.
-    return \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
+    return $this->entityTypeManager->getStorage('user')->load($account->id());
   }
 
 }
