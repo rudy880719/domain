@@ -23,16 +23,16 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
    *
    * @var string
    */
-  public $value_value; // phpcs:ignore
+  public string $value_value; // phpcs:ignore
 
-  /**
-   * The options provided by the plugin.
-   *
-   * This should be defined by the parent but is not.
-   *
-   * @var array
-   */
-  public $valueOptions;
+   /**
+    * The options provided by the plugin.
+    *
+    * This should be defined by the parent but is not.
+    *
+    * @var array
+    */
+  public ?array $valueOptions;
 
   /**
    * {@inheritdoc}
