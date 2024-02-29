@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Domain-specific config overrides.
@@ -77,13 +78,17 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    *   The module handler.
    * @param \Drupal\domain\DomainNegotiatorInterface $domainNegotiator
    *   The domain Negotiator.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
   public function __construct(StorageInterface $storage,
   ModuleHandlerInterface $module_handler,
-  DomainNegotiatorInterface $domainNegotiator) {
+  DomainNegotiatorInterface $domainNegotiator,
+  LanguageManagerInterface $language_manager) {
     $this->storage = $storage;
     $this->moduleHandler = $module_handler;
     $this->domainNegotiator = $domainNegotiator;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -236,10 +241,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     // See https://www.drupal.org/project/domain/issues/3025541.
     $this->moduleHandler->loadAll();
 
-    // Get the language context. Note that injecting the language manager
-    // into the service created a circular dependency error, so we load from
-    // the core service manager.
-    $this->languageManager = \Drupal::languageManager();
+    // Get the language context.
     $this->language = $this->languageManager->getCurrentLanguage();
 
     // Get the domain context.
