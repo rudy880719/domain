@@ -52,7 +52,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
       $i++;
     }
 
-    $path = $domain->getScheme() . 'five.' . $base . '/admin/config/domain';
+    $path = $domain->getScheme() . 'five.' . $base . $GLOBALS['base_path'] . 'admin/config/domain';
 
     // Visit the domain overview administration page.
     $this->drupalGet($path);

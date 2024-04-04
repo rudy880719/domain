@@ -2,7 +2,7 @@ name: Domain Configuration UI
 description: 'Allows saving of domain specific configuration through the administrative interface.'
 type: module
 package: Domain
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 configure: domain_config_ui.settings
 dependencies:
   - domain:domain_config

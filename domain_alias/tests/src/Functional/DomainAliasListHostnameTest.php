@@ -66,7 +66,7 @@ class DomainAliasListHostnameTest extends DomainAliasTestBase {
     $this->drupalLogin($admin);
 
     // Load an aliased domain.
-    $this->drupalGet($domain->getScheme() . 'five.' . $base . '/admin/config/domain');
+    $this->drupalGet($domain->getScheme() . 'five.' . $base . $GLOBALS['base_path'] . 'admin/config/domain');
     $this->assertSession()->statusCodeEquals(200);
 
     // Save the form.

@@ -3,7 +3,7 @@ description: "Support module for domain access testing."
 type: module
 package: Testing
 version: VERSION
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 hidden: TRUE
 
 dependencies:

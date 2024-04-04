@@ -266,8 +266,8 @@ function domain_source_node_presave(EntityInterface $node) {
  * Handles presave operations for devel generate.
  */
 function domain_source_presave_generate(EntityInterface $entity) {
-  // Handle devel module settings.
-  $exists = \Drupal::moduleHandler()->moduleExists('devel_generate');
+  // Handle devel module settings if present.
+  $exists = \Drupal::moduleHandler()->moduleExists('devel_generate') && $entity->hasField('devel_generate');
   $values = [];
   $selections = [];
   if ($exists && $entity instanceof FieldableEntityInterface && $entity->get('devel_generate')) {

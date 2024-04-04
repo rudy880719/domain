@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\domain_config_ui\Traits;
 
-use Drupal\FunctionalJavascriptTests\WebDriverWebAssert;
+use Drupal\FunctionalJavascriptTests\JSWebAssert;
 
 /**
  * Contains helper classes for tests to set up various configuration.
@@ -131,7 +131,7 @@ trait DomainConfigUITestTrait {
    *
    * PHPStan is not calculating the inheritance correctly, so we fake it.
    * We are combining WebDriverTestBase::assertSession() and
-   * WebDriverWebAssert::assertWaitOnAjaxRequest.
+   * JSWebAssert::assertWaitOnAjaxRequest.
    *
    * @param string $name
    *   The name of the current session.
@@ -139,8 +139,8 @@ trait DomainConfigUITestTrait {
    * @throws \RuntimeException
    *   When the request is not completed.
    */
-  public function assertWaitOnAjaxRequest($name = NULL) {
-    $driver = new WebDriverWebAssert($this->getSession($name), $this->baseUrl);
+  public function waitOnAjaxRequest($name = NULL) {
+    $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
     $driver->assertWaitOnAjaxRequest();
   }
 

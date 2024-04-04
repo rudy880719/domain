@@ -4,4 +4,3 @@ services:
     arguments: ['@config.factory']
     tags:
       - { name: page_cache_request_policy }
-
