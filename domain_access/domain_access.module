@@ -349,6 +349,19 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
   $manager = \Drupal::service('domain_access.manager');
   $allowed = FALSE;
 
+  // Get the all affiliates field values from an entity.
+  $all_affiliates_field_value = $manager->getAllValue($node);
+  // If it's not checked.
+  if (!$all_affiliates_field_value) {
+    // Get the domain access field values from an entity.
+    $access_field_values = $manager->getAccessValues($node);
+    // If the active domain id doesn't exist in the field value.
+    if (!in_array($active_domain->getDomainId(), $access_field_values)) {
+      // Return access as forbidden.
+      return AccessResult::forbidden()->addCacheableDependency($node);
+    }
+  }
+
   // In order to access update or delete, the user must be able to view.
   // Domain-specific permissions are relevant only if the node is not published.
   if ($op === 'view') {
