@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain_alias\Functional;
 class DomainAliasValidatorTest extends DomainAliasTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that a domain hostname validates.
    */
   public function testDomainAliasValidator() {

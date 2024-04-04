@@ -12,6 +12,11 @@ class DomainConfigCacheTest extends DomainConfigTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'domain_access',
     'domain_config',

@@ -17,6 +17,11 @@ class DomainSourceContentUrlsTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'domain',
     'domain_access',

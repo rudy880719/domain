@@ -15,6 +15,11 @@ class DomainAdminElementTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['domain', 'field', 'field_ui', 'user'];
 
   /**

@@ -104,7 +104,7 @@ else {
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+    public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
       // This line should break hooks in our code.
       // @see https://www.drupal.org/node/2896434.
       $config = $this->configFactory->get('domain_config_middleware_test.settings');

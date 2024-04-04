@@ -16,6 +16,11 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'domain',
     'domain_source',

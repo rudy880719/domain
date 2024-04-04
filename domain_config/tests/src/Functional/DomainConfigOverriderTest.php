@@ -12,6 +12,11 @@ use Drupal\domain\DomainInterface;
 class DomainConfigOverriderTest extends DomainConfigTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that domain-specific variable loading works.
    */
   public function testDomainConfigOverrider() {

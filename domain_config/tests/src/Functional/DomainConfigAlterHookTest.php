@@ -12,6 +12,11 @@ class DomainConfigAlterHookTest extends DomainConfigTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'domain',
     'domain_config',

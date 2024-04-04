@@ -129,7 +129,7 @@ class DomainSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // This needs to fire very early in the stack, before accounts are cached.
     $events[KernelEvents::REQUEST][] = ['onKernelRequestDomain', 50];
     return $events;

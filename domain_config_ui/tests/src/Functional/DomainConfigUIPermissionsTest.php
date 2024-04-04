@@ -12,6 +12,11 @@ use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
  */
 class DomainConfigUIPermissionsTest extends DomainConfigTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   use DomainConfigUITestTrait;
 
   /**

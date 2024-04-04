@@ -16,6 +16,11 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessPermissionsTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The Entity access control handler.
    *
    * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface

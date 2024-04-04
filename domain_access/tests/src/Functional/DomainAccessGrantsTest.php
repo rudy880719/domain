@@ -14,6 +14,11 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainAccessGrantsTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The Entity access handler.
    *
    * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface

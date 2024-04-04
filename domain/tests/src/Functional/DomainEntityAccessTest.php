@@ -12,6 +12,11 @@ namespace Drupal\Tests\domain\Functional;
 class DomainEntityAccessTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests initial domain creation.
    */
   public function testDomainCreate() {

@@ -11,6 +11,11 @@ use Drupal\Tests\block\Traits\BlockCreationTrait;
  */
 class DomainContextTest extends DomainTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   use BlockCreationTrait;
 
   /**

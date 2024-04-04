@@ -14,6 +14,11 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['node', 'views'];
 
   /**
