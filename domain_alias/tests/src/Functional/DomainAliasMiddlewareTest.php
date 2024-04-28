@@ -14,6 +14,11 @@ class DomainAliasMiddlewareTest extends DomainAliasNegotiatorTest {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'domain',
     'domain_alias',

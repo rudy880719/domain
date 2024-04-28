@@ -15,6 +15,11 @@ class DomainInactiveTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['domain', 'node', 'views'];
 
   /**

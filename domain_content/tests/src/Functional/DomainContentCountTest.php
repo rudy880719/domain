@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain_content\Functional;
 class DomainContentCountTest extends DomainContentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests domain content count.
    */
   public function testDomainContentCount() {

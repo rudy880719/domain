@@ -13,6 +13,11 @@ use Drupal\Tests\block\Traits\BlockCreationTrait;
  */
 class DomainBlockVisibilityTest extends DomainTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   use AssertBlockAppearsTrait;
   use BlockCreationTrait;
 

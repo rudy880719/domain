@@ -12,6 +12,11 @@ class DomainEntityReferenceTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['domain', 'field', 'field_ui'];
 
   /**

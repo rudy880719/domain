@@ -12,6 +12,11 @@ use Drupal\Tests\domain\Functional\DomainTestBase;
 class DomainConditionTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The condition plugin manager.
    *
    * @var \Drupal\Core\Condition\ConditionManager

@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain\Functional;
 class DomainPageCacheTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that a domain response is proper.
    */
   public function testDomainResponse() {

@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain_alias\Functional;
 class DomainAliasSortTest extends DomainAliasTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the sorting of alias records.
    */
   public function testAliasSort() {

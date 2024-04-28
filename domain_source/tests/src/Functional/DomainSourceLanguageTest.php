@@ -18,6 +18,11 @@ class DomainSourceLanguageTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'language',
     'content_translation',

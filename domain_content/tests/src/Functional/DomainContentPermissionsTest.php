@@ -12,6 +12,11 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainContentPermissionsTest extends DomainContentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests domain content permissions.
    */
   public function testDomainContentPermissions() {

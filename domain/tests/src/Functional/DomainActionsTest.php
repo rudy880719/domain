@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain\Functional;
 class DomainActionsTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests bulk actions through the domain overview page.
    */
   public function testDomainActions() {

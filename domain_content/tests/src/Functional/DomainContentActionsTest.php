@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain_content\Functional;
 class DomainContentActionsTest extends DomainContentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests domain content actions.
    */
   public function testDomainContentActions() {

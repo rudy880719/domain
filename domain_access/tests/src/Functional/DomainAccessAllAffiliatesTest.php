@@ -15,6 +15,11 @@ class DomainAccessAllAffiliatesTest extends DomainTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['domain', 'domain_access', 'field', 'field_ui'];
 
   /**

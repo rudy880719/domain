@@ -12,6 +12,11 @@ use Drupal\Core\Config\ConfigValueException;
 class DomainValidatorTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that a domain hostname validates.
    */
   public function testDomainValidator() {

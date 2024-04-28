@@ -12,6 +12,11 @@ use Drupal\Tests\domain_alias\Traits\DomainAliasTestTrait;
  */
 class DomainAliasDomainDeleteTest extends DomainTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   use DomainAliasTestTrait;
 
   /**

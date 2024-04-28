@@ -10,6 +10,11 @@ namespace Drupal\Tests\domain\Functional;
 class DomainFormsTest extends DomainTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Create, edit and delete a domain via the user interface.
    */
   public function testDomainInterface() {
