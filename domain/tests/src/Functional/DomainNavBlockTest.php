@@ -87,7 +87,14 @@ class DomainNavBlockTest extends DomainTestBase {
     $this->drupalGet('user/login');
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
-      $this->findLink($domain->getPath());
+      $domainLink = $this->findLink($domain->getPath());
+      if ($domain->isDefault()) {
+        $this->assertTrue($domainLink->getAttribute('class') == 'active');
+      }
+      else {
+        $this->assertFalse($domainLink->hasAttribute('class'));
+      }
+
       $this->assertSession()->responseContains($domain->getPath());
     }
   }

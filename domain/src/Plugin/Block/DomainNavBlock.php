@@ -152,7 +152,14 @@ class DomainNavBlock extends DomainBlockBase {
           ];
         }
         else {
-          $items[] = ['#markup' => Link::fromTextAndUrl($label, $url)->toString()];
+          if ($domain->isActive()) {
+            $url->mergeOptions(['attributes' => ['class' => 'active']]);
+          }
+          $items[] = [
+            '#type' => 'link',
+            '#url' => $url,
+            '#title' => $label,
+          ];
         }
       }
     }
