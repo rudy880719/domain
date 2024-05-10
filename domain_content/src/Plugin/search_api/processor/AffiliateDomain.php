@@ -77,7 +77,7 @@ class AffiliateDomain extends ProcessorPluginBase implements PluginFormInterface
     $form['domains'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Affiliate Domain(s)'),
-      '#description' => $this->t("Select content's affiliate domain(s) to include in this index."),
+      '#description' => $this->t("Select content's affiliate domain(s) to include in this index. If a content's <em>Send to all affiliates</em> options is selected; it will be included."),
       '#default_value' => $this->configuration['domains'],
       '#options' => $domains,
     ];
@@ -123,19 +123,30 @@ class AffiliateDomain extends ProcessorPluginBase implements PluginFormInterface
    * {@inheritdoc}
    */
   public function alterIndexedItems(array &$items) {
-    $include_domains = $this->configuration['domains'];
+    $domains = $this->configuration['domains'];
 
     /** @var \Drupal\search_api\Item\ItemInterface $item */
     foreach ($items as $item_id => $item) {
       $object = $item->getOriginalObject()->getValue();
-      $include = FALSE;
+      $exclude_item = FALSE;
       if ($object instanceof NodeInterface) {
+        // If "Send to all affiliates", skip the item to include it in the
+        // index.
+        if ($object->hasField('field_domain_all_affiliates') && !$object->get('field_domain_all_affiliates')->isEmpty()) {
+          if ($object->get('field_domain_all_affiliates')->getValue()[0]['value']) {
+            continue;
+          }
+        }
+
+        // If the item is not associated with the configured domains, exclude it
+        // form the index.
         if ($object->hasField('field_domain_access') && !$object->get('field_domain_access')->isEmpty()) {
-          $include = in_array($object->get('field_domain_access')->getValue(), $include_domains);
+          $values = array_map(function ($value) {return $value['target_id'];}, $object->get('field_domain_access')->getValue());
+          $exclude_item = empty(array_intersect($values, $domains));
         }
       }
 
-      if (!$include) {
+      if ($exclude_item) {
         unset($items[$item_id]);
       }
     }
