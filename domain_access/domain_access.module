@@ -354,7 +354,7 @@ function domain_access_node_access(NodeInterface $node, $op, AccountInterface $a
   if ($op === 'view') {
     if ($node->isPublished()) {
       // Explicit restatement of the condition, for clarity.
-      $allowed = FALSE;
+      $allowed = TRUE;
     }
     elseif ($account->hasPermission('view unpublished domain content') && $manager->checkEntityAccess($node, $account)) {
       $allowed = TRUE;
