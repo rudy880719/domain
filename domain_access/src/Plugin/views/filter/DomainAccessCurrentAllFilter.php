@@ -33,7 +33,7 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
   /**
    * {@inheritdoc}
    */
-  protected function operators() {
+  public function operators() {
     return [];
   }
 
