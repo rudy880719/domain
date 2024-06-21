@@ -315,7 +315,7 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   public function render() {
     // Build the default form, which includes weights.
-    $form = $this->formBuilder()->getForm($this);
+    $form = $this->formBuilder->getForm($this);
 
     // Only add the pager if a limit is specified.
     if ($this->limit) {
