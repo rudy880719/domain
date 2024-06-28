@@ -11,6 +11,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainRedirectResponse;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
@@ -104,20 +105,17 @@ function domain_source_entity_form_display_insert(EntityInterface $entity) {
  *   The value assigned to the entity, either a domain id string or NULL.
  */
 function domain_source_get(EntityInterface $entity) {
-  $source = NULL;
   $field = DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD;
-  if (!($entity instanceof FieldableEntityInterface) || !isset($entity->{$field})) {
-    return $source;
+  if (!$entity instanceof FieldableEntityInterface || !$entity->hasField($field)) {
+    return NULL;
   }
 
-  $value = $entity->get(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD)->offsetGet(0);
-  if (!empty($value)) {
-    $target_id = $value->target_id;
-    if ($domain = \Drupal::entityTypeManager()->getStorage('domain')->load($target_id)) {
-      $source = $domain->id();
-    }
+  $domain = $entity->get($field)->entity;
+  if (!$domain instanceof DomainInterface) {
+    return NULL;
   }
-  return $source;
+
+  return $domain->id();
 }
 
 /**
