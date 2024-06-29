@@ -5,7 +5,7 @@
 
 (function ($) {
   /**
-   * Provide the summary information for the block settings vertical tabs.
+   * Provides the summary information for the block settings vertical tabs.
    *
    * @type {Drupal~behavior}
    *
