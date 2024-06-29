@@ -51,9 +51,6 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setup();
 
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
-
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('node');
@@ -61,6 +58,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installConfig($this::$modules);
 
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
     $type = $this->entityTypeManager->getStorage('node_type')->create([
       'type' => 'page',
       'name' => 'page'
