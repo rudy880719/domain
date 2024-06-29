@@ -10,3 +10,7 @@ services:
       - { name: event_subscriber }
       - { name: service_collector, tag: 'config.factory.override', call: addOverride }
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed', '@domain_config_ui.manager']
+  maintenance_mode:
+    # Override core maintenance mode service.
+    class: Drupal\domain_config_ui\Site\DomainMaintenanceMode
+    arguments: ['@state', '@config.factory']
