@@ -1,5 +1,5 @@
-name: "Domain Source module tests"
-description: "Support module for domain source testing."
+name: 'Domain Source module tests'
+description: 'Support module for domain source testing.'
 type: module
 package: Testing
 version: VERSION
