@@ -2,17 +2,22 @@
  * @file
  * Attaches behaviors for the Domain module.
  */
+
 (function ($) {
   /**
+   * Provide the summary information for the block settings vertical tabs.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the block settings summaries.
    */
   Drupal.behaviors.domainSettingsSummaries = {
     attach() {
       // The drupalSetSummary method required for this behavior is not available
       // on the Blocks administration page, so we need to make sure this
       // behavior is processed only if drupalSetSummary is defined.
-      if (typeof jQuery.fn.drupalSetSummary === 'undefined') {
+      if (typeof $.fn.drupalSetSummary === 'undefined') {
         return;
       }
 
