@@ -52,3 +52,5 @@ variables:
   SKIP_ESLINT: '1'
   SKIP_PHPCS: '1'
   SKIP_PHPSTAN: '1'
+  _PHPUNIT_EXTRA: '--verbose'
+  _SHOW_ENVIRONMENT_VARIABLES: '1'

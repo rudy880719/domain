@@ -14,6 +14,7 @@ use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainElementManagerInterface;
 use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class SwitchForm.
@@ -139,6 +140,20 @@ class SwitchForm extends FormBase {
    *   The form state array.
    */
   public function addSwitchFields(array $form, FormStateInterface $form_state) {
+    $domain_options = $this->getDomainOptions();
+    $selected_domain_id = $this->domainConfigUIManager->getSelectedDomainId();
+    $selected_language_id = $this->domainConfigUIManager->getSelectedLanguageId();
+    $parsed = UrlHelper::parse($this->getRedirectDestination()->get());
+
+    if (!$selected_domain_id
+      && ($domain_id = key($domain_options))
+      && empty($parsed['query']['domain_config_ui_domain'])) {
+      $form_state->setValue('domain', $domain_id);
+      $form_state->setValue('language', $selected_language_id);
+      $response = static::switchCallback($form, $form_state);
+      return new RedirectResponse($response->getCommands()[0]['url']);
+    }
+
     // Create fieldset to group domain fields.
     $form['domain_config_ui'] = [
       '#type' => 'fieldset',
@@ -147,14 +162,14 @@ class SwitchForm extends FormBase {
     ];
 
     // Add domain switch select field.
-    if ($selected_domain_id = $this->domainConfigUIManager->getSelectedDomainId()) {
+    if ($selected_domain_id) {
       $selected_domain = $this->domainStorage->load($selected_domain_id);
     }
     // Get the form options.
     $form['domain_config_ui']['domain'] = [
       '#type' => 'select',
       '#title' => $this->t('Domain'),
-      '#options' => $this->getDomainOptions(),
+      '#options' => $domain_options,
       '#default_value' => !empty($selected_domain) ? $selected_domain->id() : '',
       '#ajax' => [
         'callback' => '::switchCallback',
@@ -174,7 +189,7 @@ class SwitchForm extends FormBase {
         '#type' => 'select',
         '#title' => $this->t('Language'),
         '#options' => $language_options,
-        '#default_value' => $this->domainConfigUIManager->getSelectedLanguageId(),
+        '#default_value' => $selected_language_id,
         '#ajax' => [
           'callback' => '::switchCallback',
         ],
@@ -246,7 +261,7 @@ class SwitchForm extends FormBase {
 
     // Reload the page to get new form values.
     $response = new AjaxResponse();
-    $response->addCommand(new RedirectCommand($request_uri));
+    $response->addCommand(new RedirectCommand($request->getSchemeAndHttpHost() . $request_uri));
     return $response;
   }
 

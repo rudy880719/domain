@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\domain_config_ui\Traits;
 
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
-
 /**
  * Contains helper classes for tests to set up various configuration.
  */
@@ -109,12 +107,12 @@ trait DomainConfigUITestTrait {
       'predefined_langcode' => 'es',
     ];
     $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, t('Add language'));
+    $this->submitForm($edit, t('Add language')->render());
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, t('Save settings'));
+    $this->submitForm($edit, t('Save settings')->render());
 
     $this->drupalLogout();
 
@@ -127,21 +125,23 @@ trait DomainConfigUITestTrait {
   }
 
   /**
-   * Creates a readable instance of assertWaitOnAjaxRequest.
+   * Helper method to assesrt AJAX callbacks.
    *
-   * PHPStan is not calculating the inheritance correctly, so we fake it.
-   * We are combining WebDriverTestBase::assertSession() and
-   * JSWebAssert::assertWaitOnAjaxRequest.
-   *
-   * @param string $name
-   *   The name of the current session.
+   * @param \Drupal\FunctionalJavascriptTests\WebDriverWebAssert $assert_session
+   *   The current session object.
+   * @param string $element_name
+   *   The name of the clicked element.
    *
    * @throws \RuntimeException
    *   When the request is not completed.
    */
-  public function waitOnAjaxRequest($name = NULL) {
-    $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
-    $driver->assertWaitOnAjaxRequest();
+  public function waitOnAjaxRequest($assert_session, $element_name = NULL) {
+    if (is_string($element_name)) {
+      $assert_session->waitForElementVisible('css', "[name=\"{$element_name}\"]");
+    }
+    else {
+      $assert_session->assertExpectedAjaxRequest(1);
+    }
   }
 
 }
