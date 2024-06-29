@@ -48,7 +48,7 @@ abstract class DomainTestBase extends BrowserTestBase {
     // Ensure that $this->baseTLD is set.
     $this->setBaseDomain();
 
-    $this->database = $this->getDatabaseConnection();
+    $this->database = \Drupal::database();
   }
 
   /**
@@ -234,7 +234,7 @@ abstract class DomainTestBase extends BrowserTestBase {
       'name' => $account->getAccountName(),
       // @phpstan-ignore-next-line
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     // @phpstan-ignore-next-line
