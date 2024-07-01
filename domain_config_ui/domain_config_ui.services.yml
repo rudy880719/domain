@@ -8,5 +8,15 @@ services:
     decoration_priority: 1
     tags:
       - { name: event_subscriber }
-      - { name: service_collector, tag: 'config.factory.override', call: addOverride }
-    arguments: ['@config.storage', '@event_dispatcher', '@config.typed', '@domain_config_ui.manager']
+      - {
+          name: service_collector,
+          tag: 'config.factory.override',
+          call: addOverride,
+        }
+    arguments:
+      [
+        '@config.storage',
+        '@event_dispatcher',
+        '@config.typed',
+        '@domain_config_ui.manager',
+      ]
