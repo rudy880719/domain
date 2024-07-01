@@ -53,3 +53,4 @@ variables:
   SKIP_PHPCS: '1'
   SKIP_PHPSTAN: '1'
   SKIP_CSPELL: '1'
+  _PHPUNIT_CONCURRENT: '1'
