@@ -68,7 +68,7 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
       $this->assertSession()->responseContains('ALIAS:');
       $this->assertSession()->responseContains($alias->getPattern());
 
-      // Test redirections.
+      // Test redirection.
       // @TODO: This could be much more elegant: the redirects break assertSession()->responseContains()
       $alias->set('redirect', 301);
       $alias->save();
@@ -93,7 +93,7 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
     $this->assertSession()->responseContains('ALIAS:');
     $this->assertSession()->responseContains($alias->getPattern());
 
-    // Test redirections.
+    // Test redirection.
     // @TODO: This could be much more elegant: the redirects break assertSession()->responseContains()
     $alias->set('redirect', 301);
     $alias->save();

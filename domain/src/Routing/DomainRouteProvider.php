@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Custom router.route_provider service to make it domain context sensitive.
  *
- * The default behaviour is to cache routes by path and query parameters only,
+ * The default behavior is to cache routes by path and query parameters only,
  * for multiple domains this can make the home page of domain 1 be served from
  * cache as the home page of domain 2.
  *

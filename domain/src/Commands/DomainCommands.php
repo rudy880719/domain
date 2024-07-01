@@ -1180,7 +1180,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       }
 
       try {
-        // Fire any registered hooks for deletion, passing them current imput.
+        // Fire any registered hooks for deletion, passing them current input.
         $handlers = $this->getCustomEventHandlers('domain-delete');
         $messages = [];
         foreach ($handlers as $handler) {
@@ -1404,7 +1404,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   protected function reassignLinkedEntities(array $domains, array $options) {
     $count = 0;
     $field = $options['field'];
-    $entity_typenames = $this->findDomainEnabledEntities($field);
+    $entity_types = $this->findDomainEnabledEntities($field);
 
     $new_domain = $this->getDomainInstanceFromPolicy($options['policy']);
     if (empty($new_domain)) {
@@ -1413,7 +1413,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     // Loop through each entity type.
     $exceptions = FALSE;
-    foreach ($entity_typenames as $name) {
+    foreach ($entity_types as $name) {
       if (empty($options['entity_filter']) || $options['entity_filter'] === $name) {
 
         // For each domain being reassigned from...

@@ -26,7 +26,7 @@ This behavior is covered by the *DomainConfigUIPermissionsTest* and the *DomainC
 
 By default, the Appearance page and the Basic Site Settings page are enabled for domain-specific forms. Administrators may inspect and expand the form list at the settings page (admin/config/domain/config-ui).
 
-On admin forms that contain configuration, the administrator should see a buttom to 'Enable / Disable domain configuration'. This button can be used to add or remove a form from domain-sensitivity.
+On admin forms that contain configuration, the administrator should see a button to 'Enable / Disable domain configuration'. This button can be used to add or remove a form from domain-sensitivity.
 
 *Note: removing a form will not remove its configuration files. See below.*
 
