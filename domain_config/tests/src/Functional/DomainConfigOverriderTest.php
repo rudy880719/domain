@@ -75,6 +75,23 @@ class DomainConfigOverriderTest extends DomainConfigTestBase {
     $this->assertSession()->responseContains('<title>Log in | Four overridden in settings</title>');
   }
 
+  public function testDomainOverrideCollectionService() {
+    $this->domainCreateTestDomains(5);
+
+    /** @var \Drupal\Core\Config\CachedStorage $configStorage */
+    $configStorage = $this->container->get('config.storage');
+    /** @var \Drupal\domain_config\DomainConfigCollection $service */
+    $service = $this->container->get('domain_config.collection');
+
+    $configs = $service->loadAllDomainOverrides(['system.site']);
+    $this->assertArrayHasKey('system.site', $configs);
+    $config = $configs['system.site'];
+
+    $this->assertEquals('One', $config['one_example_com']['en']['name'] );
+    $this->assertEquals('Two', $config['two_example_com']['en']['name'] );
+    $this->assertEquals('Dos', $config['two_example_com']['es']['name'] );
+  }
+
   /**
    * Returns the expected site name value from our test configuration.
    *

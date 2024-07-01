@@ -5,6 +5,10 @@ services:
       - { name: config.factory.override, priority: -150 }
     arguments: ['@config.storage', '@module_handler']
 
+  domain_config.collection:
+    class: Drupal\domain_config\DomainConfigCollection
+    arguments: ['@config.storage', '@entity_type.manager', '@language_manager']
+
   domain_config.library.discovery.collector:
     decorates: library.discovery.collector
     class: \Drupal\domain_config\DomainConfigLibraryDiscoveryCollector
