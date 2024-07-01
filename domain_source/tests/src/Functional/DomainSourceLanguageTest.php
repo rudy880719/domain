@@ -94,7 +94,7 @@ class DomainSourceLanguageTest extends DomainTestBase {
     $url = Url::fromUri($uri, $options)->toString();
     $this->assertTrue($url === $expected, 'fromUri');
 
-    // Now test the same for the Arfrikaans translation.
+    // Now test the same for the Afrikaans translation.
     $path = 'node/1';
     $source = $domains[$id2];
     $expected = $source->getPath() . 'af/' . $path;

@@ -19,7 +19,7 @@ class DomainContentController extends ControllerBase {
    * @param array $options
    *   A list of variables required to build editor or content pages.
    *
-   * @see contentlist()
+   * @see contentList()
    *
    * @return array
    *   A Drupal page build array.

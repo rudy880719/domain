@@ -188,7 +188,7 @@ class DomainAliasForm extends EntityForm {
   }
 
   /**
-   * Returns a list of valid environement options for the form.
+   * Returns a list of valid environment options for the form.
    *
    * @return array
    *   A list of valid environment options.

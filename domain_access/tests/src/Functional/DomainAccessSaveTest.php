@@ -32,7 +32,7 @@ class DomainAccessSaveTest extends DomainTestBase {
    */
   public function testDomainAccessSave() {
     $storage = \Drupal::entityTypeManager()->getStorage('node');
-    // Save a node programatically.
+    // Save a node programmatically.
     $node = $storage->create([
       'type' => 'article',
       'title' => 'Test node',

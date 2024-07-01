@@ -75,7 +75,7 @@ class ConfigFactory extends CoreConfigFactory {
 
     // Pre-load remaining configuration files.
     if (!empty($names)) {
-      // Initialise override information.
+      // Initialize override information.
       $module_overrides = [];
       $storage_data = $this->storage->readMultiple($names);
 
