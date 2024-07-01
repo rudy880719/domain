@@ -49,7 +49,5 @@ include:
     - echo "127.0.0.1 nine.example.local" >> /etc/hosts
     - echo "127.0.0.1 ten.example.local" >> /etc/hosts
 variables:
-  SKIP_ESLINT: '1'
-  SKIP_PHPCS: '1'
   SKIP_PHPSTAN: '1'
   _PHPUNIT_CONCURRENT: '1'
