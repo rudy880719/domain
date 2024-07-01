@@ -153,7 +153,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function create(array $values = []) {
     $default = $this->loadDefaultId();
-    $domains = $this->loadMultiple();
+    $count = $this->getQuery()->accessCheck(FALSE)->count()->execute();
     if (empty($values)) {
       $values['hostname'] = $this->createHostname();
       $values['name'] = \Drupal::config('system.site')->get('name');
@@ -161,7 +161,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
     $values += [
       'scheme' => $this->getDefaultScheme(),
       'status' => '1',
-      'weight' => count($domains) + 1,
+      'weight' => $count + 1,
       'is_default' => (int) empty($default),
     ];
     $domain = parent::create($values);
