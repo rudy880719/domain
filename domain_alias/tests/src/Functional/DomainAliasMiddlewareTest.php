@@ -20,7 +20,7 @@ class DomainAliasMiddlewareTest extends DomainAliasNegotiatorTest {
     'user',
     'block',
     'domain_config',
-    'domain_config_middleware_test'
+    'domain_config_middleware_test',
   ];
 
 }

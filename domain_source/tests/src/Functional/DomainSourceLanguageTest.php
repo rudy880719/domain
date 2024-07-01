@@ -3,10 +3,9 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
-use Drupal\domain_access\DomainAccessManagerInterface;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for the rewriting links using core URL methods.

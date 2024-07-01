@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainStorageInterface;
 use Drupal\domain\DomainValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -206,7 +205,7 @@ class DomainForm extends EntityForm {
         }
         $form_state->setErrorByName('hostname', $this->t('The server request to @url returned a @response response. To proceed, disable the <em>Test server response</em> in the form.', [
           '@url' => $entity->getPath(),
-          '@response' => $response
+          '@response' => $response,
         ]));
       }
     }

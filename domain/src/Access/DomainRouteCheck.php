@@ -6,8 +6,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\domain\DomainInterface;
-use Symfony\Component\Routing\Route;
 use Drupal\domain\DomainNegotiatorInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Determines access to routes based on domains.
@@ -66,8 +66,6 @@ class DomainRouteCheck implements AccessInterface {
    *
    * @see \Drupal\domain\Plugin\views\access\Domain
    */
-
-
   public function access(Route $route, AccountInterface $account) {
     // Requirements just allow strings, so this might be a comma-separated list.
     $string = $route->getRequirement($this->requirementsKey);
@@ -75,8 +73,10 @@ class DomainRouteCheck implements AccessInterface {
 
     // Check if the domain is not null before proceeding.
     if ($domain instanceof DomainInterface) {
-      // Since only one domain can be active per request, we only support OR logic.
-      $allowed = array_filter(array_map('trim', explode('+', $string)));
+      // Since only one domain can be active per request, we support OR logic.
+      $allowed = array_filter(
+        array_map('trim', explode('+', $string))
+      );
       if (in_array($domain->id(), $allowed, TRUE)) {
         return AccessResult::allowed()->addCacheContexts(['url.site']);
       }
@@ -85,4 +85,5 @@ class DomainRouteCheck implements AccessInterface {
     // If there is no allowed domain, give other access checks a chance.
     return AccessResult::neutral()->addCacheContexts(['url.site']);
   }
+
 }

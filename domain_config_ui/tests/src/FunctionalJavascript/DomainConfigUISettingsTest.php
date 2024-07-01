@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\domain_config_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
-use Drupal\Tests\domain\Traits\DomainTestTrait;
 use Drupal\domain_config_ui\DomainConfigUITrait;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\domain\Traits\DomainTestTrait;
+use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 
 /**
  * Tests the domain config settings interface.

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for URLs that include query parameters.
@@ -22,7 +22,7 @@ class DomainSourceParameterTest extends DomainTestBase {
     'domain_source_test',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -45,7 +45,7 @@ class DomainSourceParameterTest extends DomainTestBase {
     $node = $this->createNode([
       'type' => 'page',
       'title' => 'foo',
-      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id
+      DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => $id,
     ]);
 
     // Variables for our tests.

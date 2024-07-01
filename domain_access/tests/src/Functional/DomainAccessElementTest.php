@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for the domain access field element.
@@ -40,7 +40,7 @@ class DomainAccessElementTest extends DomainTestBase {
    */
   public function testDomainAccessElement() {
     foreach (['article', 'test'] as $type) {
-      // TODO: Something new is forcing this line for the 'test' type.
+      // @todo Something new is forcing this line for the 'test' type.
       domain_access_confirm_fields('node', $type);
       $this->runInstalledTest($type);
     }

@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\domain_source\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for getting all URLs for an entity.
@@ -22,7 +22,7 @@ class DomainSourceTokenTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -48,14 +48,14 @@ class DomainSourceTokenTest extends DomainTestBase {
       DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [
         'example_com',
         'one_example_com',
-        'two_example_com'
+        'two_example_com',
       ],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 0,
       DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD => 'one_example_com',
     ];
     $node = $this->createNode($nodes_values);
 
-    // Token value matches the normal canonical url when canonical rewrite is used.
+    // Token value matches the normal canonical url for canonical rewrites.
     $this->assertEquals($token_handler->replace('[node:canonical-source-domain-url]', ['node' => $node]), $domains['one_example_com']->getPath() . 'node/1');
     $this->assertEquals($node->toUrl('canonical')->setAbsolute()->toString(), $domains['one_example_com']->getPath() . 'node/1');
 

@@ -6,7 +6,7 @@ use Drupal\Core\Asset\LibraryDiscoveryCollector;
 use Drupal\domain\DomainNegotiatorInterface;
 
 /**
- * Class DomainConfigLibraryDiscoveryCollector.
+ * Reads library information.
  *
  * @package Drupal\domain_config
  */

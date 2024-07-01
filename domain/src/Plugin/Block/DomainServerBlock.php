@@ -5,7 +5,6 @@ namespace Drupal\domain\Plugin\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\domain\DomainStorageInterface;
 
 /**
  * Provides a server information block for a domain request.

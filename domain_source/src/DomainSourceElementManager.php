@@ -2,7 +2,6 @@
 
 namespace Drupal\domain_source;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\domain\DomainElementManager;

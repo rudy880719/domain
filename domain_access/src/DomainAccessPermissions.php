@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_access;
 
-use Drupal\node\Entity\NodeType;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Dynamic permissions class for Domain Access.

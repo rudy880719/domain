@@ -3,8 +3,8 @@
 namespace Drupal\domain_config_ui\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Url;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\domain_config_ui\DomainConfigUITrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -96,7 +96,7 @@ class DomainConfigUIController {
         'actions' => t('Actions'),
       ],
     ];
-    // @TODO: inject services.
+    // @todo inject services.
     $storage = \Drupal::service('config.storage');
     foreach ($storage->listAll('domain.config') as $name) {
       $elements[] = $this->deriveElements($name);
@@ -240,7 +240,7 @@ class DomainConfigUIController {
         foreach ($val as $k => $v) {
           $list[] = t('<strong>@key</strong> : @value', [
             '@key' => $k,
-            '@value' => self::formatValue($v)
+            '@value' => self::formatValue($v),
           ]);
         }
         $variables = [
