@@ -37,7 +37,7 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = [
       '*.' . $this->baseHostname, 'four.' . $this->baseHostname,
-      'five.' . $this->baseHostname
+      'five.' . $this->baseHostname,
     ];
     $domain = NULL;
     foreach ($domains as $domain) {
@@ -87,7 +87,7 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
       $this->assertSession()->linkByHrefExists($domain->getPath(), 0, 'Link found: ' . $domain->getPath());
     }
     // For an aliased request (four.example.com), the list should be aliased.
-    $url = $domain->getScheme() . $alias->getPattern();
+    $url = $domain->getScheme() . $alias->getPattern() . $GLOBALS['base_path'];
     $this->drupalGet($url);
     foreach ($matches as $match) {
       $this->assertSession()->assertEscaped($match->getPattern());

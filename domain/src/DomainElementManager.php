@@ -3,10 +3,10 @@
 namespace Drupal\domain;
 
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Generic base class for handling hidden field options.
@@ -82,7 +82,7 @@ class DomainElementManager implements DomainElementManagerInterface {
     }
     // Check for domains the user cannot access or the absence of any options.
     if (count($disallowed) > 0 || $empty) {
-      // @TODO: Potentially show this information to users with permission.
+      // @todo Potentially show this information to users with permission.
       $form[$field_name . '_disallowed'] = [
         '#type' => 'value',
         '#value' => $disallowed,
@@ -169,9 +169,9 @@ class DomainElementManager implements DomainElementManagerInterface {
    * {@inheritdoc}
    */
   public function getFieldValues(FieldableEntityInterface $entity, $field_name) {
-    // @TODO: static cache.
+    // @todo static cache.
     $list = [];
-    // @TODO In tests, $entity is returning NULL.
+    // @todo In tests, $entity is returning NULL.
     if (is_null($entity)) {
       return $list;
     }

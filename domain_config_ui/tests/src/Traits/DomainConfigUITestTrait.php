@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\domain_config_ui\Traits;
 
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
-
 /**
  * Contains helper classes for tests to set up various configuration.
  */
@@ -100,7 +98,7 @@ trait DomainConfigUITestTrait {
     // Create and login user.
     $adminUser = $this->drupalCreateUser([
       'administer languages',
-      'access administration pages'
+      'access administration pages',
     ]);
     $this->drupalLogin($adminUser);
 
@@ -109,12 +107,12 @@ trait DomainConfigUITestTrait {
       'predefined_langcode' => 'es',
     ];
     $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, t('Add language'));
+    $this->submitForm($edit, 'Add language');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, t('Save settings'));
+    $this->submitForm($edit, 'Save settings');
 
     $this->drupalLogout();
 
@@ -127,21 +125,17 @@ trait DomainConfigUITestTrait {
   }
 
   /**
-   * Creates a readable instance of assertWaitOnAjaxRequest.
+   * Waits for an AJAX call sensitive to the test domain.
    *
-   * PHPStan is not calculating the inheritance correctly, so we fake it.
-   * We are combining WebDriverTestBase::assertSession() and
-   * JSWebAssert::assertWaitOnAjaxRequest.
-   *
-   * @param string $name
-   *   The name of the current session.
-   *
-   * @throws \RuntimeException
-   *   When the request is not completed.
+   * @param string $key
+   *   The key to search in the window location.
+   * @param string $value
+   *   The value to search in the window location.
    */
-  public function waitOnAjaxRequest($name = NULL) {
-    $driver = new JSWebAssert($this->getSession($name), $this->baseUrl);
-    $driver->assertWaitOnAjaxRequest();
+  public function waitOnAjaxRequest($key, $value) {
+    $string = "$key=$value";
+    // Finesse value here.
+    $this->getSession()->wait(10000, 'window.location.search.includes("' . $string . '")');
   }
 
 }

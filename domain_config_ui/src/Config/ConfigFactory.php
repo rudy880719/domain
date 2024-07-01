@@ -68,14 +68,14 @@ class ConfigFactory extends CoreConfigFactory {
     $list = parent::doLoadMultiple($names, $immutable);
 
     // Do not override if configuring 'all' domains or config is immutable.
-    // @TODO: This will need to change if we allow saving for 'all allowed domains'
+    // @todo This will need to change if we allow saving for 'all allowed domains'
     if (empty($this->domainConfigUIManager) || !$this->domainConfigUIManager->getSelectedDomainId()) {
       return $list;
     }
 
     // Pre-load remaining configuration files.
     if (!empty($names)) {
-      // Initialise override information.
+      // Initialize override information.
       $module_overrides = [];
       $storage_data = $this->storage->readMultiple($names);
 

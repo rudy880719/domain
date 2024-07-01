@@ -6,13 +6,12 @@ use Consolidation\AnnotatedCommand\Events\CustomEventAwareInterface;
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareTrait;
 use Consolidation\OutputFormatters\StructuredData\PropertyList;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
-use Drupal\Core\Config\StorageException;
-use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\domain\DomainInterface;
 use Drush\Commands\DrushCommands;
 use GuzzleHttp\Exception\TransferException;
@@ -297,10 +296,14 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function add($hostname, $name, array $options = [
-    'weight' => NULL,
-    'scheme' => NULL
-  ]) {
+  public function add(
+    $hostname,
+    $name,
+    array $options = [
+      'weight' => NULL,
+      'scheme' => NULL,
+    ],
+  ) {
     // Validate the weight arg.
     if (!empty($options['weight']) && !is_numeric($options['weight'])) {
       throw new DomainCommandException(
@@ -430,11 +433,14 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @see https://github.com/consolidation/annotated-command#option-event-hook
    */
-  public function delete($domain_id, array $options = [
-    'users-assign' => NULL,
-    'dryrun' => NULL,
-    'chatty' => NULL
-  ]) {
+  public function delete(
+    $domain_id,
+    array $options = [
+      'users-assign' => NULL,
+      'dryrun' => NULL,
+      'chatty' => NULL,
+    ],
+  ) {
 
     $message = '';
     $messages = [];
@@ -537,7 +543,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       $policy = $this->io()->choice(dt('Reassign @type field @field data to:',
         [
           '@type' => $delete_options['entity_filter'],
-          '@field' => $delete_options['field']
+          '@field' => $delete_options['field'],
         ]), $reassign_list);
     }
     elseif ($policy === 'default') {
@@ -631,9 +637,12 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function defaultDomain($domain_id, array $options = [
-    'validate' => NULL
-  ]) {
+  public function defaultDomain(
+    $domain_id,
+    array $options = [
+      'validate' => NULL,
+    ],
+  ) {
     // Resolve the domain.
     if (!empty($domain_id) && $domain = $this->getDomainFromArgument($domain_id)) {
       $validate = ($options['validate']) ? 1 : 0;
@@ -869,11 +878,14 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    *
    * @throws \Drupal\domain\Commands\DomainCommandException
    */
-  public function generate($primary = 'example.com', array $options = [
-    'count' => NULL,
-    'empty' => NULL,
-    'scheme' => 'http'
-  ]) {
+  public function generate(
+    $primary = 'example.com',
+    array $options = [
+      'count' => NULL,
+      'empty' => NULL,
+      'scheme' => 'http',
+    ],
+  ) {
     // Check the number of domains to create.
     $count = $options['count'];
     if (is_null($count)) {
@@ -1180,7 +1192,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       }
 
       try {
-        // Fire any registered hooks for deletion, passing them current imput.
+        // Fire any registered hooks for deletion, passing them current input.
         $handlers = $this->getCustomEventHandlers('domain-delete');
         $messages = [];
         foreach ($handlers as $handler) {
@@ -1404,7 +1416,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   protected function reassignLinkedEntities(array $domains, array $options) {
     $count = 0;
     $field = $options['field'];
-    $entity_typenames = $this->findDomainEnabledEntities($field);
+    $entity_types = $this->findDomainEnabledEntities($field);
 
     $new_domain = $this->getDomainInstanceFromPolicy($options['policy']);
     if (empty($new_domain)) {
@@ -1413,7 +1425,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     // Loop through each entity type.
     $exceptions = FALSE;
-    foreach ($entity_typenames as $name) {
+    foreach ($entity_types as $name) {
       if (empty($options['entity_filter']) || $options['entity_filter'] === $name) {
 
         // For each domain being reassigned from...

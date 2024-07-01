@@ -1,5 +1,5 @@
-name: "Domain module hook tests"
-description: "Support module for domain hook testing."
+name: 'Domain module hook tests'
+description: 'Support module for domain hook testing.'
 type: module
 package: Testing
 version: VERSION

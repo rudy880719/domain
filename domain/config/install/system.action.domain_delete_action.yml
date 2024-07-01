@@ -7,4 +7,4 @@ id: domain_delete_action
 label: 'Delete domain record'
 type: domain
 plugin: domain_delete_action
-configuration: {  }
+configuration: {}

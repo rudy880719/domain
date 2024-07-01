@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_content\Controller;
 
-use Drupal\Core\Link;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
@@ -19,7 +19,7 @@ class DomainContentController extends ControllerBase {
    * @param array $options
    *   A list of variables required to build editor or content pages.
    *
-   * @see contentlist()
+   * @see contentList()
    *
    * @return array
    *   A Drupal page build array.

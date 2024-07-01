@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\domain_source\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for the domain source field element.
@@ -95,7 +95,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Check the URL.
-    $url = $this->geturl();
+    $url = $this->getUrl();
     $this->assertTrue(strpos($url, 'node/' . $nid . '/edit') === FALSE, 'Form submitted.');
 
     // Edit the node.
@@ -110,7 +110,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->assertSession()->pageTextContains('The source domain must be selected as a publishing option.');
 
     // Check the URL.
-    $url = $this->geturl();
+    $url = $this->getUrl();
     $this->assertTrue(strpos($url, 'node/' . $nid . '/edit') > 0, 'Form not submitted.');
 
     // Set the field properly and save again.
@@ -121,7 +121,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Check the URL.
-    $url = $this->geturl();
+    $url = $this->getUrl();
     $this->assertTrue(strpos($url, 'node/' . $nid . '/edit') === FALSE, 'Form submitted.');
 
     // Save with no source.
@@ -137,7 +137,7 @@ class DomainSourceElementTest extends DomainTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Check the URL.
-    $url = $this->geturl();
+    $url = $this->getUrl();
     $this->assertTrue(strpos($url, 'node/' . $nid . '/edit') === FALSE, 'Form submitted.');
   }
 

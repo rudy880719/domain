@@ -188,7 +188,7 @@ class DomainAliasForm extends EntityForm {
   }
 
   /**
-   * Returns a list of valid environement options for the form.
+   * Returns a list of valid environment options for the form.
    *
    * @return array
    *   A list of valid environment options.
@@ -224,18 +224,18 @@ class DomainAliasForm extends EntityForm {
       \Drupal::messenger()->addMessage($this->t('Created new domain alias.'));
       $this->logger('domain_alias')->notice('Created new domain alias %name.', [
         '%name' => $alias->label(),
-        'link' => $edit_link
+        'link' => $edit_link,
       ]);
     }
     else {
       \Drupal::messenger()->addMessage($this->t('Updated domain alias.'));
       $this->logger('domain_alias')->notice('Updated domain alias %name.', [
         '%name' => $alias->label(),
-        'link' => $edit_link
+        'link' => $edit_link,
       ]);
     }
     $form_state->setRedirect('domain_alias.admin', [
-      'domain' => $alias->getDomainId()
+      'domain' => $alias->getDomainId(),
     ]);
 
     return $result;

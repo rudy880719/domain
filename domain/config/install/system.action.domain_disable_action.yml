@@ -7,4 +7,4 @@ id: domain_disable_action
 label: 'Disable domain record'
 type: domain
 plugin: domain_disable_action
-configuration: {  }
+configuration: {}

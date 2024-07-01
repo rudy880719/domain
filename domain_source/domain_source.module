@@ -11,6 +11,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainRedirectResponse;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
@@ -71,7 +72,7 @@ function domain_source_confirm_fields($entity_type, $bundle) {
  *
  * Creates our fields when new node types are created.
  *
- * @TODO: Make this possible for all entity types.
+ * @todo Make this possible for all entity types.
  */
 function domain_source_node_type_insert(EntityInterface $entity) {
   /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
@@ -104,20 +105,17 @@ function domain_source_entity_form_display_insert(EntityInterface $entity) {
  *   The value assigned to the entity, either a domain id string or NULL.
  */
 function domain_source_get(EntityInterface $entity) {
-  $source = NULL;
   $field = DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD;
-  if (!($entity instanceof FieldableEntityInterface) || !isset($entity->{$field})) {
-    return $source;
+  if (!$entity instanceof FieldableEntityInterface || !$entity->hasField($field)) {
+    return NULL;
   }
 
-  $value = $entity->get(DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD)->offsetGet(0);
-  if (!empty($value)) {
-    $target_id = $value->target_id;
-    if ($domain = \Drupal::entityTypeManager()->getStorage('domain')->load($target_id)) {
-      $source = $domain->id();
-    }
+  $domain = $entity->get($field)->entity;
+  if (!$domain instanceof DomainInterface) {
+    return NULL;
   }
-  return $source;
+
+  return $domain->id();
 }
 
 /**
@@ -164,8 +162,8 @@ function domain_source_form_validate($element, FormStateInterface $form_state) {
   }
   else {
     foreach ($access_values as $value) {
-      // Core is inconsistent depending on the field order.
-      // See https://www.drupal.org/project/domain/issues/2945771#comment-12493199
+      // Core is inconsistent depending on the field order. See
+      // https://www.drupal.org/project/domain/issues/2945771#comment-12493199
       if (is_array($value) && $value === $source_value) {
         $source_valid = TRUE;
       }
@@ -213,7 +211,7 @@ function domain_source_form_node_form_alter(&$form, FormStateInterface $form_sta
   $hide = TRUE;
   $form = $manager->setFormOptions($form, $form_state, DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, $hide);
   // If using a select field, load the JS to show/hide options.
-  if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($form[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
+  if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]['widget']['#type']) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($form[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
     if ($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]['widget']['#type'] === 'select') {
       $form['#attached']['library'][] = 'domain_source/drupal.domain_source';
     }

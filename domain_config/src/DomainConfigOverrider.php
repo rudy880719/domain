@@ -2,12 +2,12 @@
 
 namespace Drupal\domain_config;
 
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\domain\DomainInterface;
 
 /**
  * Domain-specific config overrides.
@@ -124,7 +124,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
       // Prepare our overrides.
       $overrides = [];
       // loadOverrides() runs on config entities, which means that if we try
-      // to run this routine on our own data, then we end up in an infinite loop.
+      // to run this routine on our own data, we end up in an infinite loop.
       // So ensure that we are _not_ looking up a domain.record.*.
       $check = current($names);
       $list = explode('.', $check);

@@ -59,7 +59,7 @@ class DomainVariableSchemeTest extends KernelTestBase {
     $domain = $this->domainStorage->load($this->key);
     $this->assertTrue($domain->getScheme($add_suffix) === $default_scheme);
 
-    // Swtich the scheme and see if that works.
+    // Switch the scheme and see if that works.
     $domain->set('scheme', $alt_scheme);
     $domain->save();
     $domain = $this->domainStorage->load($this->key);

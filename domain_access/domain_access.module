@@ -5,15 +5,15 @@
  * Domain-based access control for content.
  */
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().
@@ -149,7 +149,8 @@ function domain_access_presave_generate(EntityInterface $entity) {
   }
 
   // There is a core bug https://www.drupal.org/node/2609252 that causes a
-  // fatal database errors if the boolean DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD is set when
+  // fatal database errors if the boolean
+  // DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD is set when
   // a user cannot access the field. See domain_access_entity_field_access().
   // To overcome this issue, we cast the boolean to integer, which prevents the
   // failure.
@@ -609,6 +610,7 @@ function domain_access_views_data_alter(array &$data) {
       'id' => 'domain_access_current_all_filter',
       'title' => t('Available on current domain'),
       'help' => t('Filters out nodes available on current domain (published to current domain or all affiliates).'),
+      'type' => 'yes-no',
     ],
   ];
   // Since domains are not stored in the database, relationships cannot be used.

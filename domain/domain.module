@@ -5,10 +5,10 @@
  * Defines a Domain concept for use with Drupal.
  */
 
-use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 
 /**
@@ -78,7 +78,7 @@ function domain_preprocess_html(array &$variables) {
   $config = \Drupal::config('domain.settings');
   if ($string = $config->get('css_classes')) {
     $token = \Drupal::token();
-    // Prepare the classes proparly, with one class per string.
+    // Prepare the classes properly, with one class per string.
     $classes = explode(' ', trim($string));
     foreach ($classes as $class) {
       // Ensure no leading or trailing space.

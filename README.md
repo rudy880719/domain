@@ -119,7 +119,7 @@ To create a domain record, you must provide the following information:
 - A **name** to be used in lists of domains.
 - A URL scheme, used for writing links to the domain. The scheme may be `http`, `https`, or `variable`. If `variable` is used, the scheme will be inherited from the server or request settings. This option is good if your test environments do not have secure certificates but your production environment does.
 - A **status** indicating `active` or `inactive`. Inactive domains may only be viewed by users with permission to `view inactive domains` all other users will be redirected to the default domain (see below).
-- The **weight** to be used when sorting domains. These values autoincrement as new domains are created.
+- The **weight** to be used when sorting domains. These values auto increment as new domains are created.
 - Whether the domain is the **default** or not. Only one domain can be set as `default`. The default domain is used for redirects in cases where other domains are either restricted (inactive) or fail to load. This value can be reassigned after domains are created.
 
 Domain records are **configuration entities**, which means they are not stored in the database nor accessible to Views by default. They are, however, exportable as part of your configuration.
@@ -142,11 +142,11 @@ For developers, see also the information in the Domain Alias README.
 
 For Drupal 10+, you can use the [Domain DDEV](https://github.com/agentrickard/domain-ddev) project for getting started quickly. It includes all the tools described below.
 
-If you file a pull request or patch, please (at a minimum) run the existing tests to check for failures. Writing additional tests will greatly speed completion, as I won't commit code without test coverage.
+If you file a pull request or patch, run the existing tests to check for failures. Writing additional tests will greatly speed completion, as I won't commit code without test coverage.
 
 New tests should be written in PHPUnit as Functional, FunctionalJavascript, Kernel, or Unit tests.
 
-To setup a proper environment locally, you need multiple or wilcard domains configured to point to your drupal instance. I use variants of `example.local` for local tests. See `DomainTestBase` for documentation. Domain testing should work with root hosts other than `example.com`, though we also expect to find the subdomains `one.*, two.*, three.*, four.*, five.*` in most test cases. See `DomainTestBase::domainCreateTestDomains()` for the logic.
+To setup a proper environment locally, you need multiple or wildcard domains configured to point to your drupal instance. I use variants of `example.local` for local tests. See `DomainTestBase` for documentation. Domain testing should work with root hosts other than `example.com`, though we also expect to find the subdomains `one.*, two.*, three.*, four.*, five.*` in most test cases. See `DomainTestBase::domainCreateTestDomains()` for the logic.
 
 When running tests, you normally need to be on the default domain.
 
