@@ -211,7 +211,7 @@ function domain_source_form_node_form_alter(&$form, FormStateInterface $form_sta
   $hide = TRUE;
   $form = $manager->setFormOptions($form, $form_state, DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD, $hide);
   // If using a select field, load the JS to show/hide options.
-  if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($form[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
+  if (isset($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]['widget']['#type']) && \Drupal::moduleHandler()->moduleExists('domain_access') && isset($form[DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD])) {
     if ($form[DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD]['widget']['#type'] === 'select') {
       $form['#attached']['library'][] = 'domain_source/drupal.domain_source';
     }
