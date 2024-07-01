@@ -24,7 +24,7 @@ display:
     display_options:
       access:
         type: domain_content_admin
-        options: {  }
+        options: {}
       cache:
         type: tag
       query:
@@ -34,7 +34,7 @@ display:
           distinct: false
           replica: false
           query_comment: ''
-          query_tags: {  }
+          query_tags: {}
       exposed_form:
         type: basic
         options:
@@ -69,7 +69,7 @@ display:
       style:
         type: table
         options:
-          grouping: {  }
+          grouping: {}
           row_class: ''
           default_row_class: true
           override: true
@@ -404,7 +404,7 @@ display:
           settings:
             link: false
           group_column: target_id
-          group_columns: {  }
+          group_columns: {}
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -469,7 +469,7 @@ display:
             format_custom_true: ''
             format_custom_false: ''
           group_column: value
-          group_columns: {  }
+          group_columns: {}
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -692,9 +692,9 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: basic_string
-          settings: {  }
+          settings: {}
           group_column: value
-          group_columns: {  }
+          group_columns: {}
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -742,8 +742,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           fields:
             name: name
             mail: mail
@@ -756,7 +756,7 @@ display:
           group_type: group
           admin_label: ''
           operator: or
-          value: {  }
+          value: {}
           group: 1
           exposed: true
           expose:
@@ -784,8 +784,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           reduce_duplicates: false
           plugin_id: user_roles
         permission:
@@ -796,7 +796,7 @@ display:
           group_type: group
           admin_label: ''
           operator: or
-          value: {  }
+          value: {}
           group: 1
           exposed: true
           expose:
@@ -824,8 +824,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           reduce_duplicates: false
           plugin_id: user_permissions
         status:
@@ -863,7 +863,7 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
+            default_group_multiple: {}
             group_items:
               1:
                 title: Active
@@ -909,8 +909,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           entity_type: user
           entity_field: default_langcode
           plugin_id: boolean
@@ -950,8 +950,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           plugin_id: numeric
           entity_type: user
       sorts:
@@ -998,7 +998,7 @@ display:
         operator: AND
         groups:
           1: AND
-      display_extenders: {  }
+      display_extenders: {}
       arguments:
         field_domain_access_target_id:
           id: field_domain_access_target_id
@@ -1042,7 +1042,7 @@ display:
       defaults:
         show_admin_links: false
         arguments: false
-      display_extenders: {  }
+      display_extenders: {}
       display_description: 'Default page for domain content editor lists.'
       arguments:
         field_domain_access_target_id:
@@ -1080,7 +1080,7 @@ display:
             operation: view
             multiple: 0
             access: false
-            bundles: {  }
+            bundles: {}
           glossary: false
           limit: 0
           case: none
@@ -1105,7 +1105,7 @@ display:
     display_title: 'All affiliates editors'
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders: {}
       path: admin/content/domain-editors/all_affiliates
       display_description: 'Lists editors with the All affiliates permission.'
       filters:
@@ -1144,8 +1144,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           fields:
             name: name
             mail: mail
@@ -1158,7 +1158,7 @@ display:
           group_type: group
           admin_label: ''
           operator: or
-          value: {  }
+          value: {}
           group: 1
           exposed: true
           expose:
@@ -1186,8 +1186,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           reduce_duplicates: false
           plugin_id: user_roles
         permission:
@@ -1198,7 +1198,7 @@ display:
           group_type: group
           admin_label: ''
           operator: or
-          value: {  }
+          value: {}
           group: 1
           exposed: true
           expose:
@@ -1226,8 +1226,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           reduce_duplicates: false
           plugin_id: user_permissions
         status:
@@ -1265,7 +1265,7 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
+            default_group_multiple: {}
             group_items:
               1:
                 title: Active
@@ -1311,8 +1311,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           entity_type: user
           entity_field: default_langcode
           plugin_id: boolean
@@ -1352,8 +1352,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           plugin_id: numeric
           entity_type: user
         field_domain_access_target_id:
@@ -1364,7 +1364,7 @@ display:
           group_type: group
           admin_label: ''
           operator: in
-          value: {  }
+          value: {}
           group: 1
           exposed: true
           expose:
@@ -1392,8 +1392,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           plugin_id: domain_access_filter
         field_domain_all_affiliates_value:
           id: field_domain_all_affiliates_value
@@ -1431,8 +1431,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           plugin_id: numeric
       defaults:
         filters: false

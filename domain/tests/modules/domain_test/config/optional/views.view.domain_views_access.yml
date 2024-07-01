@@ -30,7 +30,7 @@ display:
             one_example_com: one_example_com
       cache:
         type: tag
-        options: {  }
+        options: {}
       query:
         type: views_query
         options:
@@ -38,7 +38,7 @@ display:
           distinct: false
           replica: false
           query_comment: ''
-          query_tags: {  }
+          query_tags: {}
       exposed_form:
         type: basic
         options:
@@ -94,9 +94,9 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: user_name
-          settings: {  }
+          settings: {}
           group_column: value
-          group_columns: {  }
+          group_columns: {}
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -117,28 +117,28 @@ display:
           expose:
             operator: ''
           group: 1
-      sorts: {  }
+      sorts: {}
       title: 'Domain views access'
-      header: {  }
-      footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
-      display_extenders: {  }
+      header: {}
+      footer: {}
+      empty: {}
+      relationships: {}
+      arguments: {}
+      display_extenders: {}
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.site
-      tags: {  }
+      tags: {}
   block_1:
     display_plugin: block
     id: block_1
     display_title: Block
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders: {}
       pager:
         type: some
         options:
@@ -147,21 +147,21 @@ display:
       defaults:
         pager: false
         header: false
-      header: {  }
+      header: {}
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.site
-      tags: {  }
+      tags: {}
   page_1:
     display_plugin: page
     id: page_1
     display_title: Page
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders: {}
       path: domain-views-access
     cache_metadata:
       max-age: -1
@@ -169,4 +169,4 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.site
-      tags: {  }
+      tags: {}
