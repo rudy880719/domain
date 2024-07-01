@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_access\Plugin\views\field;
 
-use Drupal\views\ResultRow;
 use Drupal\views\Plugin\views\field\EntityField;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present the link an entity on a domain.

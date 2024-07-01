@@ -4,7 +4,6 @@ namespace Drupal\domain_config_hook_test\PageCache\RequestPolicy;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\PageCache\RequestPolicyInterface;
-use Drupal\Core\Session\SessionConfigurationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

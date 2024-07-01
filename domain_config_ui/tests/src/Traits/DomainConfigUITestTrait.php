@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\domain_config_ui\Traits;
 
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
-
 /**
  * Contains helper classes for tests to set up various configuration.
  */
@@ -100,7 +98,7 @@ trait DomainConfigUITestTrait {
     // Create and login user.
     $adminUser = $this->drupalCreateUser([
       'administer languages',
-      'access administration pages'
+      'access administration pages',
     ]);
     $this->drupalLogin($adminUser);
 
@@ -139,6 +137,5 @@ trait DomainConfigUITestTrait {
     // Finesse value here.
     $this->getSession()->wait(10000, 'window.location.search.includes("' . $string . '")');
   }
-
 
 }

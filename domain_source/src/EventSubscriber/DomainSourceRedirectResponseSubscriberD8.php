@@ -3,11 +3,11 @@
 namespace Drupal\domain_source\EventSubscriber;
 
 use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\domain\DomainRedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Allows manipulation of the response object when performing a redirect.

@@ -4,7 +4,6 @@ namespace Drupal\domain\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\domain\DomainStorageInterface;
 
 /**
  * Provides a block that links to all domains.

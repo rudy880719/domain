@@ -37,7 +37,7 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = [
       '*.' . $this->baseHostname, 'four.' . $this->baseHostname,
-      'five.' . $this->baseHostname
+      'five.' . $this->baseHostname,
     ];
     $domain = NULL;
     foreach ($domains as $domain) {

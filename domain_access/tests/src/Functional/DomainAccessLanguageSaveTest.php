@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\domain\Functional\DomainTestBase;
-use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
  * Tests saving the domain access field elements in multiple languages.
@@ -73,7 +73,7 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $translation->set('title', $this->randomString());
     $translation->set(DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD, [
       'example_com',
-      'one_example_com'
+      'one_example_com',
     ]);
     $translation->set(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD, 0);
     $translation->set('status', 1);

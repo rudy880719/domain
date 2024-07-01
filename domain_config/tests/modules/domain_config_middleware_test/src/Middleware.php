@@ -58,6 +58,7 @@ if ($version >= 10) {
       $config = $this->configFactory->get('domain_config_middleware_test.settings');
       return $this->httpKernel->handle($request, $type, $catch);
     }
+
   }
 }
 else {
@@ -110,8 +111,7 @@ else {
       $config = $this->configFactory->get('domain_config_middleware_test.settings');
       return $this->httpKernel->handle($request, $type, $catch);
     }
+
   }
 
 }
-
-

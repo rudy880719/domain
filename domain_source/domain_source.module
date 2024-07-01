@@ -72,7 +72,7 @@ function domain_source_confirm_fields($entity_type, $bundle) {
  *
  * Creates our fields when new node types are created.
  *
- * @TODO: Make this possible for all entity types.
+ * @todo Make this possible for all entity types.
  */
 function domain_source_node_type_insert(EntityInterface $entity) {
   /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
@@ -162,8 +162,8 @@ function domain_source_form_validate($element, FormStateInterface $form_state) {
   }
   else {
     foreach ($access_values as $value) {
-      // Core is inconsistent depending on the field order.
-      // See https://www.drupal.org/project/domain/issues/2945771#comment-12493199
+      // Core is inconsistent depending on the field order. See
+      // https://www.drupal.org/project/domain/issues/2945771#comment-12493199
       if (is_array($value) && $value === $source_value) {
         $source_valid = TRUE;
       }

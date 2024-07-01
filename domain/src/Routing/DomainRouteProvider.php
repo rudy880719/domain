@@ -34,6 +34,8 @@ class DomainRouteProvider extends RouteProvider {
    * different RouteProvider, which means we cannot declare a common interface
    * for the $inner_service parameter.
    *
+   * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
+   *
    * @see Drupal\Core\Routing\RouteProvider::__construct()
    */
   public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL) {

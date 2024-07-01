@@ -13,7 +13,7 @@ use Drupal\domain\DomainNegotiatorInterface;
 /**
  * Checks the access status of entities based on domain settings.
  *
- * @TODO: It is possible that this class may become a subclass of the
+ * @todo It is possible that this class may become a subclass of the
  * DomainElementManager, however, the use-case is separate as far as I can tell.
  */
 class DomainAccessManager implements DomainAccessManagerInterface {
@@ -67,9 +67,9 @@ class DomainAccessManager implements DomainAccessManagerInterface {
    * {@inheritdoc}
    */
   public static function getAccessValues(FieldableEntityInterface $entity, $field_name = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD) {
-    // @TODO: static cache.
+    // @todo static cache.
     $list = [];
-    // @TODO In tests, $entity is returning NULL.
+    // @todo In tests, $entity is returning NULL.
     if (is_null($entity)) {
       return $list;
     }
