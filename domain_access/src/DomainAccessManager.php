@@ -158,7 +158,15 @@ class DomainAccessManager implements DomainAccessManagerInterface {
     }
     // Validate that the user is assigned to the domain. If not, deny.
     $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
-    $allowed = $this->getAccessValues($user);
+
+    // If Domain Entity module is installed.
+    if (\Drupal::service('module_handler')->moduleExists('domain_entity')) {
+      // Override method's default field which is field_domain_access.
+      $allowed = $this->getAccessValues($user, 'domain_access');
+    } else {
+      $allowed = $this->getAccessValues($user);
+    }
+    
     if (!isset($allowed[$domain->id()]) && empty($this->getAllValue($user))) {
       $access = FALSE;
     }
