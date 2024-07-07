@@ -25,6 +25,9 @@ class DomainAccessPermissions {
         'title' => $this->t('Assign additional editors to any domains'),
         'restrict access' => TRUE,
       ],
+      'publish to default domain' => [
+        'title' => $this->t('Publish to default domain'),
+      ],
       'publish to any domain' => [
         'title' => $this->t('Publish to any domain'),
       ],
