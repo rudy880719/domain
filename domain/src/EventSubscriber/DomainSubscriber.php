@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\domain\Access\DomainAccessCheck;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
 use Drupal\domain\DomainRedirectResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -89,29 +90,28 @@ class DomainSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestDomain(RequestEvent $event) {
     // Negotiate the request and set domain context.
-    if ($domain = $this->domainNegotiator->getActiveDomain(TRUE)) {
+    $domain = $this->domainNegotiator->getActiveDomain(TRUE);
+    if ($domain instanceof DomainInterface) {
       $hostname = $domain->getHostname();
       $domain_url = $domain->getUrl();
-      if ($domain_url) {
-        $redirect_status = $domain->getRedirect();
-        $path = trim($event->getRequest()->getPathInfo(), '/');
-        // If domain negotiation asked for a redirect, issue it.
-        if (is_null($redirect_status) && $this->accessCheck instanceof DomainAccessCheck && $this->accessCheck->checkPath($path)) {
-          // Else check for active domain or inactive access.
-          $access = $this->accessCheck->access($this->account);
-          // If the access check fails, reroute to the default domain.
-          // Note that Allowed, Neutral, and Failed are the options here.
-          // We insist on Allowed.
-          if (!$access->isAllowed()) {
-            /** @var \Drupal\domain\DomainInterface $default */
-            $default = $this->domainStorage->loadDefaultDomain();
-            $domain_url = $default->getUrl();
-            $redirect_status = 302;
-            $hostname = $default->getHostname();
-          }
+      $redirect_status = $domain->getRedirect();
+      $path = trim($event->getRequest()->getPathInfo(), '/');
+      // If domain negotiation asked for a redirect, issue it.
+      if (is_null($redirect_status) && $this->accessCheck instanceof DomainAccessCheck && $this->accessCheck->checkPath($path)) {
+        // Else check for active domain or inactive access.
+        $access = $this->accessCheck->access($this->account);
+        // If the access check fails, reroute to the default domain.
+        // Note that Allowed, Neutral, and Failed are the options here.
+        // We insist on Allowed.
+        if (!$access->isAllowed()) {
+          /** @var \Drupal\domain\DomainInterface $default */
+          $default = $this->domainStorage->loadDefaultDomain();
+          $domain_url = $default->getUrl();
+          $redirect_status = 302;
+          $hostname = $default->getHostname();
         }
       }
-      if (!empty($redirect_status)) {
+      if ($redirect_status > 0) {
         // Pass a redirect if necessary.
         if (DomainRedirectResponse::checkTrustedHost($hostname)) {
           $response = new TrustedRedirectResponse($domain_url, $redirect_status);
@@ -130,8 +130,10 @@ class DomainSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
+    $events = [];
     // This needs to fire very early in the stack, before accounts are cached.
     $events[KernelEvents::REQUEST][] = ['onKernelRequestDomain', 50];
+
     return $events;
   }
 

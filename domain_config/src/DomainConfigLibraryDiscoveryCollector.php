@@ -3,6 +3,7 @@
 namespace Drupal\domain_config;
 
 use Drupal\Core\Asset\LibraryDiscoveryCollector;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
 
 /**
@@ -35,7 +36,7 @@ class DomainConfigLibraryDiscoveryCollector extends LibraryDiscoveryCollector {
   protected function getCid() {
     if (!isset($this->cid)) {
       $domain_id = 'null';
-      if (!empty($this->domain)) {
+      if ($this->domain instanceof DomainInterface) {
         $domain_id = $this->domain->id();
       }
       $this->cid = 'library_info:' . $domain_id . ':' . $this->themeManager->getActiveTheme()->getName();

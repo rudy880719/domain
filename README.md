@@ -183,8 +183,6 @@ parameters:
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static#"
-    # Ignore common errors for now.
-    - "#Drupal calls should be avoided in classes, use dependency injection instead#"
   drupal:
     entityMapping:
       domain:

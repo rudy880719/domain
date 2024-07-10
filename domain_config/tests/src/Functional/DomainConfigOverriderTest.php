@@ -20,6 +20,7 @@ class DomainConfigOverriderTest extends DomainConfigTestBase {
     // Create five new domains programmatically.
     $this->domainCreateTestDomains(5);
     // Get the domain list.
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     // Except for the default domain, the page title element should match what
     // is in the override files.
@@ -63,6 +64,7 @@ class DomainConfigOverriderTest extends DomainConfigTestBase {
 
     // Create five new domains programmatically.
     $this->domainCreateTestDomains(5);
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')
       ->loadMultiple(['one_example_com', 'four_example_com']);
 

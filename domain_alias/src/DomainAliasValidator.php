@@ -93,7 +93,7 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
     }
     // 4) Check that the alias doesn't contain any invalid characters.
     // Check for valid characters, unless using non-ASCII domains.
-    $non_ascii = $this->configFactory->get('domain.settings')->get('allow_non_ascii');
+    $non_ascii = (bool) $this->configFactory->get('domain.settings')->get('allow_non_ascii');
     if (!$non_ascii) {
       $check = preg_match('/^[a-z0-9\.\+\-\*\?:]*$/', $pattern);
       if ($check === 0) {
@@ -110,11 +110,13 @@ class DomainAliasValidator implements DomainAliasValidatorInterface {
 
     // 6) Check that the alias is not a direct match for a registered domain.
     $check = preg_match('/[a-z0-9\.\+\-:]*$/', $pattern);
-    if ($check === 1 && $this->domainStorage->loadByHostname($pattern)) {
+    $domain = $this->domainStorage->loadByHostname($pattern);
+    if ($check === 1 && !is_null($domain)) {
       return $this->t('The pattern matches an existing domain record.');
     }
     // 7) Check that the alias is unique across all records.
-    if ($alias_check = $this->aliasStorage->loadByPattern($pattern)) {
+    $alias_check = $this->aliasStorage->loadByPattern($pattern);
+    if (!is_null($alias_check)) {
       /** @var \Drupal\domain_alias\DomainAliasInterface $alias_check */
       if ($alias_check->id() !== $alias->id()) {
         return $this->t('The pattern already exists.');

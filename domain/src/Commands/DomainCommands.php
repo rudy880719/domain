@@ -92,7 +92,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     // Load all domains:
     $domains = $this->domainStorage()->loadMultipleSorted();
 
-    if (empty($domains)) {
+    if (count($domains) === 0) {
       $this->logger()->warning(dt('No domains have been created. Use "drush domain:add" to create one.'));
       return new RowsOfFields([]);
     }
@@ -133,16 +133,16 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
             break;
 
           case 'status':
-            $v = $domain->get($key);
-            if (($options['inactive'] && $v) || ($options['active'] && !$v)) {
+            $value = (bool) $domain->get($key);
+            if (($options['inactive'] && $value) || ($options['active'] && !$value)) {
               continue 3;
             }
-            $v = !empty($v) ? dt('Active') : dt('Inactive');
+            $v = $value ? dt('Active') : dt('Inactive');
             break;
 
           case 'is_default':
-            $v = $domain->get($key);
-            $v = !empty($v) ? dt('Default') : '';
+            $value = (bool) $domain->get($key);
+            $v = $value ? dt('Default') : '';
             break;
 
           default:
@@ -183,7 +183,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   public function infoDomains() {
     $default_domain = $this->domainStorage()->loadDefaultDomain();
 
-    // Load all domains:
+    // Load all domains.
+    /** @var \Drupal\domain\DomainInterface[] $all_domains */
     $all_domains = $this->domainStorage()->loadMultiple(NULL);
     $active_domains = [];
     foreach ($all_domains as $domain) {
@@ -213,14 +214,14 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
         case 'default_id':
           $v = '-unset-';
-          if ($default_domain) {
+          if ($default_domain instanceof DomainInterface) {
             $v = $default_domain->id();
           }
           break;
 
         case 'default_host':
           $v = '-unset-';
-          if ($default_domain) {
+          if ($default_domain instanceof DomainInterface) {
             $v = $default_domain->getHostname();
           }
           break;
@@ -305,20 +306,20 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     ],
   ) {
     // Validate the weight arg.
-    if (!empty($options['weight']) && !is_numeric($options['weight'])) {
+    if (!is_null($options['weight']) && !is_numeric($options['weight'])) {
       throw new DomainCommandException(
         dt('Domain weight "!weight" must be a number',
-          ['!weight' => !empty($options['weight']) ? $options['weight'] : ''])
+          ['!weight' => $options['weight'] ?? 'null'])
       );
     }
 
     // Validate the scheme arg.
-    if (!empty($options['scheme']) &&
+    if (!is_null($options['scheme']) &&
       ($options['scheme'] !== 'http' && $options['scheme'] !== 'https' && $options['scheme'] !== 'variable')
     ) {
       throw new DomainCommandException(
         dt('Scheme name "!scheme" not known',
-          ['!scheme' => !empty($options['scheme']) ? $options['scheme'] : ''])
+          ['!scheme' => $options['scheme'] ?? 'null'])
       );
     }
 
@@ -327,10 +328,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $values = [
       'hostname' => $hostname,
       'name' => $name,
-      'status' => empty($options['inactive']),
-      'scheme' => empty($options['scheme']) ? 'http' : $options['scheme'],
-      'weight' => empty($options['weight']) ? $start_weight : $options['weight'],
-      'is_default' => !empty($options['is_default']),
+      'status' => $options['inactive'] ?? 1,
+      'scheme' => $options['scheme'] ?? 'http',
+      'weight' => $options['weight'] ?? $start_weight,
+      'is_default' => $options['is_default'] ?? 0,
       'id' => $this->domainStorage()->createMachineName($hostname),
     ];
     /** @var \Drupal\domain\DomainInterface */
@@ -338,7 +339,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     // Check for hostname validity. This is required.
     $valid = $this->validateDomain($domain);
-    if (!empty($valid)) {
+    if (count($valid) > 0) {
       throw new DomainCommandException(
         dt('Hostname is not valid. !errors',
           ['!errors' => implode(" ", $valid)])
@@ -451,10 +452,10 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     // Get current domain list and perform validation checks.
     $all_domains = $this->domainStorage()->loadMultipleSorted();
 
-    if (empty($all_domains)) {
+    if (count($all_domains) === 0) {
       throw new DomainCommandException('There are no configured domains.');
     }
-    if (empty($domain_id)) {
+    if ($domain_id === '') {
       throw new DomainCommandException('You must specify a domain to delete.');
     }
 
@@ -462,25 +463,28 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     if ($domain_id === 'all') {
       $domains = $all_domains;
       $really = $this->io()->confirm(dt('This action cannot be undone. Continue?:'), FALSE);
-      if (empty($really)) {
+      if (!$really) {
         return;
       }
       $message = dt('All domain records have been deleted.');
     }
-    elseif ($domain = $this->getDomainFromArgument($domain_id)) {
-      if ($domain->isDefault()) {
-        throw new DomainCommandException('The primary domain may not be deleted.
+    else {
+      $domain = $this->getDomainFromArgument($domain_id);
+      if ($domain instanceof DomainInterface) {
+        if ($domain->isDefault()) {
+          throw new DomainCommandException('The primary domain may not be deleted.
           Use drush domain:default to set a new default domain.');
+        }
+        $domains = [$domain];
+        $message = dt('Domain record !domain deleted.',
+          ['!domain' => $domain->id()]
+        );
       }
-      $domains = [$domain];
-      $message = dt('Domain record !domain deleted.',
-        ['!domain' => $domain->id()]
-      );
     }
 
     // Set the reassignment policy.
     $policy_users = 'prompt';
-    if (!empty($options['users-assign'])) {
+    if (isset($options['users-assign']) && $options['users-assign']) {
       if (in_array($options['users-assign'], $this->reassignmentPolicies, TRUE)) {
         $policy_users = $options['users-assign'];
       }
@@ -500,10 +504,11 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     $this->deleteDomain($domains, $options);
 
-    if ($messages) {
+    if (count($messages) > 0) {
       $message .= "\n" . implode("\n", $messages);
     }
     $this->logger()->info($message);
+
     return $message;
   }
 
@@ -593,7 +598,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       $domains = $this->domainStorage()->loadMultipleSorted();
     }
     else {
-      if ($domain = $this->getDomainFromArgument($domain_id)) {
+      $domain = $this->getDomainFromArgument($domain_id);
+      if ($domain instanceof DomainInterface) {
         $domains = [$domain];
       }
       else {
@@ -644,7 +650,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     ],
   ) {
     // Resolve the domain.
-    if (!empty($domain_id) && $domain = $this->getDomainFromArgument($domain_id)) {
+    $domain = $this->getDomainFromArgument($domain_id);
+    if ($domain instanceof DomainInterface) {
       $validate = ($options['validate']) ? 1 : 0;
       $domain->addProperty('validate_url', $validate);
       if ($error = $this->checkHttpResponse($domain)) {
@@ -688,7 +695,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   public function disable($domain_id) {
     // Resolve the domain.
-    if ($domain = $this->getDomainFromArgument($domain_id)) {
+    $domain = $this->getDomainFromArgument($domain_id);
+    if ($domain instanceof DomainInterface) {
       if ($domain->status()) {
         $domain->disable();
         $this->logger()->info(dt('!domain has been disabled.',
@@ -725,7 +733,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   public function enable($domain_id) {
     // Resolve the domain.
-    if ($domain = $this->getDomainFromArgument($domain_id)) {
+    $domain = $this->getDomainFromArgument($domain_id);
+    if ($domain instanceof DomainInterface) {
       if (!$domain->status()) {
         $domain->enable();
         $this->logger()->info(dt('!domain has been enabled.',
@@ -764,7 +773,8 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   public function renameDomain($domain_id, $name) {
     // Resolve the domain.
-    if ($domain = $this->getDomainFromArgument($domain_id)) {
+    $domain = $this->getDomainFromArgument($domain_id);
+    if ($domain instanceof DomainInterface) {
       $domain->saveProperty('name', $name);
       return dt('Renamed !domain to !name.',
         ['!domain' => $domain->getHostname(), '!name' => $domain->label()]);
@@ -795,8 +805,9 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $new_scheme = NULL;
 
     // Resolve the domain.
-    if ($domain = $this->getDomainFromArgument($domain_id)) {
-      if (!empty($scheme)) {
+    $domain = $this->getDomainFromArgument($domain_id);
+    if ($domain instanceof DomainInterface) {
+      if (!is_null($scheme)) {
         // Set with a value.
         $new_scheme = $scheme;
       }
@@ -811,7 +822,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       }
 
       // If we were asked to change scheme, validate the value and do so.
-      if (!empty($new_scheme)) {
+      if (!is_null($new_scheme)) {
         switch ($new_scheme) {
           case 'http':
             $new_scheme = 'http';
@@ -892,17 +903,16 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
       $count = 15;
     }
 
-    $domains = $this->domainStorage()->loadMultiple(NULL);
-    if (!empty($options['empty'])) {
+    $domains = $this->domainStorage()->loadMultiple();
+    if (isset($options['empty']) && $options['empty']) {
       $this->domainStorage()->delete($domains);
-      $domains = $this->domainStorage()->loadMultiple(NULL);
+      $domains = $this->domainStorage()->loadMultiple();
     }
     // Ensure we don't duplicate any domains.
     $existing = [];
-    if (!empty($domains)) {
-      foreach ($domains as $domain) {
-        $existing[] = $domain->getHostname();
-      }
+    /** @var \Drupal\domain\DomainInterface[] $domains */
+    foreach ($domains as $domain) {
+      $existing[] = $domain->getHostname();
     }
     // Set up one.* and so on.
     $names = [
@@ -976,7 +986,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     }
 
     // If nothing created, say so.
-    if (empty($prepared)) {
+    if (count($prepared) === 0) {
       return dt('No new domains were created.');
     }
     else {
@@ -1029,7 +1039,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
 
     // Try loading domain assuming arg is a machine name.
     $domain = $this->domainStorage()->load($argument);
-    if (!$domain) {
+    if (is_null($domain)) {
       // Try loading assuming it is a host name.
       $domain = $this->domainStorage()->loadByHostname($argument);
     }
@@ -1037,7 +1047,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     // domain_id (an INT) is only used internally because the Node Access
     // system demands the use of numeric keys. It should never be used to load
     // or identify domain records. Use the machine_name or hostname instead.
-    if (!$domain) {
+    if (is_null($domain)) {
       throw new DomainCommandException(
         dt('Domain record could not be found from "!a".', ['!a' => $argument])
       );
@@ -1062,6 +1072,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
   protected function filterDomains(array $domains, array $exclude, array $initial = []) {
     foreach ($domains as $domain) {
       // Exclude unwanted domains.
+      // @phpstan-ignore-next-line
       if (!in_array($domain->id(), $exclude, FALSE)) {
         $initial[$domain->id()] = $domain;
       }
@@ -1124,7 +1135,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
         throw new DomainCommandException('Unable to save domain', $e);
       }
 
-      if ($domain->getDomainId()) {
+      if ($domain->getDomainId() > 0) {
         $this->logger()->info(dt('Created @name at @domain.',
           ['@name' => $domain->label(), '@domain' => $domain->getHostname()]));
         return TRUE;
@@ -1258,7 +1269,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
    */
   protected function ensureEntityFieldMap() {
     // Try to avoid repeated calls to getFieldMap() assuming it's expensive.
-    if (empty($this->entityFieldMap)) {
+    if (is_null($this->entityFieldMap)) {
       $entity_field_manager = \Drupal::service('entity_field.manager');
       $this->entityFieldMap = $entity_field_manager->getFieldMap();
     }
@@ -1298,6 +1309,7 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     if ($just_count) {
       $efq->count();
     }
+
     return $efq->execute();
   }
 
@@ -1419,19 +1431,19 @@ class DomainCommands extends DrushCommands implements CustomEventAwareInterface 
     $entity_types = $this->findDomainEnabledEntities($field);
 
     $new_domain = $this->getDomainInstanceFromPolicy($options['policy']);
-    if (empty($new_domain)) {
+    if (is_null($new_domain)) {
       throw new DomainCommandException('invalid destination domain');
     }
 
     // Loop through each entity type.
     $exceptions = FALSE;
     foreach ($entity_types as $name) {
-      if (empty($options['entity_filter']) || $options['entity_filter'] === $name) {
+      if (!isset($options['entity_filter']) || $options['entity_filter'] === $name) {
 
         // For each domain being reassigned from...
         foreach ($domains as $domain) {
           $ids = $this->enumerateDomainEntities($name, $domain->id(), $field);
-          if (!empty($ids)) {
+          if ($ids !== []) {
             try {
               if ($options['chatty']) {
                 $this->logger()->info('Reassigning @count @entity_name entities to @domain',

@@ -73,7 +73,8 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   public function loadByHostname($hostname) {
     $patterns = $this->getPatterns($hostname);
     foreach ($patterns as $pattern) {
-      if ($alias = $this->loadByPattern($pattern)) {
+      $alias = $this->loadByPattern($pattern);
+      if ($alias instanceof DomainAliasInterface) {
         return $alias;
       }
     }
@@ -84,9 +85,9 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    * {@inheritdoc}
    */
   public function loadByPattern($pattern) {
-    $result = $this->loadByProperties(['pattern' => $pattern]);
+    $results = $this->loadByProperties(['pattern' => $pattern]);
 
-    return $result ? current($result) : NULL;
+    return count($results) > 0 ? current($results) : NULL;
   }
 
   /**
@@ -123,13 +124,7 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
   }
 
   /**
-   * Returns an array of eligible matching patterns.
-   *
-   * @param string $hostname
-   *   A hostname string, in the format example.com.
-   *
-   * @return array
-   *   An array of eligible matching patterns.
+   * {@inheritdoc}
    */
   public function getPatterns($hostname) {
     $parts = explode('.', $hostname);
@@ -219,8 +214,8 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
    *   An array of eligible matching patterns, modified by port.
    */
   private function buildPortPatterns(array $patterns, $hostname, $port = NULL) {
-    // Fetch the port if empty.
-    if (empty($port) && !empty($this->requestStack->getCurrentRequest())) {
+    // Fetch the port if not passed by the caller.
+    if (is_null($port) && !is_null($this->requestStack->getCurrentRequest())) {
       $port = $this->requestStack->getCurrentRequest()->getPort();
     }
 
@@ -228,10 +223,10 @@ class DomainAliasStorage extends ConfigEntityStorage implements DomainAliasStora
     foreach ($patterns as $index => $pattern) {
       // If default ports, allow exact no-port alias.
       $new_patterns[] = $pattern . ':*';
-      if (empty($port) || intval($port) === 80 || intval($port) === 443) {
+      if (is_null($port) || intval($port) === 80 || intval($port) === 443) {
         $new_patterns[] = $pattern;
       }
-      if (!empty($port)) {
+      if (!is_null($port)) {
         $new_patterns[] = $pattern . ':' . $port;
       }
     }

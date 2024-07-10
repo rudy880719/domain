@@ -20,6 +20,8 @@ class DomainEntityAccessTest extends DomainTestBase {
       'administer domains',
     ]);
     $this->drupalLogin($admin);
+
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
 
     // No domains should exist.
@@ -65,7 +67,7 @@ class DomainEntityAccessTest extends DomainTestBase {
     $edit = $this->domainPostValues();
     // Use hostname with dot (.) to avoid validation error.
     $edit['hostname'] = 'one.example.com';
-    $edit['id'] = \Drupal::entityTypeManager()->getStorage('domain')->createMachineName($edit['hostname']);
+    $edit['id'] = $storage->createMachineName($edit['hostname']);
     $this->drupalGet('admin/config/domain/add');
     $this->submitForm($edit, 'Save');
 

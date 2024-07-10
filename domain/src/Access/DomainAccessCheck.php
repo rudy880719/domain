@@ -64,7 +64,7 @@ class DomainAccessCheck implements AccessCheckInterface {
    */
   public function checkPath($path) {
     // Do not directly send null value to preg_quote().
-    $allowed_paths = ($this->configFactory->get('domain.settings')->get('login_paths') ?: '');
+    $allowed_paths = $this->configFactory->get('domain.settings')->get('login_paths') ?? '';
     return !$this->pathMatcher->matchPath($path, $allowed_paths);
   }
 

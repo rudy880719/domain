@@ -5,6 +5,7 @@ namespace Drupal\domain\Plugin\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a server information block for a domain request.
@@ -15,6 +16,31 @@ use Drupal\Core\Session\AccountInterface;
  * )
  */
 class DomainServerBlock extends DomainBlockBase {
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->renderer = $container->get('renderer');
+    $instance->configFactory = $container->get('config.factory');
+
+    return $instance;
+  }
 
   /**
    * Overrides \Drupal\block\BlockBase::access().
@@ -30,25 +56,26 @@ class DomainServerBlock extends DomainBlockBase {
    */
   public function build() {
     /** @var \Drupal\domain\DomainInterface $domain */
-    $domain = \Drupal::service('domain.negotiator')->getActiveDomain();
-    $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    if (!$domain) {
+    $domain = $this->domainNegotiator->getActiveDomain();
+
+    if (is_null($domain)) {
       return [
         '#markup' => $this->t('No domain record could be loaded.'),
       ];
     }
     $header = [$this->t('Server'), $this->t('Value')];
+    $rows = [];
     $rows[] = [
       $this->t('HTTP_HOST request'),
       Html::escape($_SERVER['HTTP_HOST']),
     ];
     // Check the response test.
     $domain->getResponse();
-    $check = $storage->loadByHostname($_SERVER['HTTP_HOST']);
+    $check = $this->domainStorage->loadByHostname($_SERVER['HTTP_HOST']);
     $match = $this->t('Exact match');
     // This value is not translatable.
     $environment = 'default';
-    if (!$check) {
+    if (is_null($check)) {
       // Specific check for Domain Alias.
       if (isset($domain->alias)) {
         $match = $this->t('ALIAS: Using alias %id', ['%id' => $domain->alias->getPattern()]);
@@ -59,6 +86,7 @@ class DomainServerBlock extends DomainBlockBase {
         $match = $this->t('FALSE: Using default domain.');
       }
     }
+
     $rows[] = [
       $this->t('Domain match'),
       $match,
@@ -80,10 +108,10 @@ class DomainServerBlock extends DomainBlockBase {
       $domain->getUrl(),
     ];
 
-    $www = \Drupal::config('domain.settings')->get('www_prefix');
+    $ignore_www = (bool) $this->configFactory->get('domain.settings')->get('www_prefix');
     $rows[] = [
       $this->t('Strip www prefix'),
-      !empty($www) ? $this->t('On') : $this->t('Off'),
+      $ignore_www ? $this->t('On') : $this->t('Off'),
     ];
     $list = $domain->toArray();
     ksort($list);
@@ -98,13 +126,14 @@ class DomainServerBlock extends DomainBlockBase {
         $value = $this->t('FALSE');
       }
       elseif ($key === 'status' || $key === 'is_default') {
-        $value = empty($value) ? $this->t('FALSE') : $this->t('TRUE');
+        $value = (bool) $value ? $this->t('FALSE') : $this->t('TRUE');
       }
       $rows[] = [
         Html::escape($key),
         !is_array($value) ? Html::escape($value) : $this->printArray($value),
       ];
     }
+
     return [
       '#theme' => 'table',
       '#rows' => $rows,
@@ -136,11 +165,14 @@ class DomainServerBlock extends DomainBlockBase {
       }
       $items[] = $this->t('@key : @value', ['@key' => $key, '@value' => $value]);
     }
-    $variables['domain_server'] = [
-      '#theme' => 'item_list',
-      '#items' => $items,
+    $variables = [
+      'domain_server' => [
+        '#theme' => 'item_list',
+        '#items' => $items,
+      ],
     ];
-    return \Drupal::service('renderer')->render($variables);
+
+    return $this->renderer->render($variables);
   }
 
 }

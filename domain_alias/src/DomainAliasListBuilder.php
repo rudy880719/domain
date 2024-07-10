@@ -22,9 +22,12 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Pattern');
-    $header['redirect'] = $this->t('Redirect');
-    $header['environment'] = $this->t('Environment');
+    $header = [
+      'label' => $this->t('Pattern'),
+      'redirect' => $this->t('Redirect'),
+      'environment' => $this->t('Environment'),
+    ];
+
     return $header + parent::buildHeader();
   }
 
@@ -37,7 +40,7 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
     if ($entity instanceof DomainAliasInterface) {
       $row['label'] = $entity->label();
       $redirect = $entity->getRedirect();
-      $row['redirect'] = empty($redirect) ? $this->t('None') : $redirect;
+      $row['redirect'] = is_null($redirect) ? $this->t('None') : $redirect;
       $row['environment'] = $entity->getEnvironment();
     }
     $row += parent::buildRow($entity);
@@ -56,7 +59,8 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
       '#empty' => $this->t('No aliases have been created for this domain.'),
     ];
     foreach ($this->load() as $entity) {
-      if ($row = $this->buildRow($entity)) {
+      $row = $this->buildRow($entity);
+      if ($row !== []) {
         $build['#rows'][$entity->id()] = $row;
       }
     }
@@ -100,7 +104,7 @@ class DomainAliasListBuilder extends ConfigEntityListBuilder {
    */
   public function getDomainId() {
     // @todo check for a use-case where we might need to derive the id?
-    return !empty($this->domain) ? $this->domain->id() : NULL;
+    return $this->domain instanceof DomainInterface ? $this->domain->id() : NULL;
   }
 
 }

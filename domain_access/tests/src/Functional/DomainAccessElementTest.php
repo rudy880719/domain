@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
+use Drupal\domain_access\DomainAccessManager;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 
@@ -72,7 +73,7 @@ class DomainAccessElementTest extends DomainTestBase {
     foreach ($domains as $domain) {
       $locator = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD . '[' . $domain->id() . ']';
       $this->findField($locator);
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->checkField($locator);
       }
     }
@@ -93,9 +94,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $node = $storage->load($nid);
     // Check that two values are set.
     $manager = \Drupal::service('domain_access.manager');
-    $values = $manager->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertTrue(count($values) === 3, 'Node saved with three domain records.');
-    $value = $manager->getAllValue($node);
+    $value = DomainAccessManager::getAllValue($node);
     $this->assertTrue(intval($value) === 1, 'Node saved to all affiliates.');
 
     // Now login as a user with limited rights.
@@ -108,9 +109,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $this->addDomainsToEntity('user', $account->id(), $ids, DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD);
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     $user = $user_storage->load($account->id());
-    $values = $manager->getAccessValues($user);
+    $values = DomainAccessManager::getAccessValues($user);
     $this->assertTrue(count($values) === 2, 'User saved with two domain records.');
-    $value = $manager->getAllValue($user);
+    $value = DomainAccessManager::getAllValue($user);
     $this->assertTrue(intval($value) === 0, 'User not saved to all affiliates.');
 
     $this->drupalLogin($account);
@@ -144,9 +145,9 @@ class DomainAccessElementTest extends DomainTestBase {
     $storage->resetCache([$node->id()]);
     $node = $storage->load($node->id());
     // Check that two values are set.
-    $values = $manager->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertTrue(count($values) === 2, 'Node saved with two domain records.');
-    $value = $manager->getAllValue($node);
+    $value = DomainAccessManager::getAllValue($node);
     $this->assertTrue(intval($value) === 1, 'Node saved to all affiliates.');
   }
 

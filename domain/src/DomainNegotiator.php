@@ -88,7 +88,8 @@ class DomainNegotiator implements DomainNegotiatorInterface {
     // @todo Investigate caching methods.
     $this->setHttpHost($httpHost);
     // Try to load a direct match.
-    if ($domain = $this->domainStorage()->loadByHostname($httpHost)) {
+    $domain = $this->domainStorage()->loadByHostname($httpHost);
+    if (!is_null($domain)) {
       // If the load worked, set an exact match flag for the hook.
       $domain->setMatchType(DomainNegotiatorInterface::DOMAIN_MATCHED_EXACT);
     }
@@ -106,15 +107,18 @@ class DomainNegotiator implements DomainNegotiatorInterface {
     $this->moduleHandler->alter('domain_request', $domain);
 
     // We must have registered a valid id, else the request made no match.
-    if (!empty($domain->id())) {
+    if (!is_null($domain->id())) {
       $this->setActiveDomain($domain);
     }
     // Fallback to default domain if no match.
-    elseif ($domain = $this->domainStorage()->loadDefaultDomain()) {
-      $this->moduleHandler->alter('domain_request', $domain);
-      $domain->setMatchType(DomainNegotiatorInterface::DOMAIN_MATCHED_NONE);
-      if (!empty($domain->id())) {
-        $this->setActiveDomain($domain);
+    else {
+      $domain = $this->domainStorage()->loadDefaultDomain();
+      if ($domain instanceof DomainInterface) {
+        $this->moduleHandler->alter('domain_request', $domain);
+        $domain->setMatchType(DomainNegotiatorInterface::DOMAIN_MATCHED_NONE);
+        if (!is_null($domain->id())) {
+          $this->setActiveDomain($domain);
+        }
       }
     }
   }
@@ -157,13 +161,15 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    * {@inheritdoc}
    */
   public function negotiateActiveHostname() {
-    if ($request = $this->requestStack->getCurrentRequest()) {
+    $request = $this->requestStack->getCurrentRequest();
+    if (!is_null($request)) {
       $httpHost = $request->getHttpHost();
     }
     else {
       $httpHost = $_SERVER['HTTP_HOST'] ?? NULL;
     }
-    $hostname = !empty($httpHost) ? $httpHost : 'localhost';
+    $hostname = $httpHost ?? 'localhost';
+
     return $this->domainStorage()->prepareHostname($hostname);
   }
 
@@ -186,7 +192,8 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    */
   public function isRegisteredDomain($hostname) {
     // Direct hostname match always passes.
-    if ($domain = $this->domainStorage()->loadByHostname($hostname)) {
+    $domain = $this->domainStorage()->loadByHostname($hostname);
+    if ($domain instanceof DomainInterface) {
       return TRUE;
     }
     // Check for registered alias matches.
@@ -200,7 +207,7 @@ class DomainNegotiator implements DomainNegotiatorInterface {
     $this->moduleHandler->alter('domain_request', $domain);
 
     // We must have registered a valid id, else the request made no match.
-    if (!empty($domain->id())) {
+    if (!is_null($domain->id())) {
       return TRUE;
     }
     return FALSE;
@@ -213,7 +220,7 @@ class DomainNegotiator implements DomainNegotiatorInterface {
    *   The domain storage handler.
    */
   protected function domainStorage() {
-    if (!$this->domainStorage) {
+    if (is_null($this->domainStorage)) {
       $this->domainStorage = $this->entityTypeManager->getStorage('domain');
     }
     return $this->domainStorage;

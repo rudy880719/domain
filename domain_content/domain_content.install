@@ -6,6 +6,7 @@
  */
 
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Implements hook_requirements().
@@ -17,22 +18,22 @@ function domain_content_requirements($phase) {
   $requirements = [];
   $allow = TRUE;
   if ($phase === 'install') {
-    $list['user'] = 'user';
+    $list = ['user' => 'user'];
     $node_types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
     foreach ($node_types as $type => $info) {
       $list[$type] = 'node';
     }
     // Check for required fields.
     foreach ($list as $bundle => $entity_type) {
-      // phpcs:ignore
       $id = $entity_type . '.' . $bundle . '.' . DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD;
-      if (!$field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
+      $field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id);
+      if (is_null($field)) {
         $allow = FALSE;
         break;
       }
-      // phpcs:ignore
       $id = $entity_type . '.' . $bundle . '.' . DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD;
-      if (!$field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
+      $field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id);
+      if (is_null($field)) {
         $allow = FALSE;
         break;
       }
@@ -55,11 +56,12 @@ function domain_content_uninstall() {
   $storage = \Drupal::entityTypeManager()->getStorage('view');
   $entities = [];
   foreach (['affiliated_content', 'affiliated_editors'] as $id) {
-    if ($view = $storage->load($id)) {
+    $view = $storage->load($id);
+    if ($view instanceof ViewEntityInterface) {
       $entities[$id] = $view;
     }
   }
-  if (!empty($entities)) {
+  if ($entities !== []) {
     $storage->delete($entities);
   }
 }

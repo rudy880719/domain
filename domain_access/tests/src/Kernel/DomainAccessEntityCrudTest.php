@@ -4,6 +4,7 @@ namespace Drupal\Tests\domain_access\Kernel;
 
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\FieldConfigInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -48,7 +49,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('user');
     $this->installSchema('user', ['users_data']);
@@ -84,7 +85,7 @@ class DomainAccessEntityCrudTest extends KernelTestBase {
     foreach ($fields as $field_name) {
       /** @var \Drupal\field\FieldConfigInterface $field */
       $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
-      if ($field) {
+      if ($field instanceof FieldConfigInterface) {
         $field->delete();
       }
     }

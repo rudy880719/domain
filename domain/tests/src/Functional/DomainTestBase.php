@@ -43,7 +43,9 @@ abstract class DomainTestBase extends BrowserTestBase {
     parent::setUp();
 
     // Set the base hostname for domains.
-    $this->baseHostname = \Drupal::entityTypeManager()->getStorage('domain')->createHostname();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $this->baseHostname = $storage->createHostname();
 
     // Ensure that $this->baseTLD is set.
     $this->setBaseDomain();
@@ -80,7 +82,7 @@ abstract class DomainTestBase extends BrowserTestBase {
    *   TRUE if link is absent, or FALSE.
    */
   public function findNoLink($locator) {
-    return empty($this->getSession()->getPage()->hasLink($locator));
+    return $this->getSession()->getPage()->hasLink($locator) === FALSE;
   }
 
   /**
@@ -101,13 +103,9 @@ abstract class DomainTestBase extends BrowserTestBase {
    *
    * @param string $locator
    *   Input id, name or label.
-   *
-   * @return \Behat\Mink\Element\NodeElement|null
-   *   The input field element.
    */
   public function findNoField($locator) {
-    return $this->assertSession()->fieldNotExists($locator);
-    ;
+    $this->assertSession()->fieldNotExists($locator);
   }
 
   /**
@@ -224,12 +222,11 @@ abstract class DomainTestBase extends BrowserTestBase {
     // Due to a quirk in session handling that we cannot directly access, it
     // works if we login, then logout, and then login to a specific domain.
     $this->drupalLogin($account);
-    if ($this->loggedInUser) {
+    if ($this->loggedInUser !== FALSE) {
       $this->drupalLogout();
     }
 
     // Login.
-    $url = $domain->getPath() . 'user/login';
     $this->submitForm([
       'name' => $account->getAccountName(),
       // @phpstan-ignore-next-line

@@ -18,6 +18,7 @@ class DomainValidatorTest extends DomainTestBase {
     // No domains should exist.
     $this->domainTableIsEmpty();
     $validator = \Drupal::service('domain.validator');
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
 
     // Create a domain.
@@ -51,7 +52,7 @@ class DomainValidatorTest extends DomainTestBase {
     ];
     foreach ($hostnames as $hostname => $valid) {
       $errors = $validator->validate($hostname);
-      if ($valid) {
+      if ($valid === 1) {
         $this->assertEmpty($errors, 'Validation correct with no errors.');
       }
       else {

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
+use Drupal\domain_access\DomainAccessManager;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 
@@ -47,10 +48,9 @@ class DomainAccessSaveTest extends DomainTestBase {
     $node = $storage->load(1);
 
     // Check that two values are set properly.
-    $manager = \Drupal::service('domain_access.manager');
-    $values = $manager->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertTrue(count($values) === 1, 'Node saved with one domain records.');
-    $value = $manager->getAllValue($node);
+    $value = DomainAccessManager::getAllValue($node);
     $this->assertTrue(intval($value) === 1, 'Node saved to all affiliates.');
 
     // Save a node with different values.
@@ -69,9 +69,9 @@ class DomainAccessSaveTest extends DomainTestBase {
 
     // Load and check the node.
     $node = $storage->load(2);
-    $values = $manager->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertTrue(count($values) === 2, 'Node saved with two domain records.');
-    $value = $manager->getAllValue($node);
+    $value = DomainAccessManager::getAllValue($node);
     $this->assertTrue(intval($value) === 0, 'Node not saved to all affiliates.');
   }
 

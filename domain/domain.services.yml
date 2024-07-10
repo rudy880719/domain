@@ -16,7 +16,7 @@ services:
       - { name: 'context_provider' }
   domain.element_manager:
     class: Drupal\domain\DomainElementManager
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@renderer']
   domain.negotiator:
     class: Drupal\domain\DomainNegotiator
     arguments:

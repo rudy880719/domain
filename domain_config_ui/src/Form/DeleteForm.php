@@ -25,13 +25,13 @@ class DeleteForm extends FormBase {
    * Build configuration form with metadata and values.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $config_name = NULL) {
-    if (empty($config_name)) {
+    if (is_null($config_name)) {
       $url = Url::fromRoute('domain_config_ui.list');
       return new RedirectResponse($url->toString());
     }
 
     $elements = DomainConfigUIController::deriveElements($config_name);
-    $config = \Drupal::configFactory()->get($config_name)->getRawData();
+    $config = $this->config($config_name)->getRawData();
 
     $form['help'] = [
       '#type' => 'item',
@@ -91,9 +91,9 @@ class DeleteForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $name = $form_state->getValue('config_name');
     $message = $this->t('Domain configuration %label has been deleted.', ['%label' => $name]);
-    \Drupal::messenger()->addMessage($message);
-    \Drupal::logger('domain_config')->notice($message);
-    \Drupal::configFactory()->getEditable($name)->delete();
+    $this->messenger()->addMessage($message);
+    $this->logger('domain_config')->notice($message);
+    $this->configFactory()->getEditable($name)->delete();
     $form_state->setRedirectUrl(new Url('domain_config_ui.list'));
   }
 

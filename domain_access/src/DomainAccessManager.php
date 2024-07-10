@@ -47,6 +47,13 @@ class DomainAccessManager implements DomainAccessManagerInterface {
   protected $domainStorage;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * Constructs a DomainAccessManager object.
    *
    * @param \Drupal\domain\DomainNegotiatorInterface $negotiator
@@ -61,6 +68,7 @@ class DomainAccessManager implements DomainAccessManagerInterface {
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->domainStorage = $entity_type_manager->getStorage('domain');
+    $this->userStorage = $entity_type_manager->getStorage('user');
   }
 
   /**
@@ -74,17 +82,18 @@ class DomainAccessManager implements DomainAccessManagerInterface {
       return $list;
     }
     // Get the values of an entity.
-    $values = $entity->hasField($field_name) ? $entity->get($field_name) : NULL;
+    $values = $entity->hasField($field_name) ? $entity->get($field_name) : [];
     // Must be at least one item.
-    if (!empty($values)) {
-      foreach ($values as $item) {
-        if ($target = $item->getValue()) {
-          if ($domain = \Drupal::entityTypeManager()->getStorage('domain')->load($target['target_id'])) {
-            $list[$domain->id()] = $domain->getDomainId();
-          }
+    foreach ($values as $item) {
+      $target = $item->getValue();
+      if (isset($target['target_id'])) {
+        $domain = \Drupal::entityTypeManager()->getStorage('domain')->load($target['target_id']);
+        if ($domain instanceof DomainInterface) {
+          $list[$domain->id()] = $domain->getDomainId();
         }
       }
     }
+
     return $list;
   }
 
@@ -92,20 +101,20 @@ class DomainAccessManager implements DomainAccessManagerInterface {
    * {@inheritdoc}
    */
   public static function getAllValue(FieldableEntityInterface $entity) {
-    return $entity->hasField(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD) ? $entity->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value : NULL;
+    return $entity->hasField(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD) ? (bool) $entity->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value : FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function checkEntityAccess(FieldableEntityInterface $entity, AccountInterface $account) {
-    $entity_domains = $this->getAccessValues($entity);
-    $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
-    if (!empty($this->getAllValue($user)) && !empty($entity_domains)) {
+    $entity_domains = self::getAccessValues($entity);
+    $user = $this->userStorage->load($account->id());
+    if (self::getAllValue($user) === TRUE && count($entity_domains) > 0) {
       return TRUE;
     }
-    $user_domains = $this->getAccessValues($user);
-    return (bool) !empty(array_intersect($entity_domains, $user_domains));
+    $user_domains = self::getAccessValues($user);
+    return count(array_intersect($entity_domains, $user_domains)) > 0;
   }
 
   /**
@@ -121,7 +130,8 @@ class DomainAccessManager implements DomainAccessManagerInterface {
     }
     // When creating a new entity, populate if required.
     elseif ($entity->getFieldDefinition(DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD)->isRequired()) {
-      if ($active = \Drupal::service('domain.negotiator')->getActiveDomain()) {
+      $active = \Drupal::service('domain.negotiator')->getActiveDomain();
+      if ($active instanceof DomainInterface) {
         $item[0]['target_uuid'] = $active->uuid();
       }
     }
@@ -137,7 +147,7 @@ class DomainAccessManager implements DomainAccessManagerInterface {
 
     // In the case of multiple AND permissions, assume access and then deny if
     // any check fails.
-    if ($conjunction === 'AND' && !empty($permissions)) {
+    if ($conjunction === 'AND' && $permissions !== []) {
       $access = TRUE;
       foreach ($permissions as $permission) {
         if (!($permission_access = $account->hasPermission($permission))) {
@@ -157,9 +167,9 @@ class DomainAccessManager implements DomainAccessManagerInterface {
       }
     }
     // Validate that the user is assigned to the domain. If not, deny.
-    $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
-    $allowed = $this->getAccessValues($user);
-    if (!isset($allowed[$domain->id()]) && empty($this->getAllValue($user))) {
+    $user = $this->userStorage->load($account->id());
+    $allowed = self::getAccessValues($user);
+    if (!isset($allowed[$domain->id()]) && self::getAllValue($user) !== TRUE) {
       $access = FALSE;
     }
 
@@ -172,13 +182,13 @@ class DomainAccessManager implements DomainAccessManagerInterface {
   public function getContentUrls(FieldableEntityInterface $entity) {
     $list = [];
     $processed = FALSE;
-    $domains = $this->getAccessValues($entity);
+    $domains = self::getAccessValues($entity);
     if ($this->moduleHandler->moduleExists('domain_source')) {
       $source = domain_source_get($entity);
       if (isset($domains[$source])) {
         unset($domains['source']);
       }
-      if (!empty($source)) {
+      if (!is_null($source)) {
         $list[] = $source;
       }
       $processed = TRUE;
@@ -187,12 +197,13 @@ class DomainAccessManager implements DomainAccessManagerInterface {
     $domains = $this->domainStorage->loadMultiple($list);
     $urls = [];
     foreach ($domains as $domain) {
-      $options['domain_target_id'] = $domain->id();
+      $options = ['domain_target_id' => $domain->id()];
       $url = $entity->toUrl('canonical', $options);
       if ($processed) {
         $urls[$domain->id()] = $url->toString();
       }
       else {
+        // @phpstan-ignore-next-line
         $urls[$domain->id()] = $domain->buildUrl($url->toString());
       }
     }

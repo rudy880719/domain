@@ -86,7 +86,7 @@ class DomainListBuilderTest extends DomainTestBase {
     $this->drupalGet($path);
     foreach ($this->getPaginatedDomains() as $domain) {
       $href = 'admin/config/domain/edit/' . $domain->id();
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->linkByHrefExists($href, 0, 'Link found');
         $this->assertSession()->assertEscaped($domain->label());
       }
@@ -102,7 +102,7 @@ class DomainListBuilderTest extends DomainTestBase {
     foreach ($this->getPaginatedDomains() as $domain) {
       $path = 'admin/config/domain/edit/' . $domain->id();
       $this->drupalGet($path);
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->statusCodeEquals(200);
       }
       else {
@@ -115,7 +115,7 @@ class DomainListBuilderTest extends DomainTestBase {
     $this->clickLink('Next');
     foreach ($this->getPaginatedDomains(1) as $domain) {
       $href = 'admin/config/domain/edit/' . $domain->id();
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->linkByHrefExists($href, 0, 'Link found');
         $this->assertSession()->assertEscaped($domain->label());
       }
@@ -152,7 +152,7 @@ class DomainListBuilderTest extends DomainTestBase {
     $this->drupalGet($path);
     foreach ($this->getPaginatedDomains() as $domain) {
       $href = 'admin/config/domain/edit/' . $domain->id();
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->linkByHrefExists($href, 0, 'Link found');
         $this->assertSession()->assertEscaped($domain->label());
       }
@@ -168,7 +168,7 @@ class DomainListBuilderTest extends DomainTestBase {
     foreach ($this->getPaginatedDomains() as $domain) {
       $path = 'admin/config/domain/edit/' . $domain->id();
       $this->drupalGet($path);
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->statusCodeEquals(200);
       }
       else {
