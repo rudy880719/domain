@@ -24,8 +24,11 @@ class DomainAliasListHostnameTest extends DomainAliasTestBase {
    * Test for environment matching.
    */
   public function testDomainAliasEnvironments() {
+    /** @var \Drupal\domain\DomainStorageInterface $domain_storage */
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $alias_loader = \Drupal::entityTypeManager()->getStorage('domain_alias');
+    /** @var \Drupal\domain_alias\DomainAliasStorageInterface $alias_storage */
+    $alias_storage = \Drupal::entityTypeManager()->getStorage('domain_alias');
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = $domain_storage->loadMultiple();
 
     $base = $this->baseHostname;
@@ -34,7 +37,6 @@ class DomainAliasListHostnameTest extends DomainAliasTestBase {
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = ['*.' . $base, 'four.' . $base, 'five.' . $base];
     $i = 0;
-    $domain = NULL;
     foreach ($domains as $domain) {
       $this->assertTrue($domain->getHostname() === $hostnames[$i], 'Hostnames set correctly');
       $this->assertTrue($domain->getCanonical() === $hostnames[$i], 'Canonical domains set correctly');
@@ -48,10 +50,11 @@ class DomainAliasListHostnameTest extends DomainAliasTestBase {
       $i++;
     }
     // Test the environment loader.
-    $local = $alias_loader->loadByEnvironment('local');
+    $local = $alias_storage->loadByEnvironment('local');
     $this->assertTrue(count($local) === 3, 'Three aliases set to local');
     // Test the environment matcher. $domain here is two.example.com.
-    $match = $alias_loader->loadByEnvironmentMatch($domain, 'local');
+    $test_domain = end($domains);
+    $match = $alias_storage->loadByEnvironmentMatch($test_domain, 'local');
     $this->assertTrue(count($match) === 1, 'One environment match loaded');
     $alias = current($match);
     $this->assertTrue($alias->getPattern() === 'five.' . $base, 'Proper pattern match loaded.');
@@ -66,13 +69,14 @@ class DomainAliasListHostnameTest extends DomainAliasTestBase {
     $this->drupalLogin($admin);
 
     // Load an aliased domain.
-    $this->drupalGet($domain->getScheme() . 'five.' . $base . $GLOBALS['base_path'] . 'admin/config/domain');
+    $this->drupalGet($test_domain->getScheme() . 'five.' . $base . $GLOBALS['base_path'] . 'admin/config/domain');
     $this->assertSession()->statusCodeEquals(200);
 
     // Save the form.
     $this->pressButton('edit-submit');
     // Ensure the values haven't changed.
     $i = 0;
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = $domain_storage->loadMultiple();
     foreach ($domains as $domain) {
       $this->assertTrue($domain->getHostname() === $hostnames[$i], 'Hostnames set correctly');

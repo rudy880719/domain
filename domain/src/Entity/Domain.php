@@ -157,17 +157,18 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    */
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
+    /** @var \Drupal\domain\DomainStorageInterface $domain_storage */
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
     $default = $domain_storage->loadDefaultId();
     $count = $storage_controller->getQuery()->accessCheck(FALSE)->count()->execute();
-    $values += [
-      'scheme' => empty($GLOBALS['is_https']) ? 'http' : 'https',
-      'status' => 1,
-      'weight' => $count + 1,
-      'is_default' => (int) empty($default),
-    ];
     // Note that we have not created a domain_id, which is only used for
     // node access control and will be added on save.
+    $values += [
+      'scheme' => $domain_storage->getDefaultScheme(),
+      'status' => 1,
+      'weight' => $count + 1,
+      'is_default' => (int) ($default === FALSE),
+    ];
   }
 
   /**
@@ -186,7 +187,9 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    * {@inheritdoc}
    */
   public function addProperty($name, $value) {
+    // @phpstan-ignore-next-line
     if (!isset($this->{$name})) {
+      // @phpstan-ignore-next-line
       $this->{$name} = $value;
     }
   }
@@ -195,14 +198,14 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    * {@inheritdoc}
    */
   public function isDefault() {
-    return (bool) $this->is_default;
+    return $this->is_default;
   }
 
   /**
    * {@inheritdoc}
    */
   public function isHttps() {
-    return (bool) ($this->getScheme(FALSE) === 'https');
+    return $this->getScheme(FALSE) === 'https';
   }
 
   /**
@@ -211,8 +214,10 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public function saveDefault() {
     if (!$this->isDefault()) {
       // Swap the current default domain.
+      /** @var \Drupal\domain\DomainStorageInterface $storage */
       $storage = \Drupal::entityTypeManager()->getStorage('domain');
-      if ($default = $storage->loadDefaultDomain()) {
+      $default = $storage->loadDefaultDomain();
+      if ($default instanceof DomainInterface) {
         $default->set('is_default', FALSE);
         $default->setHostname($default->getCanonical());
         $default->save();
@@ -256,7 +261,9 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    * {@inheritdoc}
    */
   public function saveProperty($name, $value) {
+    // @phpstan-ignore-next-line
     if (isset($this->{$name})) {
+      // @phpstan-ignore-next-line
       $this->{$name} = $value;
       $this->setHostname($this->getCanonical());
       $this->save();
@@ -276,16 +283,18 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    */
   public function setPath() {
     global $base_path;
-    $this->path = $this->getScheme() . $this->getHostname() . ($base_path ?: '/');
+    $this->path = $this->getScheme() . $this->getHostname() . ($base_path ?? '/');
   }
 
   /**
    * {@inheritdoc}
    */
   public function setUrl() {
-    $request = \Drupal::request();
-    $uri = $request ? $request->getRequestUri() : '/';
-    $this->url = $this->getScheme() . $this->getHostname() . $uri;
+    $request = \Drupal::requestStack()->getCurrentRequest();
+    if (!is_null($request)) {
+      $uri = $request->getRequestUri() ?? '/';
+      $this->url = $this->getScheme() . $this->getHostname() . $uri;
+    }
   }
 
   /**
@@ -340,7 +349,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     // Sets the default domain properly.
     /** @var self $default */
     $default = $storage->loadDefaultDomain();
-    if (!$default) {
+    if (is_null($default)) {
       $this->is_default = TRUE;
     }
     elseif ($this->is_default && $default->getDomainId() !== $this->getDomainId()) {
@@ -349,12 +358,13 @@ class Domain extends ConfigEntityBase implements DomainInterface {
       $default->save();
     }
     // Ensures we have a proper domain_id but does not erase existing ones.
-    if ($this->isNew() && empty($this->getDomainId())) {
+    if ($this->isNew() && is_null($this->getDomainId())) {
       $this->createDomainId();
     }
     // Prevent duplicate hostname.
     $hostname = $this->getHostname();
     // Do not use domain loader because it may change hostname.
+    /** @var \Drupal\domain\DomainInterface[] $existing */
     $existing = $storage->loadByProperties(['hostname' => $hostname]);
     $existing = reset($existing);
     if ($existing && $this->getDomainId() !== $existing->getDomainId()) {
@@ -420,7 +430,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
     // Ensure that this value is unique.
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
     $result = $storage->loadByProperties(['domain_id' => $id]);
-    if (empty($result)) {
+    if (count($result) === 0) {
       $this->domain_id = $id;
     }
     else {
@@ -435,7 +445,9 @@ class Domain extends ConfigEntityBase implements DomainInterface {
   public function getScheme($add_suffix = TRUE) {
     $scheme = $this->scheme;
     if ($scheme === 'variable') {
-      $scheme = \Drupal::entityTypeManager()->getStorage('domain')->getDefaultScheme();
+      /** @var \Drupal\domain\DomainStorageInterface $storage */
+      $storage = \Drupal::entityTypeManager()->getStorage('domain');
+      $scheme = $storage->getDefaultScheme();
     }
     elseif ($scheme !== 'https') {
       $scheme = 'http';
@@ -456,7 +468,7 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    * {@inheritdoc}
    */
   public function getResponse() {
-    if (empty($this->response)) {
+    if (is_null($this->response)) {
       $validator = \Drupal::service('domain.validator');
       $validator->checkResponse($this);
     }
@@ -568,9 +580,10 @@ class Domain extends ConfigEntityBase implements DomainInterface {
    * {@inheritdoc}
    */
   public function getCanonical() {
-    if (empty($this->canonical)) {
+    if (is_null($this->canonical)) {
       $this->setCanonical();
     }
+
     return $this->canonical;
   }
 

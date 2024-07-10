@@ -136,6 +136,7 @@ class DomainListBuilder extends DraggableListBuilder {
     $this->limit = 50;
 
     // Do not inject the form builder for backwards-compatibility.
+    // @phpstan-ignore-next-line.
     $this->formBuilder = \Drupal::formBuilder();
   }
 
@@ -209,7 +210,7 @@ class DomainListBuilder extends DraggableListBuilder {
     $default = $this->domainStorage->loadDefaultDomain();
 
     // Deleting the site default domain is not allowed.
-    if ($default && $id === $default->id()) {
+    if (!is_null($default) && $id === $default->id()) {
       unset($operations['delete']);
     }
     return $operations;
@@ -219,6 +220,7 @@ class DomainListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
+    $header = [];
     $header['label'] = $this->t('Name');
     $header['hostname'] = $this->t('Hostname');
     $header['status'] = $this->t('Status');
@@ -241,6 +243,7 @@ class DomainListBuilder extends DraggableListBuilder {
       return;
     }
 
+    $row = [];
     $row['label'] = $entity->label();
     $row['hostname'] = ['#markup' => $entity->getLink()];
     if ($entity->isActive()) {

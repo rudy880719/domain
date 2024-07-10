@@ -63,6 +63,7 @@ class DomainSourceCommands extends DomainCommands {
    */
   public function domainSourceDomainDelete($target_domain, $options) {
     // Run our own deletion routine here.
+    // @phpstan-ignore-next-line
     if (empty($options['content-assign'])) {
       $policy_content = 'prompt';
     }

@@ -176,7 +176,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $this->rebuildContainer();
 
     $es = \Drupal::entityTypeManager()->getStorage('configurable_language')->load('es');
-    $this->assertTrue(!empty($es), 'Created test language.');
+    $this->assertTrue(!is_null($es), 'Created test language.');
   }
 
 }

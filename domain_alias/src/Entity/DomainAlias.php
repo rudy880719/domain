@@ -100,7 +100,7 @@ class DomainAlias extends ConfigEntityBase implements DomainAliasInterface {
    * {@inheritdoc}
    */
   public function getEnvironment() {
-    return !empty($this->environment) ? $this->environment : 'default';
+    return $this->environment ?? 'default';
   }
 
   /**
@@ -116,7 +116,7 @@ class DomainAlias extends ConfigEntityBase implements DomainAliasInterface {
   public function getDomain() {
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
     $domains = $storage->loadByProperties(['domain_id' => $this->domain_id]);
-    return $domains ? current($domains) : NULL;
+    return count($domains) > 0 ? current($domains) : NULL;
   }
 
   /**

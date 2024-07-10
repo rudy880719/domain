@@ -72,6 +72,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
     $url = Url::fromRoute('view.test_active_domain_argument.page_1');
 
     foreach ($this->getDomains() as $domain_id => $domain) {
+      // @phpstan-ignore-next-line
       $page_url = $domain->buildUrl($url->toString());
       $this->drupalGet($page_url);
 

@@ -51,6 +51,7 @@ class DomainSourceUrlTest extends DomainTestBase {
     // Variables for our tests.
     $path = 'node/1';
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    /** @var \Drupal\domain\DomainInterface $source */
     $source = $domains[$id];
     $expected = $source->getPath() . $path;
     $route_name = 'entity.node.canonical';

@@ -76,14 +76,15 @@ function domain_tokens($type, $tokens, array $data, array $options, BubbleableMe
 function domain_preprocess_html(array &$variables) {
   // Add class to body tag, if set.
   $config = \Drupal::config('domain.settings');
-  if ($string = $config->get('css_classes')) {
+  $string = $config->get('css_classes') ?? NULL;
+  if (!is_null($string)) {
     $token = \Drupal::token();
     // Prepare the classes properly, with one class per string.
     $classes = explode(' ', trim($string));
     foreach ($classes as $class) {
       // Ensure no leading or trailing space.
       $class = trim($class);
-      if (!empty($class)) {
+      if (strlen($class) > 0) {
         $variables['attributes']['class'][] = Html::getClass($token->replace($class));
       }
     }
@@ -159,6 +160,7 @@ function template_preprocess_domain_nav_block(array &$variables) {
  * Implements hook_hook_info().
  */
 function domain_hook_info() {
+  $hooks = [];
   $hooks['domain_request_alter'] = [
     'group' => 'domain',
   ];
@@ -168,5 +170,6 @@ function domain_hook_info() {
   $hooks['domain_references_alter'] = [
     'group' => 'domain',
   ];
+
   return $hooks;
 }

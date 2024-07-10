@@ -22,7 +22,7 @@ class DomainNavBlockTest extends DomainTestBase {
   public function testDomainNav() {
     // Create four new domains programmatically.
     $this->domainCreateTestDomains(4);
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->getDomains();
 
     // Place the nav block.
     $block = $this->drupalPlaceBlock('domain_nav_block');
@@ -73,6 +73,7 @@ class DomainNavBlockTest extends DomainTestBase {
     // Confirm domain links.
     foreach ($domains as $id => $domain) {
       $this->findLink($domain->getHostname());
+      // @phpstan-ignore-next-line
       $this->assertSession()->responseContains($domain->buildUrl(base_path() . 'user/login'));
     }
 

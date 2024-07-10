@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -40,14 +41,24 @@ class DomainElementManager implements DomainElementManagerInterface {
   protected $domainStorage;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a DomainElementManager object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer) {
     $this->entityTypeManager = $entity_type_manager;
     $this->domainStorage = $entity_type_manager->getStorage('domain');
+    $this->renderer = $renderer;
   }
 
   /**
@@ -62,10 +73,11 @@ class DomainElementManager implements DomainElementManagerInterface {
     $fields = $this->fieldList($field_name);
     $empty = FALSE;
     $disallowed = $this->disallowedOptions($form_state, $form[$field_name]);
-    if (empty($form[$field_name]['widget']['#options'])
-      || (count($form[$field_name]['widget']['#options']) === 1
-           && isset($form[$field_name]['widget']['#options']['_none'])
-         )
+    if ((isset($form[$field_name]['widget']['#options']) &&
+         count($form[$field_name]['widget']['#options']) === 0)
+        ||
+        (count($form[$field_name]['widget']['#options']) === 1 &&
+         isset($form[$field_name]['widget']['#options']['_none']))
     ) {
       $empty = TRUE;
     }
@@ -94,7 +106,7 @@ class DomainElementManager implements DomainElementManagerInterface {
       if ($hide_on_disallow || $empty) {
         $form[$field_name]['#access'] = FALSE;
       }
-      elseif (!empty($disallowed)) {
+      elseif (count($disallowed) > 0) {
         $form[$field_name]['widget']['#description'] .= $this->listDisallowed($disallowed);
       }
       // Call our submit function to merge in values.
@@ -102,7 +114,7 @@ class DomainElementManager implements DomainElementManagerInterface {
       $buttons = ['preview', 'delete'];
       $submit = $this->getSubmitHandler();
       foreach ($form['actions'] as $key => $action) {
-        if (!in_array($key, $buttons) && isset($form['actions'][$key]['#submit']) && !in_array($submit, $form['actions'][$key]['#submit'])) {
+        if (!in_array($key, $buttons, TRUE) && isset($form['actions'][$key]['#submit']) && !in_array($submit, $form['actions'][$key]['#submit'], TRUE)) {
           array_unshift($form['actions'][$key]['#submit'], $submit);
         }
       }
@@ -117,22 +129,24 @@ class DomainElementManager implements DomainElementManagerInterface {
   public static function submitEntityForm(array &$form, FormStateInterface $form_state) {
     $fields = $form_state->getValue('domain_hidden_fields');
     foreach ($fields as $field) {
+      $values = NULL;
       $entity_values = [];
-      $values = $form_state->getValue($field . '_disallowed');
-      if (!empty($values)) {
+      if ($form_state->hasValue($field . '_disallowed')) {
+        $values = $form_state->getValue($field . '_disallowed');
         $entity_values = $form_state->getValue($field);
-      }
-      if (is_array($values)) {
-        foreach ($values as $value) {
-          $entity_values[]['target_id'] = $value;
+
+        if (is_array($values)) {
+          foreach ($values as $value) {
+            $entity_values[]['target_id'] = $value;
+          }
         }
-      }
-      else {
-        $entity_values[]['target_id'] = $values;
+        else {
+          $entity_values[]['target_id'] = $values;
+        }
       }
       // Prevent a fatal error caused by passing a NULL value.
       // See https://www.drupal.org/node/2841962.
-      if (!empty($entity_values)) {
+      if ($entity_values !== []) {
         $form_state->setValue($field, $entity_values);
       }
     }
@@ -178,15 +192,18 @@ class DomainElementManager implements DomainElementManagerInterface {
     // Get the values of an entity.
     $values = $entity->hasField($field_name) ? $entity->get($field_name) : NULL;
     // Must be at least one item.
-    if (!empty($values)) {
+    if (!is_null($values)) {
       foreach ($values as $item) {
-        if ($target = $item->getValue()) {
-          if ($domain = $this->domainStorage->load($target['target_id'])) {
+        $target = $item->getValue();
+        if (isset($target['target_id'])) {
+          $domain = $this->domainStorage->load($target['target_id']);
+          if ($domain instanceof DomainInterface) {
             $list[$domain->id()] = $domain->getDomainId();
           }
         }
       }
     }
+
     return $list;
   }
 
@@ -217,7 +234,7 @@ class DomainElementManager implements DomainElementManagerInterface {
       '#theme' => 'item_list',
       '#items' => $items,
     ];
-    $string .= \Drupal::service('renderer')->render($build);
+    $string .= $this->renderer->render($build);
     return '<div class="disallowed">' . $string . '</div>';
   }
 

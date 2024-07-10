@@ -51,6 +51,7 @@ class DomainSourceParameterTest extends DomainTestBase {
     // Variables for our tests.
     $path = 'domain-format-test';
     $options = ['query' => ['_format' => 'json']];
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $this->drupalGet($domain->getPath() . $path, $options);

@@ -75,13 +75,14 @@ class DomainHookTest extends KernelTestBase {
    */
   public function testHookDomainLoad() {
     // Check the created domain based on its known id value.
+    /** @var \Drupal\domain\DomainInterface $domain */
     $domain = $this->domainStorage->load($this->key);
 
     // Internal hooks.
     $path = $domain->getPath();
     $url = $domain->getUrl();
-    $this->assertTrue(!empty($path), new FormattableMarkup('The path property was set to %path by hook_entity_load.', ['%path' => $path]));
-    $this->assertTrue(!empty($url), new FormattableMarkup('The url property was set to %url by hook_entity_load.', ['%url' => $url]));
+    $this->assertTrue(strlen($path) > 0, new FormattableMarkup('The path property was set to %path by hook_entity_load.', ['%path' => $path]));
+    $this->assertTrue(strlen($url) > 0, new FormattableMarkup('The url property was set to %url by hook_entity_load.', ['%url' => $url]));
 
     // External hooks.
     $this->assertTrue($domain->get('foo') === 'bar', 'The foo property was set to <em>bar</em> by hook_domain_load.');

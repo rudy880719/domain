@@ -31,12 +31,15 @@ class DomainAliasWildcardTest extends DomainAliasTestBase {
    * Test for environment matching.
    */
   public function testDomainAliasWildcards() {
+    /** @var \Drupal\domain\DomainStorageInterface $domain_storage */
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $alias_loader = \Drupal::entityTypeManager()->getStorage('domain_alias');
+    /** @var \Drupal\domain_alias\DomainAliasStorageInterface $alias_storage */
+    $alias_storage = \Drupal::entityTypeManager()->getStorage('domain_alias');
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = $domain_storage->loadMultipleSorted();
+
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = ['example.*', 'four.example.*', 'five.example.*'];
-    $domain = NULL;
     foreach ($domains as $domain) {
       $values = [
         'domain_id' => $domain->id(),
@@ -46,18 +49,24 @@ class DomainAliasWildcardTest extends DomainAliasTestBase {
       ];
       $this->createDomainAlias($values);
     }
+
     // Test the environment loader.
-    $local = $alias_loader->loadByEnvironment('local');
+    /** @var \Drupal\domain_alias\DomainAliasInterface $local */
+    $local = $alias_storage->loadByEnvironment('local');
     $this->assertTrue(count($local) === 3, 'Three aliases set to local');
     // Test the environment matcher. $domain here is two.example.com.
-    $match = $alias_loader->loadByEnvironmentMatch($domain, 'local');
-    $this->assertTrue(count($match) === 1, 'One environment match loaded');
-    $alias = current($match);
+    $test_domain = end($domains);
+    /** @var \Drupal\domain_alias\DomainAliasInterface[] $matches */
+    $matches = $alias_storage->loadByEnvironmentMatch($test_domain, 'local');
+    $this->assertTrue(count($matches) === 1, 'One environment match loaded');
+    $alias = current($matches);
     $this->assertTrue($alias->getPattern() === 'five.example.*', 'Proper pattern match loaded.');
 
     // Test the environment matcher. $domain here is one.example.com.
+    /** @var \Drupal\domain\DomainInterface $domain */
     $domain = $domain_storage->load('one_example_com');
-    $matches = $alias_loader->loadByEnvironmentMatch($domain, 'local');
+    /** @var \Drupal\domain_alias\DomainAliasInterface[] $matches */
+    $matches = $alias_storage->loadByEnvironmentMatch($domain, 'local');
     $this->assertTrue(count($matches) === 1, 'One environment match loaded');
     $alias = current($matches);
     $this->assertTrue($alias->getPattern() === 'four.example.*', 'Proper pattern match loaded.');
@@ -71,6 +80,8 @@ class DomainAliasWildcardTest extends DomainAliasTestBase {
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['administer domains']);
     // For a non-aliased request, the url list should be normal.
     $this->drupalGet($domain->getPath());
+
+    // @phpstan-ignore-next-line
     foreach ($domains as $domain) {
       $this->assertSession()->assertEscaped($domain->getHostname());
       $this->assertSession()->linkByHrefExists($domain->getPath(), 0, 'Link found: ' . $domain->getPath());

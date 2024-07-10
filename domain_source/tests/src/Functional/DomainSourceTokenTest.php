@@ -40,6 +40,7 @@ class DomainSourceTokenTest extends DomainTestBase {
    */
   public function testDomainSourceTokens() {
     $token_handler = \Drupal::token();
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     // Create a node, assigned to a source domain.
     $nodes_values = [

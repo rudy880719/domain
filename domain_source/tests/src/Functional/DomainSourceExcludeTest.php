@@ -50,6 +50,7 @@ class DomainSourceExcludeTest extends DomainTestBase {
 
     // Variables for our tests.
     $path = 'node/1';
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $source = $domains[$id];
     $expected = $source->getPath() . $path;

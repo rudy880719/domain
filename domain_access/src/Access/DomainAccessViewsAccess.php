@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -82,12 +83,13 @@ class DomainAccessViewsAccess implements AccessCheckInterface {
 
     // Load the domain from the passed argument. In testing, this passed NULL
     // in some instances.
+    $domain = NULL;
     if (!is_null($arg_0)) {
       $domain = $this->domainStorage->load($arg_0);
     }
 
     // Domain found, check user permissions.
-    if (!empty($domain)) {
+    if ($domain instanceof DomainInterface) {
       if ($this->manager->hasDomainPermissions($account, $domain, [$permission])) {
         return AccessResult::allowed();
       }

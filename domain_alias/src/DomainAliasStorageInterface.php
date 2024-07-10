@@ -73,4 +73,15 @@ interface DomainAliasStorageInterface extends ConfigEntityStorageInterface {
    */
   public function loadSchema();
 
+  /**
+   * Returns an array of eligible matching patterns.
+   *
+   * @param string $hostname
+   *   A hostname string, in the format example.com.
+   *
+   * @return array
+   *   An array of eligible matching patterns.
+   */
+  public function getPatterns($hostname);
+
 }

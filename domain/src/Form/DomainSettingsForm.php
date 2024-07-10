@@ -2,8 +2,11 @@
 
 namespace Drupal\domain\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\domain\DomainToken;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Settings form for the Domain module.
@@ -11,6 +14,44 @@ use Drupal\Core\Form\FormStateInterface;
  * @package Drupal\domain\Form
  */
 class DomainSettingsForm extends ConfigFormBase {
+
+  /**
+   * The domain token handler.
+   *
+   * @var \Drupal\domain\DomainToken
+   */
+  protected $domainTokens;
+
+  /**
+   * Constructs a DomainSettingsForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface|null $typedConfigManager
+   *   The typed config manager.
+   * @param \Drupal\domain\DomainToken|null $domain_tokens
+   *   The domain token handler. See https://www.drupal.org/node/3404140.
+   */
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    protected $typedConfigManager = NULL,
+    DomainToken $domain_tokens = NULL,
+  ) {
+    parent::__construct($config_factory, $typedConfigManager);
+    $this->domainTokens = $domain_tokens;
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('config.typed'),
+      $container->get('domain.token')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -45,7 +86,7 @@ class DomainSettingsForm extends ConfigFormBase {
     ];
     // Get the usable tokens for this field.
     $patterns = [];
-    foreach (\Drupal::service('domain.token')->getCallbacks() as $key => $callback) {
+    foreach ($this->domainTokens->getCallbacks() as $key => $callback) {
       $patterns[] = "[domain:$key]";
     }
     $form['css_classes'] = [

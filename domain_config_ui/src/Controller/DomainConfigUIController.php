@@ -3,18 +3,113 @@
 namespace Drupal\domain_config_ui\Controller;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Config\CachedStorage;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\domain\Controller\DomainControllerBase;
+use Drupal\domain\DomainInterface;
+use Drupal\domain\DomainStorageInterface;
 use Drupal\domain_config_ui\DomainConfigUITrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Controller routines for AJAX callbacks for domain actions.
  */
-class DomainConfigUIController {
+class DomainConfigUIController extends DomainControllerBase {
 
   use DomainConfigUITrait;
   use StringTranslationTrait;
+
+  /**
+   * The configuration factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * Config storage.
+   *
+   * @var \Drupal\Core\Config\CachedStorage
+   */
+  protected $configStorage;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The path matcher service.
+   *
+   * @var \Drupal\Core\Path\PathMatcherInterface
+   */
+  protected $pathMatcher;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * Constructs a new DomainControllerBase.
+   *
+   * @param \Drupal\domain\DomainStorageInterface $domain_storage
+   *   The storage controller.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   * @param \Drupal\Core\Config\CachedStorage $config_storage
+   *   Config storage.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
+   * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
+   *   The path matcher service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   */
+  public function __construct(
+    DomainStorageInterface $domain_storage,
+    EntityTypeManagerInterface $entity_type_manager,
+    ConfigFactoryInterface $config_factory,
+    CachedStorage $config_storage,
+    MessengerInterface $messenger,
+    PathMatcherInterface $path_matcher,
+    RequestStack $request_stack,
+  ) {
+    parent::__construct($domain_storage, $entity_type_manager);
+    $this->configFactory = $config_factory;
+    $this->configStorage = $config_storage;
+    $this->messenger = $messenger;
+    $this->pathMatcher = $path_matcher;
+    $this->requestStack = $request_stack;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')->getStorage('domain'),
+      $container->get('entity_type.manager'),
+      $container->get('config.factory'),
+      $container->get('config.storage'),
+      $container->get('messenger'),
+      $container->get('path.matcher'),
+      $container->get('request_stack')
+    );
+  }
 
   /**
    * Handles AJAX operations to add/remove configuration forms.
@@ -34,7 +129,7 @@ class DomainConfigUIController {
     $success = FALSE;
     $message = '';
     // Get the query string for the return URL.
-    $query = \Drupal::requestStack()->getCurrentRequest()->getQueryString();
+    $query = $this->requestStack->getCurrentRequest()->getQueryString();
     $params = [];
     $parts = explode('&', $query);
     foreach ($parts as $part) {
@@ -46,7 +141,7 @@ class DomainConfigUIController {
     $url = Url::fromRoute($route_name, $params);
 
     // Get current module settings.
-    $config = \Drupal::configFactory()->getEditable('domain_config_ui.settings');
+    $config = $this->configFactory->getEditable('domain_config_ui.settings');
     $path_pages = $this->standardizePaths($config->get('path_pages'));
     $new_path = '/' . $url->getInternalPath();
 
@@ -54,7 +149,7 @@ class DomainConfigUIController {
       switch ($op) {
         case 'enable':
           // Check to see if we already registered this form.
-          if (!$exists = \Drupal::service('path.matcher')->matchPath($new_path, $path_pages)) {
+          if (!$exists = $this->pathMatcher->matchPath($new_path, $path_pages)) {
             $this->addPath($new_path);
             $message = $this->t('Form added to domain configuration interface.');
             $success = TRUE;
@@ -62,7 +157,7 @@ class DomainConfigUIController {
           break;
 
         case 'disable':
-          if ($exists = \Drupal::service('path.matcher')->matchPath($new_path, $path_pages)) {
+          if ($exists = $this->pathMatcher->matchPath($new_path, $path_pages)) {
             $this->removePath($new_path);
             $message = $this->t('Form removed from domain configuration interface.');
             $success = TRUE;
@@ -72,10 +167,10 @@ class DomainConfigUIController {
     }
     // Set a message.
     if ($success) {
-      \Drupal::messenger()->addMessage($message);
+      $this->messenger->addMessage($message);
     }
     else {
-      \Drupal::messenger()->addError($this->t('The operation failed.'));
+      $this->messenger->addError($this->t('The operation failed.'));
     }
     // Return to the invoking page.
     return new RedirectResponse($url->toString(), 302);
@@ -86,23 +181,23 @@ class DomainConfigUIController {
    */
   public function overview() {
     $elements = [];
-    $page['table'] = [
-      '#type' => 'table',
-      '#header' => [
-        'name' => t('Configuration key'),
-        'item' => t('Item'),
-        'domain' => t('Domain'),
-        'language' => t('Language'),
-        'actions' => t('Actions'),
+    $page = [
+      'table' => [
+        '#type' => 'table',
+        '#header' => [
+          'name' => t('Configuration key'),
+          'item' => t('Item'),
+          'domain' => t('Domain'),
+          'language' => t('Language'),
+          'actions' => t('Actions'),
+        ],
       ],
     ];
-    // @todo inject services.
-    $storage = \Drupal::service('config.storage');
-    foreach ($storage->listAll('domain.config') as $name) {
-      $elements[] = $this->deriveElements($name);
+    foreach ($this->configStorage->listAll('domain.config') as $name) {
+      $elements[] = self::deriveElements($name);
     }
     // Sort the items.
-    if (!empty($elements)) {
+    if ($elements !== []) {
       uasort($elements, [$this, 'sortItems']);
       foreach ($elements as $element) {
         $operations = [
@@ -139,32 +234,34 @@ class DomainConfigUIController {
    *   The domain config object being inspected.
    */
   public function inspectConfig($config_name = NULL) {
-    if (empty($config_name)) {
+    if (is_null($config_name)) {
       $url = Url::fromRoute('domain_config_ui.list');
       return new RedirectResponse($url->toString());
     }
-    $elements = $this->deriveElements($config_name);
-    $config = \Drupal::configFactory()->get($config_name)->getRawData();
+    $elements = self::deriveElements($config_name);
+    $config = $this->configFactory->get($config_name)->getRawData();
     if ($elements['language'] === $this->t('all')->render()) {
       $language = $this->t('all languages');
     }
     else {
       $language = $this->t('the @language language.', ['@language' => $elements['language']]);
     }
-    $page['help'] = [
-      '#type' => 'item',
-      '#title' => Html::escape($config_name),
-      '#markup' => $this->t('This configuration is for the %domain domain and
-        applies to %language.', [
-          '%domain' => $elements['domain'],
-          '%language' => $language,
-        ]
-      ),
-      '#prefix' => '<p>',
-      '#suffix' => '</p>',
+    $page = [
+      'help' => [
+        '#type' => 'item',
+        '#title' => Html::escape($config_name),
+        '#markup' => $this->t('This configuration is for the %domain domain and
+          applies to %language.', [
+            '%domain' => $elements['domain'],
+            '%language' => $language,
+          ]
+        ),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      ],
     ];
     $page['text'] = [
-      '#markup' => $this->printArray($config),
+      '#markup' => self::printArray($config),
     ];
     return $page;
   }
@@ -183,23 +280,29 @@ class DomainConfigUIController {
     $items = explode('.', $name);
     $elements = [
       'prefix' => $items[0],
-      'config' => isset($items[1]) && isset($items[2]) ? $items[1] : '',
-      'domain' => isset($items[2]) && isset($items[3]) ? $items[2] : '',
-      'language' => isset($items[3]) && isset($items[4]) && strlen($items[3]) === 2 ? $items[3] : '',
+      'config' => isset($items[1]) && isset($items[2]) ? $items[1] : NULL,
+      'domain' => isset($items[2]) && isset($items[3]) ? $items[2] : NULL,
+      'language' => isset($items[3]) && isset($items[4]) && strlen($items[3]) === 2 ? $items[3] : NULL,
     ];
 
     $elements['item'] = trim(str_replace($elements, '', $name), '.');
 
-    if (!empty($elements['domain']) && $domain = $entity_manager->getStorage('domain')->load($elements['domain'])) {
-      $elements['domain'] = $domain->label();
+    if (!is_null($elements['domain'])) {
+      $domain = $entity_manager->getStorage('domain')->load($elements['domain']);
+      if ($domain instanceof DomainInterface) {
+        $elements['domain'] = $domain->label();
+      }
     }
 
-    if (!$elements['language']) {
+    if (is_null($elements['language'])) {
       // Static context requires use of t() here.
       $elements['language'] = t('all')->render();
     }
-    elseif ($language = \Drupal::languageManager()->getLanguage($elements['language'])) {
-      $elements['language'] = $language->getName();
+    else {
+      $language = \Drupal::languageManager()->getLanguage($elements['language']);
+      if (!is_null($language)) {
+        $elements['language'] = $language->getName();
+      }
     }
 
     $elements['name'] = $name;
@@ -276,9 +379,11 @@ class DomainConfigUIController {
     if (is_scalar($value)) {
       return Html::escape($value);
     }
+    // @phpstan-ignore-next-line
     if (empty($value)) {
       return '<' . t('empty') . '>';
     }
+
     return '<' . gettype($value) . '>';
   }
 

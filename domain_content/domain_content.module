@@ -8,6 +8,7 @@
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
+use Drupal\domain_access\DomainAccessManager;
 
 /**
  * Implements hook_domain_operations().
@@ -17,7 +18,7 @@ function domain_content_domain_operations(DomainInterface $domain, AccountInterf
 
   // Advanced grants for edit/delete require permissions.
   $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
-  $allowed = \Drupal::service('domain_access.manager')->getAccessValues($user);
+  $allowed = DomainAccessManager::getAccessValues($user);
   $id = $domain->id();
   if ($account->hasPermission('publish to any domain') || ($account->hasPermission('publish to any assigned domain') && isset($allowed[$domain->id()]))) {
     $operations['domain_content'] = [

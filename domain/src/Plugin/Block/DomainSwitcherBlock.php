@@ -29,12 +29,11 @@ class DomainSwitcherBlock extends DomainBlockBase {
    */
   public function build() {
     /** @var \Drupal\domain\DomainInterface $active_domain */
-    $active_domain = \Drupal::service('domain.negotiator')->getActiveDomain();
-    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $active_domain = $this->domainNegotiator->getActiveDomain();
 
     $items = [];
     /** @var \Drupal\domain\DomainInterface $domain */
-    foreach ($storage->loadMultipleSorted() as $domain) {
+    foreach ($this->domainStorage->loadMultipleSorted() as $domain) {
       $string = $domain->getLink()->__toString();
       $marker = $domain->status() ? '' : ' * ';
       if ($domain->id() === $active_domain->id()) {
@@ -42,6 +41,7 @@ class DomainSwitcherBlock extends DomainBlockBase {
       }
       $items[] = ['#markup' => $string . $marker];
     }
+
     return [
       '#theme' => 'item_list',
       '#items' => $items,

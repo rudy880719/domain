@@ -5,6 +5,7 @@ namespace Drupal\domain_access\Plugin\views\access;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainStorageInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\user\UserStorageInterface;
@@ -117,19 +118,22 @@ class DomainAccessContent extends AccessPluginBase implements CacheableDependenc
       return TRUE;
     }
 
+    $domain = NULL;
     // The routine below determines what domain (if any) was passed to the View.
     if (isset($this->view->element['#arguments'])) {
       foreach ($this->view->element['#arguments'] as $value) {
-        if ($domain = $this->domainStorage->load($value)) {
+        $domain = $this->domainStorage->load($value);
+        if ($domain instanceof DomainInterface) {
           break;
         }
       }
     }
 
     // Domain found, check user permissions.
-    if (!empty($domain)) {
+    if ($domain instanceof DomainInterface) {
       return $this->manager->hasDomainPermissions($account, $domain, [$this->permission]);
     }
+
     return FALSE;
   }
 
@@ -137,11 +141,13 @@ class DomainAccessContent extends AccessPluginBase implements CacheableDependenc
    * {@inheritdoc}
    */
   public function alterRouteDefinition(Route $route) {
-    if ($domains = $this->domainStorage->loadMultiple()) {
+    $list = [];
+    $domains = $this->domainStorage->loadMultiple();
+    if (!is_null($domains)) {
       $list = array_keys($domains);
     }
-    $list[] = 'all_affiliates';
-    $route->setRequirement('_domain_access_views', (string) implode('+', $list));
+    $list += ['all_affiliates'];
+    $route->setRequirement('_domain_access_views', implode('+', $list));
     $route->setDefault('domain_permission', $this->permission);
     $route->setDefault('domain_all_permission', $this->allPermission);
   }

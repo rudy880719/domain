@@ -3,11 +3,12 @@
 namespace Drupal\domain_access\Plugin\Action;
 
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\DependencyTrait;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\DomainStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,16 +21,24 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
   /**
    * The action's entity type.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
    */
   protected $entityType;
 
   /**
+   * The action's entity storage.
+   *
+   * @var \Drupal\domain\DomainStorageInterface
+   */
+  protected $domainStorage;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeInterface $entity_type) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigEntityTypeInterface $entity_type, DomainStorageInterface $domain_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityType = $entity_type;
+    $this->domainStorage = $domain_storage;
   }
 
   /**
@@ -40,7 +49,8 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getDefinition('domain')
+      $container->get('entity_type.manager')->getDefinition('domain'),
+      $container->get('entity_type.manager')->getStorage('domain'),
     );
   }
 
@@ -57,7 +67,7 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList();
+    $domains = $this->domainStorage->loadOptionsList();
     $form['domain_id'] = [
       '#type' => 'checkboxes',
       '#title' => t('Domain'),
@@ -79,10 +89,11 @@ abstract class DomainAccessActionBase extends ConfigurableActionBase implements 
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    if (!empty($this->configuration['domain_id'])) {
+    if (isset($this->configuration['domain_id'])) {
       $prefix = $this->entityType->getConfigPrefix() . '.';
       $this->addDependency('config', $prefix . $this->configuration['domain_id']);
     }
+
     return $this->dependencies;
   }
 

@@ -84,6 +84,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
       $page->clickLink('Enable domain configuration');
+      // @phpstan-ignore-next-line
       $this->assertSession()->waitForLink('Disable domain configuration');
 
       $this->drupalGet($path);
@@ -96,12 +97,14 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
       $page->clickLink('Disable domain configuration');
+      // @phpstan-ignore-next-line
       $this->assertSession()->waitForLink('Enable domain configuration');
 
       $path = $prefix . '/admin/config/system/site-information';
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
       $page->clickLink('Disable domain configuration');
+      // @phpstan-ignore-next-line
       $this->assertSession()->waitForLink('Enable domain configuration');
 
       $expected3 = $this->explodePathSettings("/admin/appearance");

@@ -36,7 +36,7 @@ interface DomainAliasInterface extends ConfigEntityInterface {
   /**
    * Get the redirect value (301|302|NULL) for an alias record.
    *
-   * @return int
+   * @return int|null
    *   The redirect value.
    */
   public function getRedirect();

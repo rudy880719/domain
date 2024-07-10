@@ -59,6 +59,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
    * 25 users, 5 per domain and 5 to all affiliates.
    */
   public function createDomainUsers() {
+    $account = [];
     foreach ($this->domains as $id => $domain) {
       for ($i = 0; $i < 5; $i++) {
         $account[$id] = $this->drupalCreateUser([

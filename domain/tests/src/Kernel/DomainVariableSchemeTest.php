@@ -56,12 +56,14 @@ class DomainVariableSchemeTest extends KernelTestBase {
     $add_suffix = FALSE;
 
     // Our created domain should have a scheme that matches the request.
+    /** @var \Drupal\domain\DomainInterface $domain */
     $domain = $this->domainStorage->load($this->key);
     $this->assertTrue($domain->getScheme($add_suffix) === $default_scheme);
 
     // Switch the scheme and see if that works.
     $domain->set('scheme', $alt_scheme);
     $domain->save();
+    /** @var \Drupal\domain\DomainInterface $domain */
     $domain = $this->domainStorage->load($this->key);
     $this->assertTrue($domain->getScheme($add_suffix) === $alt_scheme);
 

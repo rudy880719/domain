@@ -3,10 +3,12 @@
 namespace Drupal\domain_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines domain content pages.
@@ -14,15 +16,60 @@ use Drupal\domain_access\DomainAccessManagerInterface;
 class DomainContentController extends ControllerBase {
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Domain Access manager.
+   *
+   * @var \Drupal\domain_access\DomainAccessManagerInterface
+   */
+  protected $manager;
+
+  /**
+   * The entity storage.
+   *
+   * @var \Drupal\domain\DomainStorageInterface
+   */
+  protected $domainStorage;
+
+  /**
+   * Constructs a new DomainContentController.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity manager.
+   * @param \Drupal\domain_access\DomainAccessManagerInterface $manager
+   *   The domain access manager service.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, DomainAccessManagerInterface $manager) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->domainStorage = $entity_type_manager->getStorage('domain');
+    $this->manager = $manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('domain_access.manager')
+    );
+  }
+
+  /**
    * Builds the list of domains and relevant entities.
    *
    * @param array $options
    *   A list of variables required to build editor or content pages.
    *
-   * @see contentList()
-   *
    * @return array
    *   A Drupal page build array.
+   *
+   * @see contentList()
    */
   public function buildList(array $options) {
     $account = $this->getUser();
@@ -37,11 +84,10 @@ class DomainContentController extends ControllerBase {
       ];
     }
     // Loop through domains.
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultipleSorted();
-    $manager = \Drupal::service('domain_access.manager');
+    $domains = $this->domainStorage->loadMultipleSorted();
     /** @var \Drupal\domain\DomainInterface $domain */
     foreach ($domains as $domain) {
-      if ($account->hasPermission($options['all_permission']) || $manager->hasDomainPermissions($account, $domain, [$options['permission']])) {
+      if ($account->hasPermission($options['all_permission']) || $this->manager->hasDomainPermissions($account, $domain, [$options['permission']])) {
         $row = [
           Link::fromTextAndUrl($domain->label(), Url::fromUri('internal:/admin/content/' . $options['path'] . '/' . $domain->id())),
           $this->getCount($options['type'], $domain),
@@ -103,7 +149,7 @@ class DomainContentController extends ControllerBase {
       $value = $domain->id();
     }
     // Note that we ignore node access so these queries work on any domain.
-    $query = \Drupal::entityQuery($entity_type)
+    $query = $this->entityTypeManager->getStorage($entity_type)->getQuery()
       ->condition($field, $value)
       ->accessCheck(FALSE);
 
@@ -119,7 +165,7 @@ class DomainContentController extends ControllerBase {
   protected function getUser() {
     $account = $this->currentUser();
     // Advanced grants for edit/delete require permissions.
-    return \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
+    return $this->entityTypeManager->getStorage('user')->load($account->id());
   }
 
 }

@@ -2,19 +2,21 @@
 
 namespace Drupal\domain;
 
-use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Loads Domain records.
  */
 class DomainStorage extends ConfigEntityStorage implements DomainStorageInterface {
+
+  /**
+   * The currently active global container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $container;
 
   /**
    * The typed config handler.
@@ -24,40 +26,22 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
   protected $typedConfig;
 
   /**
-   * Constructs a DomainStorage object.
+   * The request stack object.
    *
-   * Trying to inject the storage manager throws an exception.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory service.
-   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
-   *   The UUID service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
-   *   The memory cache.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
-   *   The typed config handler.
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, TypedConfigManagerInterface $typed_config) {
-    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache);
-    $this->typedConfig = $typed_config;
-  }
+  protected $requestStack;
 
   /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('config.factory'),
-      $container->get('uuid'),
-      $container->get('language_manager'),
-      $container->get('entity.memory_cache'),
-      $container->get('config.typed')
-    );
+    $instance = parent::createInstance($container, $entity_type);
+    $instance->container = $container;
+    $instance->typedConfig = $container->get('config.typed');
+    $instance->requestStack = $container->get('request_stack');
+
+    return $instance;
   }
 
   /**
@@ -65,6 +49,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function loadSchema() {
     $fields = $this->typedConfig->getDefinition('domain.record.*');
+
     return $fields['mapping'] ?? [];
   }
 
@@ -73,9 +58,10 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function loadDefaultId() {
     $result = $this->loadDefaultDomain();
-    if (!empty($result)) {
+    if ($result instanceof DomainInterface) {
       return $result->id();
     }
+
     return NULL;
   }
 
@@ -84,9 +70,10 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function loadDefaultDomain() {
     $result = $this->loadByProperties(['is_default' => TRUE]);
-    if (!empty($result)) {
+    if (count($result) > 0) {
       return current($result);
     }
+
     return NULL;
   }
 
@@ -96,6 +83,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
   public function loadMultipleSorted(array $ids = NULL) {
     $domains = $this->loadMultiple($ids);
     uasort($domains, [$this, 'sort']);
+
     return $domains;
   }
 
@@ -105,9 +93,10 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
   public function loadByHostname($hostname) {
     $hostname = $this->prepareHostname($hostname);
     $result = $this->loadByProperties(['hostname' => $hostname]);
-    if (empty($result)) {
+    if (count($result) === 0) {
       return NULL;
     }
+
     return current($result);
   }
 
@@ -119,6 +108,7 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
     foreach ($this->loadMultipleSorted() as $id => $domain) {
       $list[$id] = $domain->label();
     }
+
     return $list;
   }
 
@@ -141,10 +131,11 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function prepareHostname($hostname) {
     // Strip www. prefix off the hostname.
-    $ignore_www = $this->configFactory->get('domain.settings')->get('www_prefix');
+    $ignore_www = (bool) $this->configFactory->get('domain.settings')->get('www_prefix');
     if ($ignore_www && substr($hostname, 0, 4) === 'www.') {
       $hostname = substr($hostname, 4);
     }
+
     return $hostname;
   }
 
@@ -154,15 +145,15 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
   public function create(array $values = []) {
     $default = $this->loadDefaultId();
     $count = $this->getQuery()->accessCheck(FALSE)->count()->execute();
-    if (empty($values)) {
+    if ($values === []) {
       $values['hostname'] = $this->createHostname();
-      $values['name'] = \Drupal::config('system.site')->get('name');
+      $values['name'] = $this->configFactory->get('system.site')->get('name');
     }
     $values += [
       'scheme' => $this->getDefaultScheme(),
       'status' => '1',
       'weight' => $count + 1,
-      'is_default' => (int) empty($default),
+      'is_default' => (int) ($default === FALSE),
     ];
     $domain = parent::create($values);
 
@@ -174,16 +165,17 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function createHostname() {
     // We cannot inject the negotiator due to dependencies.
-    return \Drupal::service('domain.negotiator')->negotiateActiveHostname();
+    return $this->container->get('domain.negotiator')->negotiateActiveHostname();
   }
 
   /**
    * {@inheritdoc}
    */
   public function createMachineName($hostname = NULL) {
-    if (empty($hostname)) {
+    if (is_null($hostname)) {
       $hostname = $this->createHostname();
     }
+
     return preg_replace('/[^a-z0-9_]/', '_', $hostname);
   }
 
@@ -192,12 +184,12 @@ class DomainStorage extends ConfigEntityStorage implements DomainStorageInterfac
    */
   public function getDefaultScheme() {
     // Use the foundation request if possible.
-    $request = \Drupal::request();
+    $request = $this->requestStack->getCurrentRequest();
     if (!is_null($request)) {
       $scheme = $request->getScheme();
     }
     // Else use the server variable.
-    elseif (!empty($_SERVER['https'])) {
+    elseif (isset($_SERVER['https']) && (bool) $_SERVER['https'] === TRUE) {
       $scheme = 'https';
     }
     // Else fall through to default.
