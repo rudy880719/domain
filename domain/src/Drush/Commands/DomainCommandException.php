@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\domain\Commands;
+namespace Drupal\domain\Drush\Commands;
 
 /**
  * Placeholder class for exceptions.

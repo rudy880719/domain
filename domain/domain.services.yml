@@ -49,6 +49,7 @@ services:
         '@http_client',
         '@entity_type.manager',
       ]
+  Drupal\domain\DomainValidatorInterface: '@domain.validator'
   domain.route_provider:
     class: Drupal\domain\Routing\DomainRouteProvider
     decorates: router.route_provider
