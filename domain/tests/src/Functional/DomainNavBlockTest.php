@@ -94,6 +94,9 @@ class DomainNavBlockTest extends DomainTestBase {
     }
   }
 
+  /**
+   * Test links class in domain navigation block.
+   */
   public function testActiveDomainLinkClass() {
     $this->domainCreateTestDomains(3);
     $domains = $this->getDomains();
@@ -116,4 +119,5 @@ class DomainNavBlockTest extends DomainTestBase {
       $this->assertEquals($expected_classes, array_filter($actual_classes));
     }
   }
+
 }
