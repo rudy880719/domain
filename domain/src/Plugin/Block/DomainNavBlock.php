@@ -86,7 +86,7 @@ class DomainNavBlock extends DomainBlockBase {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     // Process the block's submission handling if no errors occurred only.
-    if ($form_state->getErrors() !== []) {
+    if (empty($form_state->getErrors())) {
       foreach (array_keys($this->defaultConfiguration()) as $element) {
         $this->configuration[$element] = $form_state->getValue($element);
       }
