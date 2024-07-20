@@ -26,7 +26,7 @@ class DomainValidator implements DomainValidatorInterface {
   /**
    * The HTTP client.
    *
-   * @var \GuzzleHttp\Client
+   * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
@@ -82,7 +82,7 @@ class DomainValidator implements DomainValidatorInterface {
     elseif (substr_count($hostname, ':') === 1) {
       $parts = explode(':', $hostname);
       $port = (int) $parts[1];
-      if (strcmp($port, $parts[1])) {
+      if (strcmp($port, $parts[1]) < 0) {
         $error_list[] = $this->t('The port protocol must be an integer.');
       }
     }
@@ -96,7 +96,7 @@ class DomainValidator implements DomainValidatorInterface {
     }
     // Check for valid characters, unless using non-ASCII domains.
     $config = $this->configFactory->get('domain.settings');
-    $non_ascii = $config->get('allow_non_ascii');
+    $non_ascii = (bool) $config->get('allow_non_ascii');
     if (!$non_ascii) {
       $pattern = '/^[a-z0-9\.\-:]*$/i';
       if (!preg_match($pattern, $hostname)) {
@@ -111,7 +111,8 @@ class DomainValidator implements DomainValidatorInterface {
     // enabled under global domain settings.
     // Note that www prefix handling must be set explicitly in the UI.
     // See http://drupal.org/node/1529316 and http://drupal.org/node/1783042
-    if ($config->get('www_prefix') && (substr($hostname, 0, strpos($hostname, '.')) === 'www')) {
+    $ignore_www = (bool) $config->get('www_prefix');
+    if ($ignore_www && (substr($hostname, 0, strpos($hostname, '.')) === 'www')) {
       $error_list[] = $this->t('WWW prefix handling: Domains must be registered without the www. prefix.');
     }
 
@@ -125,19 +126,33 @@ class DomainValidator implements DomainValidatorInterface {
    * {@inheritdoc}
    */
   public function checkResponse(DomainInterface $domain) {
-    $url = $domain->getPath() . \Drupal::service('extension.list.module')->getPath('domain') . '/tests/200.png';
+    $url = $domain->getPath() . $this->moduleHandler->getModule('domain')->getPath() . '/tests/200.png';
     try {
-      // GuzzleHttp no longer allows for bogus URL calls.
-      $request = $this->httpClient->get($url);
+      // Guzzle will not work for items without DNS. If we replace
+      // Guzzle with file_get_contents(), then we have an API change.
+      if (dns_check_record($domain->getHostname())) {
+        // @phpstan-ignore-next-line
+        $request = $this->httpClient->get($url);
+        // Expected result (i.e. no exception thrown.)
+        $domain->setResponse($request->getStatusCode());
+      }
+      else {
+        // file_get_contents() will error on unregistered domains.
+        $request = @file_get_contents($url);
+        if ($request === FALSE) {
+          // File a general server failure.
+          $domain->setResponse(500);
+        }
+        else {
+          $domain->setResponse(200);
+        }
+      }
     }
     // We cannot know which Guzzle Exception class will be returned; be generic.
     catch (RequestException $e) {
       // File a general server failure.
       $domain->setResponse(500);
-      return $domain->getResponse();
     }
-    // Expected result (i.e. no exception thrown.)
-    $domain->setResponse($request->getStatusCode());
 
     return $domain->getResponse();
   }

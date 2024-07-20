@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for excluding some links from rewriting.
@@ -21,7 +21,7 @@ class DomainSourceExcludeTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -50,6 +50,7 @@ class DomainSourceExcludeTest extends DomainTestBase {
 
     // Variables for our tests.
     $path = 'node/1';
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $source = $domains[$id];
     $expected = $source->getPath() . $path;

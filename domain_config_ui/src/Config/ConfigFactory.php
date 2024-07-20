@@ -68,19 +68,19 @@ class ConfigFactory extends CoreConfigFactory {
     $list = parent::doLoadMultiple($names, $immutable);
 
     // Do not override if configuring 'all' domains or config is immutable.
-    // @TODO: This will need to change if we allow saving for 'all allowed domains'
-    if (empty($this->domainConfigUIManager) || !$this->domainConfigUIManager->getSelectedDomainId()) {
+    // @todo This will need to change if we allow saving for 'all allowed domains'
+    if (is_null($this->domainConfigUIManager->getSelectedDomainId())) {
       return $list;
     }
 
     // Pre-load remaining configuration files.
-    if (!empty($names)) {
-      // Initialise override information.
+    if ($names !== []) {
+      // Initialize override information.
       $module_overrides = [];
       $storage_data = $this->storage->readMultiple($names);
 
       // Load module overrides so that domain config is loaded in admin forms.
-      if (!empty($storage_data)) {
+      if ($storage_data !== []) {
         // Only get domain overrides if we have configuration to override.
         $module_overrides = $this->loadDomainOverrides($names);
       }
@@ -88,7 +88,7 @@ class ConfigFactory extends CoreConfigFactory {
       foreach ($storage_data as $name => $data) {
         $cache_key = $this->getConfigCacheKey($name, $immutable);
 
-        if (isset($this->cache[$cache_key]) && !empty($module_overrides[$name])) {
+        if (isset($module_overrides[$name], $this->cache[$cache_key])) {
           $this->cache[$cache_key]->setModuleOverride($module_overrides[$name]);
           $list[$name] = $this->cache[$cache_key];
           $this->propagateConfigOverrideCacheability($cache_key, $name);
@@ -105,11 +105,11 @@ class ConfigFactory extends CoreConfigFactory {
    */
   protected function doGet($name, $immutable = TRUE) {
     // If config for 'all' domains or immutable then don't override config.
-    if (empty($this->domainConfigUIManager) || !$this->domainConfigUIManager->getSelectedDomainId()) {
+    if (is_null($this->domainConfigUIManager->getSelectedDomainId())) {
       return parent::doGet($name, $immutable);
     }
-
-    if ($config = $this->doLoadMultiple([$name], $immutable)) {
+    $config = $this->doLoadMultiple([$name], $immutable);
+    if (isset($config[$name])) {
       return $config[$name];
     }
     else {
@@ -145,12 +145,14 @@ class ConfigFactory extends CoreConfigFactory {
     foreach ($names as $name) {
       // Try to load the language-specific domain override.
       $config_name = $this->domainConfigUIManager->getSelectedConfigName($name);
-      if ($override = $this->storage->read($config_name)) {
+      $langcode = $this->domainConfigUIManager->getSelectedLanguageId();
+      $override = $this->storage->read($config_name);
+      if ($override !== FALSE) {
         $overrides[$name] = $override;
       }
       // If we tried to load a language-sensitive file and failed, load the
       // domain-specific override.
-      elseif ($this->domainConfigUIManager->getSelectedLanguageId()) {
+      elseif (!is_null($langcode)) {
         $omit_language = TRUE;
         $config_name = $this->domainConfigUIManager->getSelectedConfigName($name, $omit_language);
         if ($override = $this->storage->read($config_name)) {

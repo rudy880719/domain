@@ -43,7 +43,8 @@ function domain_update_8001() {
  * Configures user form display to checkboxes widget for domain admin field.
  */
 function _domain_configure_field() {
-  if ($display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('user.user.default')) {
+  $display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('user.user.default');
+  if (!is_null($display)) {
     $display->setComponent(DomainInterface::DOMAIN_ADMIN_FIELD, [
       'type' => 'options_buttons',
       'weight' => 50,
@@ -61,9 +62,10 @@ function domain_update_8002() {
   foreach ($config_factory->listAll('block.block.') as $block_config_name) {
     $update_block = FALSE;
     $block = $config_factory->getEditable($block_config_name);
-    if ($visibility = $block->get('visibility')) {
+    $visibility = $block->get('visibility');
+    if (!is_null($visibility)) {
       foreach ($visibility as $condition_plugin_id => &$condition) {
-        if ($condition_plugin_id === 'domain' && (empty($condition['context_mapping']['domain']) || $condition['context_mapping']['domain'] !== $new_context_id)) {
+        if ($condition_plugin_id === 'domain' && (!isset($condition['context_mapping']['domain']) || $condition['context_mapping']['domain'] !== $new_context_id)) {
           $condition['context_mapping']['domain'] = $new_context_id;
           $update_block = TRUE;
           $update_list[] = $block_config_name;
@@ -75,14 +77,14 @@ function domain_update_8002() {
       $block->save(TRUE);
     }
   }
-  if (empty($update_list)) {
+  if ($update_list === []) {
     return t('No blocks updated.');
   }
   else {
     return t('Updated @count blocks: @blocks',
       [
         '@count' => count($update_list),
-        '@blocks' => implode(', ', $update_list)
+        '@blocks' => implode(', ', $update_list),
       ]
     );
   }

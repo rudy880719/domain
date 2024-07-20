@@ -32,6 +32,7 @@ class DomainListWeightTest extends DomainTestBase {
     // Test the default sort values. Should be 1 to 60.
     $domains = $this->getDomainsSorted();
     $i = 1;
+    // @phpstan-ignore-next-line
     foreach ($domains as $domain) {
       $this->assertTrue($domain->getWeight() === $i, 'Weight set to ' . $i);
       $i++;
@@ -61,6 +62,7 @@ class DomainListWeightTest extends DomainTestBase {
 
     $domains = $this->getDomainsSorted();
     $i = 1;
+    // @phpstan-ignore-next-line
     foreach ($domains as $domain) {
       // Weights should be the same one page 1 except for the one we changed.
       if ($domain->id() === 'one_example_com') {
@@ -93,6 +95,7 @@ class DomainListWeightTest extends DomainTestBase {
     // Check the domain sort order.
     $domains = $this->getDomainsSorted();
     $i = 1;
+    // @phpstan-ignore-next-line
     foreach ($domains as $domain) {
       if ($domain->id() === 'one_example_com') {
         $this->assertTrue($domain->getWeight() === 2, 'Weight set to 2');

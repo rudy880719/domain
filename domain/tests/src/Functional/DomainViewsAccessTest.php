@@ -20,7 +20,8 @@ class DomainViewsAccessTest extends DomainTestBase {
   public function testInactiveDomain() {
     // Create five new domains programmatically.
     $this->domainCreateTestDomains(5);
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    /** @var \Drupal\domain\DomainInterface[] $domains */
+    $domains = $this->getDomains();
     // Enable the views.
     $this->enableViewsTestModule();
     // Create a user. To test the area output was more difficult, so we just
@@ -36,7 +37,7 @@ class DomainViewsAccessTest extends DomainTestBase {
 
     foreach ($domains as $domain) {
       $path = $domain->getPath() . 'domain-views-access';
-      $this->DrupalGet($path);
+      $this->drupalGet($path);
       if (in_array($domain->id(), $allowed, TRUE)) {
         $this->assertSession()->statusCodeEquals(200);
         $this->assertSession()->pageTextContains('admin');

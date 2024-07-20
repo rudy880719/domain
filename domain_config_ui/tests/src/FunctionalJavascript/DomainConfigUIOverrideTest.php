@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_config_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
+use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 
 /**
  * Tests the domain config user interface.
@@ -31,7 +31,7 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -86,7 +86,7 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -109,13 +109,14 @@ class DomainConfigUIOverrideTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Test our form.
-    $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertWaitOnAjaxRequest();
+    $this->assertSession()->selectExists('domain')->selectOption('one_example_com');
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
+    $this->waitOnAjaxRequest('domain_config_ui_language', 'es');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();

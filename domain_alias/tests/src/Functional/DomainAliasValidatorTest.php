@@ -21,8 +21,10 @@ class DomainAliasValidatorTest extends DomainAliasTestBase {
     $this->domainCreateTestDomains(1, 'foo.com');
     // Check the created domain based on it's known id value.
     $key = 'foo.com';
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
     /** @var \Drupal\domain\Entity\Domain $domain */
-    $domain = \Drupal::entityTypeManager()->getStorage('domain')->loadByHostname($key);
+    $domain = $storage->loadByHostname($key);
     $this->assertNotEmpty($domain, 'Test domain created.');
 
     // Valid patterns to test. Valid is the boolean value.
@@ -56,7 +58,7 @@ class DomainAliasValidatorTest extends DomainAliasTestBase {
     foreach ($patterns as $pattern => $valid) {
       $alias = $this->domainAliasCreateTestAlias($domain, $pattern, 0, 'default', FALSE);
       $errors = $validator->validate($alias);
-      if ($valid) {
+      if ($valid === 1) {
         $this->assertEmpty($errors, 'Validation test success.');
       }
       else {
@@ -74,7 +76,7 @@ class DomainAliasValidatorTest extends DomainAliasTestBase {
     foreach ($patterns as $pattern => $valid) {
       $alias = $this->domainAliasCreateTestAlias($domain, $pattern, 0, 'default', FALSE);
       $errors = $validator->validate($alias);
-      if ($valid) {
+      if ($valid === 1) {
         $this->assertEmpty($errors, 'Validation test success.');
       }
       else {

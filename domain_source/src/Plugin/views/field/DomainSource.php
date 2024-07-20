@@ -19,7 +19,7 @@ class DomainSource extends EntityField {
     $items = parent::getItems($values);
     // Override the default link generator, which wants to send us to the entity
     // page, not the entity we are looking at.
-    if (!empty($this->options['settings']['link'])) {
+    if (isset($this->options['settings']['link']) && !is_null($this->options['settings']['link'])) {
       foreach ($items as &$item) {
         $object = $item['raw'];
         $entity = $object->getEntity();

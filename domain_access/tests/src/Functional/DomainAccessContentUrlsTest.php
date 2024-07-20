@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_access\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for getting all URLs for an entity.
@@ -21,7 +21,7 @@ class DomainAccessContentUrlsTest extends DomainTestBase {
     'domain_access',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -55,6 +55,7 @@ class DomainAccessContentUrlsTest extends DomainTestBase {
 
     // Variables for our tests.
     $path = 'node/1';
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $route_name = 'entity.node.canonical';
     $route_parameters = ['node' => 1];

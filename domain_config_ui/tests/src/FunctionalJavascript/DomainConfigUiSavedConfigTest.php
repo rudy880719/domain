@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_config_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
+use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 
 /**
  * Tests the domain config inspector.
@@ -31,7 +31,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -71,7 +71,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -88,12 +88,12 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->assertWaitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_language', 'es');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -144,7 +144,6 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $this->assertSession()->pageTextNotContains('domain.config.one_example_com.system.site');
     $this->assertSession()->pageTextContains('domain.config.one_example_com.es.system.site');
     $this->assertSession()->pageTextNotContains('domain.config.example_com.en.system.site');
-
   }
 
   /**
@@ -154,7 +153,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     // Create and login user.
     $adminUser = $this->drupalCreateUser([
       'administer languages',
-      'access administration pages'
+      'access administration pages',
     ]);
     $this->drupalLogin($adminUser);
 
@@ -177,7 +176,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $this->rebuildContainer();
 
     $es = \Drupal::entityTypeManager()->getStorage('configurable_language')->load('es');
-    $this->assertTrue(!empty($es), 'Created test language.');
+    $this->assertTrue(!is_null($es), 'Created test language.');
   }
 
 }

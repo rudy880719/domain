@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_content\Plugin\views\access;
 
-use Symfony\Component\Routing\Route;
 use Drupal\domain_access\Plugin\views\access\DomainAccessEditor;
+use Symfony\Component\Routing\Route;
 
 /**
  * Access plugin that provides domain assignment access control.

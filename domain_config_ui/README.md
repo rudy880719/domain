@@ -26,7 +26,7 @@ This behavior is covered by the *DomainConfigUIPermissionsTest* and the *DomainC
 
 By default, the Appearance page and the Basic Site Settings page are enabled for domain-specific forms. Administrators may inspect and expand the form list at the settings page (admin/config/domain/config-ui).
 
-On admin forms that contain configuration, the administrator should see a buttom to 'Enable / Disable domain configuration'. This button can be used to add or remove a form from domain-sensitivity.
+On admin forms that contain configuration, the administrator should see a button to 'Enable / Disable domain configuration'. This button can be used to add or remove a form from domain-sensitivity.
 
 *Note: removing a form will not remove its configuration files. See below.*
 
@@ -57,17 +57,15 @@ This behavior is covered by the *DomainConfigUIOverrideTest*.
 
 # Limitations
 
-As noted above, some administrative forms have complex handling that cannot be covered by this module. The color settings for the Bartik theme are a good example. Default language handling is another. Due to the extra processing required by these settings, we do not recommend using Domain Config UI for these settings.
+As noted above, some administrative forms have complex handling that cannot be covered by this module. The color settings for the Olivero theme are a good example. Default language handling is another. Due to the extra processing required by these settings, we do not recommend using Domain Config UI for these settings.
 
 The proper function of any settings is *at the administrator's own risk*. Always test before deploying configuration to the live site. If a configuration override does not work, there may be numerous core reasons why. The most common is caching, addressed below.
 
 # Installation
 
-If some variable changes are not picked up when the page renders, you may need
-add domain-sensitivity to the site's cache.
+If some variable changes are not picked up when the page renders, you may need to add domain-sensitivity to the site's cache.
 
-To do so, clone  `default.services.yml` to `services.yml` and change the
-`required_cache_contexts` value to add the *url.site* context:
+To do so, clone  `default.services.yml` to `services.yml` and change the `required_cache_contexts` value to add the *url.site* context:
 
 ```YAML
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions', 'url.site']

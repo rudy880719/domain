@@ -2,9 +2,10 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
+use Drupal\domain_access\DomainAccessManager;
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\domain\Functional\DomainTestBase;
-use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
  * Tests saving the domain access field elements in multiple languages.
@@ -62,10 +63,9 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $node = $storage->load(1);
 
     // Check that two values are set properly.
-    $manager = \Drupal::service('domain_access.manager');
-    $values = $manager->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertTrue(count($values) === 1, 'Node saved with one domain records.');
-    $value = $manager->getAllValue($node);
+    $value = DomainAccessManager::getAllValue($node);
     $this->assertTrue(intval($value) === 1, 'Node saved to all affiliates.');
 
     // Create an Afrikaans translation assigned to domain 2.
@@ -73,7 +73,7 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     $translation->set('title', $this->randomString());
     $translation->set(DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD, [
       'example_com',
-      'one_example_com'
+      'one_example_com',
     ]);
     $translation->set(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD, 0);
     $translation->set('status', 1);
@@ -82,9 +82,9 @@ class DomainAccessLanguageSaveTest extends DomainTestBase {
     // Load and check the translated node.
     $parent_node = $storage->load(1);
     $node = $parent_node->getTranslation('af');
-    $values = $manager->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertTrue(count($values) === 2, 'Node saved with two domain records.');
-    $value = $manager->getAllValue($node);
+    $value = DomainAccessManager::getAllValue($node);
     $this->assertTrue(intval($value) === 0, 'Node not saved to all affiliates.');
   }
 

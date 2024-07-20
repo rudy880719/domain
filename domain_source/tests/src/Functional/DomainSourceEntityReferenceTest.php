@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\domain_source\Functional;
 
+use Drupal\field\FieldConfigInterface;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
@@ -77,6 +78,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
 
     // We expect to find 5 domain options + none.
     $one = $two = $two_path = NULL;
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
@@ -95,8 +97,10 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
     // Try to post a node, assigned to the second domain.
-    $edit['title[0][value]'] = 'Test node';
-    $edit['field_domain_source'] = $two;
+    $edit = [
+      'title[0][value]' => 'Test node',
+      'field_domain_source' => $two,
+    ];
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -111,8 +115,10 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $this->assertEquals($expected_url, $url, 'URL rewritten correctly.');
 
     // Try to post a node, assigned to no domain.
-    $edit['title[0][value]'] = 'Test node';
-    $edit["field_domain_source"] = '_none';
+    $edit = [
+      'title[0][value]' => 'Test node',
+      'field_domain_source' => '_none',
+    ];
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -135,7 +141,7 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Create a third node that is assigned to a menu.
     $edit = [
@@ -158,7 +164,8 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     // Remove the field from the node type and make sure nothing breaks.
     // See https://www.drupal.org/node/2892612
     $id = 'node.article.field_domain_source';
-    if ($field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id)) {
+    $field = \Drupal::entityTypeManager()->getStorage('field_config')->load($id);
+    if ($field instanceof FieldConfigInterface) {
       $field->delete();
       field_purge_batch(10, $field->uuid());
       drupal_flush_all_caches();
@@ -167,7 +174,9 @@ class DomainSourceEntityReferenceTest extends DomainTestBase {
     $this->drupalGet('node/add/article');
     $this->assertSession()->statusCodeEquals(200);
     // Try to post a node, assigned to no domain.
-    $edit2['title[0][value]'] = 'Test node';
+    $edit2 = [
+      'title[0][value]' => 'Test node',
+    ];
     $this->drupalGet('node/add/article');
     $this->submitForm($edit2, 'Save');
     // Test the URL against expectations, and the rendered menu link.

@@ -2,10 +2,8 @@
 
 namespace Drupal\domain_access\Plugin\views\filter;
 
-use Drupal\domain\DomainNegotiatorInterface;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\ViewExecutable;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Handles matching of current domain.
@@ -17,43 +15,29 @@ use Drupal\views\ViewExecutable;
 class DomainAccessCurrentAllFilter extends BooleanOperator {
 
   /**
-   * The label value for the plugin.
+   * The Domain negotiator.
    *
-   * This should be defined by the parent but is not.
-   *
-   * @var string
+   * @var \Drupal\domain\DomainNegotiatorInterface
    */
-  public $value_value; // phpcs:ignore
-
-  /**
-   * The options provided by the plugin.
-   *
-   * This should be defined by the parent but is not.
-   *
-   * @var array
-   */
-  public $valueOptions;
+  protected $domainNegotiator;
 
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
-    parent::init($view, $display, $options);
-    $this->value_value = t('Available on current domain');
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->domainNegotiator = $container->get('domain.negotiator');
+
+    return $instance;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getValueOptions() {
-    $this->valueOptions = [1 => $this->t('Yes'), 0 => $this->t('No')];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function operators() {
-    return [];
+  public function operators() {
+    $operators = parent::operators();
+    unset($operators['!=']);
+    return $operators;
   }
 
   /**
@@ -66,12 +50,10 @@ class DomainAccessCurrentAllFilter extends BooleanOperator {
       $all_field = $all_table . '.field_domain_all_affiliates_value';
       $real_field = $this->tableAlias . '.' . $this->realField;
 
-      /** @var \Drupal\domain\DomainNegotiatorInterface $domain_negotiator */
-      $domain_negotiator = \Drupal::service('domain.negotiator');
-      $current_domain = $domain_negotiator->getActiveDomain();
+      $current_domain = $this->domainNegotiator->getActiveDomain();
       $current_domain_id = $current_domain->id();
 
-      if (empty($this->value)) {
+      if (is_null($this->value)) {
         $where = "(($real_field <> '$current_domain_id' OR $real_field IS NULL) AND ($all_field = 0 OR $all_field IS NULL))";
         if ($current_domain->isDefault()) {
           $where = "($real_field <> '$current_domain_id' AND ($all_field = 0 OR $all_field IS NULL))";

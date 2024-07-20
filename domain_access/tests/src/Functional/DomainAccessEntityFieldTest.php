@@ -49,10 +49,12 @@ class DomainAccessEntityFieldTest extends DomainTestBase {
       'weight' => 100,
     ]);
     $vocabulary->save();
-    $text['taxonomy_term'] = [
-      'name' => 'term',
-      'label' => 'Send to all affiliates',
-      'description' => 'Make this term available on all domains.',
+    $text = [
+      'taxonomy_term' => [
+        'name' => 'term',
+        'label' => 'Send to all affiliates',
+        'description' => 'Make this term available on all domains.',
+      ],
     ];
     domain_access_confirm_fields('taxonomy_term', 'domain_access', $text);
     $admin_user = $this->drupalCreateUser([

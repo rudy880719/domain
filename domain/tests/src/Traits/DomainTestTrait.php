@@ -49,13 +49,15 @@ trait DomainTestTrait {
    *   An optional list of subdomains to apply instead of the default set.
    */
   public function domainCreateTestDomains($count = 1, $base_hostname = NULL, array $list = []) {
-    if (empty($base_hostname)) {
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    if (is_null($base_hostname)) {
       $base_hostname = $this->baseHostname;
     }
     // Note: these domains are rigged to work on my test server.
     // For proper testing, yours should be set up similarly, but you can pass a
     // $list array to change the default.
-    if (empty($list)) {
+    if ($list === []) {
       $list = [
         '',
         'one',
@@ -76,7 +78,7 @@ trait DomainTestTrait {
         $machine_name = 'example.com';
         $name = 'Example';
       }
-      elseif (!empty($list[$i])) {
+      elseif (isset($list[$i])) {
         $hostname = $list[$i] . '.' . $base_hostname;
         $machine_name = $list[$i] . '.example.com';
         $name = 'Test ' . ucfirst($list[$i]);
@@ -91,9 +93,9 @@ trait DomainTestTrait {
       $values = [
         'hostname' => $hostname,
         'name' => $name,
-        'id' => \Drupal::entityTypeManager()->getStorage('domain')->createMachineName($machine_name),
+        'id' => $storage->createMachineName($machine_name),
       ];
-      $domain = \Drupal::entityTypeManager()->getStorage('domain')->create($values);
+      $domain = $storage->create($values);
       $domain->save();
     }
   }
@@ -111,7 +113,9 @@ trait DomainTestTrait {
    *   The name of the domain field used to attach to the entity.
    */
   public function addDomainsToEntity($entity_type, $entity_id, $ids, $field) {
-    $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
+    $entity = $storage->load($entity_id);
     if ($entity instanceof FieldableEntityInterface) {
       $entity->set($field, $ids);
       $entity->save();
@@ -121,23 +125,29 @@ trait DomainTestTrait {
   /**
    * Returns an uncached list of all domains.
    *
-   * @return array
+   * @return \Drupal\domain\DomainInterface[]
    *   An array of domain entities.
    */
   public function getDomains() {
-    \Drupal::entityTypeManager()->getStorage('domain')->resetCache();
-    return \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $storage->resetCache();
+
+    return $storage->loadMultiple();
   }
 
   /**
    * Returns an uncached list of all domains, sorted by weight.
    *
-   * @return array
+   * @return \Drupal\domain\DomainInterface[]
    *   An array of domain entities.
    */
   public function getDomainsSorted() {
-    \Drupal::entityTypeManager()->getStorage('domain')->resetCache();
-    return \Drupal::entityTypeManager()->getStorage('domain')->loadMultipleSorted();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $storage->resetCache();
+
+    return $storage->loadMultipleSorted();
   }
 
   /**
@@ -158,7 +168,9 @@ trait DomainTestTrait {
    * Set the base hostname for this test.
    */
   public function setBaseHostname() {
-    $this->baseHostname = \Drupal::entityTypeManager()->getStorage('domain')->createHostname();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $this->baseHostname = $storage->createHostname();
     $this->setBaseDomain();
   }
 
@@ -175,9 +187,11 @@ trait DomainTestTrait {
    * Reusable test function for checking initial / empty table status.
    */
   public function domainTableIsEmpty() {
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $domains = $storage->loadMultiple();
     $this->assertEmpty($domains, 'No domains have been created.');
-    $default_id = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultId();
+    $default_id = $storage->loadDefaultId();
     $this->assertEmpty($default_id, 'No default domain has been set.');
   }
 
@@ -186,14 +200,19 @@ trait DomainTestTrait {
    */
   public function domainPostValues() {
     $edit = [];
-    $domain = \Drupal::entityTypeManager()->getStorage('domain')->create();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    /** @var \Drupal\domain\DomainInterface $domain */
+    $domain = $storage->create();
     $required = \Drupal::service('domain.validator')->getRequiredFields();
     foreach ($required as $key) {
       $edit[$key] = $domain->get($key);
     }
-    // URL validation has issues on Travis, so only do it when requested.
+    $edit['id'] = $storage->createMachineName($edit['hostname']);
+
+    // Validation requires extra test steps, so do not do it by default.
     $edit['validate_url'] = 0;
-    $edit['id'] = \Drupal::entityTypeManager()->getStorage('domain')->createMachineName($edit['hostname']);
+
     return $edit;
   }
 

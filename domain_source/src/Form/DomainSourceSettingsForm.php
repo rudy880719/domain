@@ -4,13 +4,31 @@ namespace Drupal\domain_source\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class DomainSourceSettingsForm.
+ * Settings for the module.
  *
  * @package Drupal\domain_source\Form
  */
 class DomainSourceSettingsForm extends ConfigFormBase {
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -30,8 +48,7 @@ class DomainSourceSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $manager = \Drupal::entityTypeManager();
-    $routes = $manager->getDefinition('node')->getLinkTemplates();
+    $routes = $this->entityTypeManager->getDefinition('node')->getLinkTemplates();
 
     $options = [];
     foreach ($routes as $route => $path) {
@@ -45,7 +62,7 @@ class DomainSourceSettingsForm extends ConfigFormBase {
     $form['exclude_routes'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Disable link rewrites for the selected routes.'),
-      '#default_value' => $config->get('exclude_routes') ?: [],
+      '#default_value' => $config->get('exclude_routes') ?? [],
       '#options' => $options,
       '#description' => $this->t('Check the routes to disable. Any entity URL with a Domain Source field will be rewritten unless its corresponding route is disabled.'),
     ];
