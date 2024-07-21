@@ -25,7 +25,7 @@ class DomainSourceCommands extends DomainCommands {
    */
   public function initDomainInfo(InputInterface $input, AnnotationData $annotationData) {
     // To add a field label, append to the 'field-labels' item.
-    // @TODO: watch https://github.com/consolidation/annotated-command/pull/174
+    // @todo watch https://github.com/consolidation/annotated-command/pull/174
     $annotationData['field-labels'] .= "\n" . 'domain_source_entities: Domain source entities';
   }
 
@@ -63,6 +63,7 @@ class DomainSourceCommands extends DomainCommands {
    */
   public function domainSourceDomainDelete($target_domain, $options) {
     // Run our own deletion routine here.
+    // @phpstan-ignore-next-line
     if (empty($options['content-assign'])) {
       $policy_content = 'prompt';
     }

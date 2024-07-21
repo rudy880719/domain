@@ -25,8 +25,9 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     // Create test domains.
     $this->domainCreateTestDomains(3);
 
+    /** @var \Drupal\domain\DomainStorageInterface $domain_storage */
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $alias_loader = \Drupal::entityTypeManager()->getStorage('domain_alias');
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = $domain_storage->loadMultiple();
 
     // Save these for later testing.
@@ -38,7 +39,6 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = ['*.' . $base, 'four.' . $base, 'five.' . $base];
     $i = 0;
-    $domain = NULL;
     foreach ($domains as $domain) {
       $this->assertTrue($domain->getHostname() === $hostnames[$i], 'Hostnames set correctly');
       $this->assertTrue($domain->getCanonical() === $hostnames[$i], 'Canonical domains set correctly');
@@ -52,13 +52,15 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
       $i++;
     }
 
-    $path = $domain->getScheme() . 'five.' . $base . '/admin/config/domain';
+    $test_domain = end($domains);
+    $path = $test_domain->getScheme() . 'five.' . $base . $GLOBALS['base_path'] . 'admin/config/domain';
 
     // Visit the domain overview administration page.
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(200);
 
     // Test the domains.
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = $domain_storage->loadMultiple();
     $this->assertCount(3, $domains, 'Three domain records found.');
 
@@ -88,6 +90,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(200);
 
+    /** @var \Drupal\domain\DomainInterface $domain */
     foreach ($domain_storage->loadMultiple() as $domain) {
       if ($domain->id() === 'one_example_com') {
         $this->assertEmpty($domain->status(), 'One domain inactive.');
@@ -110,6 +113,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(200);
 
+    /** @var \Drupal\domain\DomainInterface $domain */
     foreach ($domain_storage->loadMultiple() as $domain) {
       $this->assertNotEmpty($domain->status(), 'All domains active.');
     }
@@ -128,6 +132,7 @@ class DomainAliasActionsTest extends DomainAliasTestBase {
     $this->assertTrue($default === $key, 'Default domain set correctly.');
 
     // Did the hostnames change accidentally?
+    /** @var \Drupal\domain\DomainInterface $domain */
     foreach ($domain_storage->loadMultiple() as $id => $domain) {
       $this->assertTrue($domain->getHostname() === $original_domains[$id]->getHostname(), 'Hostnames match.');
     }

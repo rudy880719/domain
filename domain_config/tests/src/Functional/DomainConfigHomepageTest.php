@@ -32,6 +32,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     // Create four new domains programmatically.
     $this->domainCreateTestDomains(5);
     // Get the domain list.
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $node1 = $this->drupalCreateNode([
       'type' => 'article',
@@ -49,7 +50,7 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
       'promoted' => TRUE,
     ]);
     $homepages = $this->getHomepages();
-    $domain = NULL;
+
     foreach ($domains as $domain) {
       foreach (['en', 'es'] as $langcode) {
         $prefix = '';
@@ -67,10 +68,11 @@ class DomainConfigHomepageTest extends DomainConfigTestBase {
     }
     // Explicit test for https://www.drupal.org/project/domain/issues/3154402
     // Create and login user.
+    $test_domain = end($domains);
     $perms = ['bypass node access', 'access administration pages'];
     $admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($admin_user);
-    $this->drupalGet($domain->getPath() . 'node/' . $node3->id() . '/delete');
+    $this->drupalGet($test_domain->getPath() . 'node/' . $node3->id() . '/delete');
     $this->getSession()->getPage()->pressButton('Delete');
     $this->drupalLogout();
 

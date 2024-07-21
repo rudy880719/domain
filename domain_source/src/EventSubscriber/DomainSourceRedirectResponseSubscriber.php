@@ -3,11 +3,12 @@
 namespace Drupal\domain_source\EventSubscriber;
 
 use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
+use Drupal\Core\Routing\RequestContext;
+use Drupal\domain\DomainRedirectResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
-use Drupal\domain\DomainRedirectResponse;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * Allows manipulation of the response object when performing a redirect.
@@ -21,7 +22,7 @@ class DomainSourceRedirectResponseSubscriber extends RedirectResponseSubscriber 
    *
    * @var \Drupal\Core\Routing\RequestContext
    */
-  public $requestContext;
+  public RequestContext $requestContext;
 
   /**
    * Allows manipulation of the response object when performing a redirect.

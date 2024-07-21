@@ -1,13 +1,12 @@
-name: "Domain config hook test"
-description: "Support module for domain config testing."
+name: 'Domain config hook test'
+description: 'Support module for domain config testing.'
 type: module
 package: Testing
 version: VERSION
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 hidden: TRUE
 
 dependencies: []
-
 # This module represents several services that could be provided by multiple modules in the Drupal community.
 # The following are not playing nice together:
 #   - A page cache policy service that uses the config factory.

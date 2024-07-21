@@ -27,7 +27,7 @@ class DomainBlockVisibilityTest extends DomainTestBase {
   public function testDomainBlockVisibility() {
     // Create four new domains programmatically.
     $this->domainCreateTestDomains(4);
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->getDomains();
 
     // Place the nav block.
     $block = $this->placeBlock('domain_nav_block');

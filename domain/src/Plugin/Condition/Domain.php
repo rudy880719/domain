@@ -3,10 +3,10 @@
 namespace Drupal\domain\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\domain\DomainNegotiator;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\domain\DomainStorageInterface;
+use Drupal\domain\DomainNegotiator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,23 +27,40 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    *
    * @var \Drupal\domain\DomainNegotiator
    */
-  protected $domainNegotiator;
+  protected DomainNegotiator $domainNegotiator;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs a Domain condition plugin.
    *
-   * @param \Drupal\domain\DomainNegotiator $domain_negotiator
-   *   The domain negotiator service.
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\domain\DomainNegotiator $domain_negotiator
+   *   The domain negotiator service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(DomainNegotiator $domain_negotiator, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    DomainNegotiator $domain_negotiator,
+    EntityTypeManagerInterface $entity_type_manager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
     $this->domainNegotiator = $domain_negotiator;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -51,10 +68,11 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-        $container->get('domain.negotiator'),
-        $configuration,
-        $plugin_id,
-        $plugin_definition
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('domain.negotiator'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -63,8 +81,8 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     // Use the domain labels. They will be sanitized below.
-    // @TODO Set the optionsList as a property.
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadOptionsList();
+    // @todo Set the optionsList as a property.
+    $domains = $this->entityTypeManager->getStorage('domain')->loadOptionsList();
 
     $form['domains'] = [
       '#type' => 'checkboxes',
@@ -104,8 +122,7 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    */
   public function summary() {
     // Use the domain labels. They will be sanitized below.
-    $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $domains = array_intersect_key($storage->loadOptionsList(), $this->configuration['domains']);
+    $domains = array_intersect_key($this->entityTypeManager->getStorage('domain')->loadOptionsList(), $this->configuration['domains']);
 
     if (count($domains) > 1) {
       $domains = implode(', ', $domains);
@@ -126,19 +143,20 @@ class Domain extends ConditionPluginBase implements ContainerFactoryPluginInterf
    */
   public function evaluate() {
     $domains = $this->configuration['domains'];
-    if (empty($domains) && !$this->isNegated()) {
+    if ($domains === [] && !$this->isNegated()) {
       return TRUE;
     }
     // If the context did not load, derive from the request.
-    if (!$domain = $this->getContextValue('domain')) {
+    $domain = $this->getContextValue('domain');
+    if (is_null($domain)) {
       $domain = $this->domainNegotiator->getActiveDomain();
     }
     // No context found?
-    if (empty($domain)) {
+    if (is_null($domain)) {
       return FALSE;
     }
     // NOTE: The context system handles negation for us.
-    return (bool) in_array($domain->id(), $domains);
+    return in_array($domain->id(), $domains, TRUE);
   }
 
   /**

@@ -6,4 +6,4 @@ services:
     class: Drupal\domain_access\Access\DomainAccessViewsAccess
     arguments: ['@entity_type.manager', '@domain_access.manager']
     tags:
-     - { name: access_check, applies_to: _domain_access_views }
+      - { name: access_check, applies_to: _domain_access_views }

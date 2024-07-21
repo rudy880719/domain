@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_access\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests the application of domain access grants.
@@ -44,13 +44,14 @@ class DomainAccessGrantsTest extends DomainTestBase {
     // Create 5 domains.
     $this->domainCreateTestDomains(5);
     // Assign a node to a random domain.
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $active_domain = array_rand($domains, 1);
-    $domain = $domains[$active_domain];
+    $selected_domain = $domains[$active_domain];
     // Create an article node.
     $node1 = $this->drupalCreateNode([
       'type' => 'article',
-      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [$domain->id()],
+      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [$selected_domain->id()],
     ]);
     $this->assertNotNull($node_storage->load($node1->id()), 'Article node created.');
 
@@ -71,7 +72,7 @@ class DomainAccessGrantsTest extends DomainTestBase {
     // Create an article node.
     $node2 = $this->drupalCreateNode([
       'type' => 'article',
-      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [$domain->id()],
+      DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD => [$selected_domain->id()],
       DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD => 1,
     ]);
     $this->assertNotNull($node_storage->load($node2->id()), 'Article node created.');

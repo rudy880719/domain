@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\domain_config_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
-use Drupal\Tests\domain\Traits\DomainTestTrait;
 use Drupal\domain_config_ui\DomainConfigUITrait;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\domain\Traits\DomainTestTrait;
+use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 
 /**
  * Tests the domain config settings interface.
@@ -33,7 +33,7 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'stable';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -78,16 +78,14 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       // Test some theme paths.
       $path = $prefix . '/admin/appearance';
       $this->drupalGet($path);
-      $page = $this->getSession()->getPage();
-      $page->findLink('Disable domain configuration');
+      $this->assertSession()->linkExists('Disable domain configuration');
 
       $path = $prefix . '/admin/appearance/settings/stark';
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
-      $page->findLink('Enable domain configuration');
       $page->clickLink('Enable domain configuration');
-
-      $this->assertWaitOnAjaxRequest();
+      // @phpstan-ignore-next-line
+      $this->assertSession()->waitForLink('Disable domain configuration');
 
       $this->drupalGet($path);
       $config2 = $this->config('domain_config_ui.settings');
@@ -98,18 +96,16 @@ class DomainConfigUISettingsTest extends WebDriverTestBase {
       // Test removal of paths.
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
-      $page->findLink('Disable domain configuration');
       $page->clickLink('Disable domain configuration');
-
-      $this->assertWaitOnAjaxRequest();
+      // @phpstan-ignore-next-line
+      $this->assertSession()->waitForLink('Enable domain configuration');
 
       $path = $prefix . '/admin/config/system/site-information';
       $this->drupalGet($path);
       $page = $this->getSession()->getPage();
-      $page->findLink('Disable domain configuration');
       $page->clickLink('Disable domain configuration');
-
-      $this->assertWaitOnAjaxRequest();
+      // @phpstan-ignore-next-line
+      $this->assertSession()->waitForLink('Enable domain configuration');
 
       $expected3 = $this->explodePathSettings("/admin/appearance");
       $config3 = $this->config('domain_config_ui.settings');

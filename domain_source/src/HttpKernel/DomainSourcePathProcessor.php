@@ -2,14 +2,17 @@
 
 namespace Drupal\domain_source\HttpKernel;
 
-use Drupal\domain\DomainNegotiatorInterface;
-use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
+use Drupal\domain\DomainInterface;
+use Drupal\domain\DomainNegotiatorInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -107,22 +110,22 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
    */
   public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     // Load the active domain if not set.
-    if (empty($options['active_domain'])) {
-      $active_domain = $this->getActiveDomain();
-    }
+    $active_domain = $options['active_domain'] ?? $this->getActiveDomain();
 
     // Only act on valid internal paths and when a domain loads.
-    if (empty($active_domain) || empty($path) || !empty($options['external'])) {
+    $external = $options['external'] ?? FALSE;
+    if (is_null($active_domain) || $path === '' || $external === TRUE) {
       return $path;
     }
 
     // Set the default source information.
     $source = NULL;
     $options['active_domain'] = $active_domain;
+    $entity = NULL;
 
     // Get the current language.
     $langcode = NULL;
-    if (!empty($options['language'])) {
+    if (isset($options['language'])) {
       $langcode = $options['language']->getId();
     }
 
@@ -138,22 +141,18 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
     // Check the route, if available. Entities can be configured to
     // only rewrite specific routes.
     if ($url->isRouted() && $this->allowedRoute($url->getRouteName())) {
+      $entity = $options['entity'] ?? NULL;
       // Load the entity to check.
-      if (!empty($options['entity'])) {
-        $entity = $options['entity'];
-      }
-      else {
+      if (is_null($entity)) {
         $parameters = $url->getRouteParameters();
-        if (!empty($parameters)) {
-          $entity = $this->getEntity($parameters);
-        }
+        $entity = $this->getEntity($parameters);
       }
     }
 
     // One hook for entities.
-    if (!empty($entity) && is_object($entity)) {
+    if ($entity instanceof EntityInterface) {
       // Ensure we send the right translation.
-      if (!empty($langcode) && $entity->getEntityType()->isTranslatable() && $entity->hasTranslation($langcode) && $translation = $entity->getTranslation($langcode)) {
+      if (!is_null($langcode) && $entity->getEntityType()->isTranslatable() && $entity instanceof TranslatableInterface && $entity->hasTranslation($langcode) && $translation = $entity->getTranslation($langcode)) {
         $entity = $translation;
       }
       if (isset($options['domain_target_id'])) {
@@ -162,7 +161,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
       else {
         $target_id = domain_source_get($entity);
       }
-      if (!empty($target_id)) {
+      if (!is_null($target_id)) {
         $source = $this->domainStorage()->load($target_id);
       }
       $options['entity'] = $entity;
@@ -178,7 +177,7 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
       $this->moduleHandler->alter('domain_source_path', $source, $path, $options);
     }
     // If a source domain is specified, rewrite the link.
-    if (!empty($source)) {
+    if ($source instanceof DomainInterface) {
       // Note that url rewrites add a leading /, which getPath() also adds.
       $options['base_url'] = trim($source->getPath(), '/');
       $options['absolute'] = TRUE;
@@ -197,13 +196,13 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
    */
   public function getEntity(array $parameters) {
     $entity = NULL;
-    $entity_type = key($parameters);
     $entity_types = $this->getEntityTypes();
     foreach ($parameters as $entity_type => $value) {
-      if (!empty($entity_type) && isset($entity_types[$entity_type])) {
+      if (isset($entity_types[$entity_type])) {
         $entity = $this->entityTypeManager->getStorage($entity_type)->load($value);
       }
     }
+
     return $entity;
   }
 
@@ -290,9 +289,10 @@ class DomainSourcePathProcessor implements OutboundPathProcessorInterface {
    *   The domain storage handler.
    */
   protected function domainStorage() {
-    if (!$this->domainStorage) {
+    if (is_null($this->domainStorage)) {
       $this->domainStorage = $this->entityTypeManager->getStorage('domain');
     }
+
     return $this->domainStorage;
   }
 

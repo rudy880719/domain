@@ -34,7 +34,8 @@ class DomainTokenTest extends DomainTestBase {
     user_role_grant_permissions(AccountInterface::ANONYMOUS_ROLE, ['view domain information']);
 
     // Test the response of the default home page.
-    foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultiple() as $domain) {
+    /** @var \Drupal\domain\DomainInterface $domain */
+    foreach ($this->getDomains() as $domain) {
       $this->drupalGet($domain->getPath());
       $this->assertSession()->responseContains($domain->label());
       $this->assertSession()->responseContains('<th>Token</th>');
@@ -43,7 +44,7 @@ class DomainTokenTest extends DomainTestBase {
         // The URL token is sensitive to the path, which is /user, but that
         // does not come across when making the callback outside of a request
         // context.
-        $value = $domain->{$callback}();
+        $value = call_user_func_array([$domain, $callback], []);
         if ($token === '[domain:url]') {
           $value = str_replace('user', '', $value);
           if (substr($value, -1) !== '/') {

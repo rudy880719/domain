@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\domain\Functional;
 
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
@@ -34,14 +32,14 @@ class DomainContextTest extends DomainTestBase {
     $this->drupalLogin($admin);
 
     // Try to configure a block.
-    $url = 'admin/structure/block/manage/bartik_branding';
+    $url = 'admin/structure/block/manage/olivero_branding';
     $this->drupalGet($url);
 
     // Create one domain programmatically.
     $this->domainCreateTestDomains(1);
 
     // Try to configure a block.
-    $url = 'admin/structure/block/manage/bartik_branding';
+    $url = 'admin/structure/block/manage/olivero_branding';
     $this->drupalGet($url);
 
   }

@@ -28,6 +28,7 @@ class DomainConfigCacheTest extends DomainConfigTestBase {
     $this->domainCreateTestDomains(5);
     $expected = [];
 
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $this->drupalGet($domain->getPath());
@@ -47,7 +48,7 @@ class DomainConfigCacheTest extends DomainConfigTestBase {
     $node1 = $this->drupalCreateNode([
       'type' => 'article',
       'field_domain_access' => [$ids],
-      'path' => '/test'
+      'path' => '/test',
     ]);
 
     $original = $expected;

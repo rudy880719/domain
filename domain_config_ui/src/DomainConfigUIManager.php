@@ -39,13 +39,17 @@ class DomainConfigUIManager implements DomainConfigUIManagerInterface {
    * {@inheritdoc}
    */
   public function getSelectedConfigName($name, $omit_language = FALSE) {
-    if ($domain_id = $this->getSelectedDomainId()) {
+    $domain_id = $this->getSelectedDomainId();
+
+    if (!is_null($domain_id)) {
       $prefix = "domain.config.{$domain_id}.";
-      if (!$omit_language && $langcode = $this->getSelectedLanguageId()) {
+      $langcode = $this->getSelectedLanguageId();
+      if (!$omit_language && strlen($langcode) > 0) {
         $prefix .= "{$langcode}.";
       }
       return $prefix . $name;
     }
+
     return $name;
   }
 
@@ -54,10 +58,12 @@ class DomainConfigUIManager implements DomainConfigUIManagerInterface {
    */
   public function getSelectedDomainId() {
     $id = NULL;
-    if (!empty($this->getRequest()) && $domain = $this->currentRequest->get('domain_config_ui_domain')) {
-      $id = $domain;
+
+    $request = $this->getRequest();
+    if (!is_null($request)) {
+      $id = $this->currentRequest->get('domain_config_ui_domain') ?? NULL;
     }
-    elseif (isset($_SESSION['domain_config_ui_domain'])) {
+    if (is_null($id) && isset($_SESSION['domain_config_ui_domain'])) {
       $id = $_SESSION['domain_config_ui_domain'];
     }
 
@@ -69,10 +75,12 @@ class DomainConfigUIManager implements DomainConfigUIManagerInterface {
    */
   public function getSelectedLanguageId() {
     $id = NULL;
-    if (!empty($this->getRequest()) && $language = $this->currentRequest->get('domain_config_ui_language')) {
-      $id = $language;
+
+    $request = $this->getRequest();
+    if (!is_null($request)) {
+      $id = $this->currentRequest->get('domain_config_ui_language') ?? NULL;
     }
-    elseif (isset($_SESSION['domain_config_ui_language'])) {
+    if (is_null($id) && isset($_SESSION['domain_config_ui_language'])) {
       $id = $_SESSION['domain_config_ui_language'];
     }
 
@@ -89,6 +97,7 @@ class DomainConfigUIManager implements DomainConfigUIManagerInterface {
     if (!isset($this->currentRequest)) {
       $this->currentRequest = $this->requestStack->getCurrentRequest();
     }
+
     return $this->currentRequest;
   }
 

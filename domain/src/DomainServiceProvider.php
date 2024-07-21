@@ -24,7 +24,7 @@ class DomainServiceProvider extends ServiceProviderBase implements ServiceModifi
     if ($container->hasParameter('renderer.config')) {
       $renderer_config = $container->getParameter('renderer.config');
 
-      if (!in_array('url.site', $renderer_config['required_cache_contexts'])) {
+      if (!in_array('url.site', $renderer_config['required_cache_contexts'], TRUE)) {
         $renderer_config['required_cache_contexts'][] = 'url.site';
       }
 

@@ -3,9 +3,9 @@
 namespace Drupal\Tests\domain\Functional\Views;
 
 use Drupal\Core\Url;
+use Drupal\domain_access\DomainAccessManagerInterface;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
-use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
  * Tests the active_domain default argument.
@@ -28,7 +28,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
     'node',
     'domain',
     'domain_access',
-    'domain_test_views'
+    'domain_test_views',
   ];
 
   /**
@@ -72,6 +72,7 @@ class ActiveDomainDefaultArgumentTest extends DomainTestBase {
     $url = Url::fromRoute('view.test_active_domain_argument.page_1');
 
     foreach ($this->getDomains() as $domain_id => $domain) {
+      // @phpstan-ignore-next-line
       $page_url = $domain->buildUrl($url->toString());
       $this->drupalGet($page_url);
 

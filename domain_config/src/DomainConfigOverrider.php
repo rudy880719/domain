@@ -2,11 +2,12 @@
 
 namespace Drupal\domain_config;
 
-use Drupal\domain\DomainInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\domain\DomainInterface;
 
 /**
  * Domain-specific config overrides.
@@ -102,7 +103,7 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     // Check if any overridden config exists or if we have already
     // made this check.
     // See https://www.drupal.org/project/domain/issues/3126532.
-    if ($load === FALSE || (!$this->storage->listAll('domain.config.') && !$config_override_exists)) {
+    if ($load === FALSE || ($this->storage->listAll('domain.config.') === [] && !$config_override_exists)) {
       $load = FALSE;
       return [];
     }
@@ -116,14 +117,14 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
       }
 
       // Set the context of the override request.
-      if (empty($this->contextSet)) {
+      if (!$this->contextSet) {
         $this->initiateContext();
       }
 
       // Prepare our overrides.
       $overrides = [];
       // loadOverrides() runs on config entities, which means that if we try
-      // to run this routine on our own data, then we end up in an infinite loop.
+      // to run this routine on our own data, we end up in an infinite loop.
       // So ensure that we are _not_ looking up a domain.record.*.
       $check = current($names);
       $list = explode('.', $check);
@@ -131,18 +132,18 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
         $lookups[$key] = $overrides;
         return $overrides;
       }
-      if (!empty($this->domain)) {
+      if ($this->domain instanceof DomainInterface) {
         foreach ($names as $name) {
           $config_name = $this->getDomainConfigName($name, $this->domain);
           // Check to see if the config storage has an appropriately named file
           // containing override data.
-          if (in_array($config_name['langcode'], $this->storage->listAll('domain.config.'))
+          if (in_array($config_name['langcode'], $this->storage->listAll('domain.config.'), TRUE)
             && ($override = $this->storage->read($config_name['langcode']))
           ) {
             $overrides[$name] = $override;
           }
           // Check to see if we have a file without a specific language.
-          elseif (in_array($config_name['domain'], $this->storage->listAll('domain.config.'))
+          elseif (in_array($config_name['domain'], $this->storage->listAll('domain.config.'), TRUE)
             && ($override = $this->storage->read($config_name['domain']))
           ) {
             $overrides[$name] = $override;
@@ -189,9 +190,9 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function getCacheSuffix() {
-    $suffix = $this->domain ? $this->domain->id() : '';
-    $suffix .= $this->language ? $this->language->getId() : '';
-    return ($suffix) ? $suffix : NULL;
+    $suffix = ($this->domain instanceof DomainInterface) ? $this->domain->id() : '';
+    $suffix .= ($this->language instanceof LanguageInterface) ? $this->language->getId() : '';
+    return ($suffix !== '') ? $suffix : NULL;
   }
 
   /**
@@ -205,11 +206,11 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function getCacheableMetadata($name) {
-    if (empty($this->contextSet)) {
+    if ($this->contextSet) {
       $this->initiateContext();
     }
     $metadata = new CacheableMetadata();
-    if (!empty($this->domain)) {
+    if ($this->domain instanceof DomainInterface) {
       $metadata->addCacheContexts(['url.site', 'languages:language_interface']);
     }
     return $metadata;
@@ -233,10 +234,12 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     // Get the language context. Note that injecting the language manager
     // into the service created a circular dependency error, so we load from
     // the core service manager.
+    // @phpstan-ignore-next-line
     $this->languageManager = \Drupal::languageManager();
     $this->language = $this->languageManager->getCurrentLanguage();
 
     // The same issue is true for the domainNegotiator.
+    // @phpstan-ignore-next-line
     $this->domainNegotiator = \Drupal::service('domain.negotiator');
     // Get the domain context.
     $this->domain = $this->domainNegotiator->getActiveDomain(TRUE);

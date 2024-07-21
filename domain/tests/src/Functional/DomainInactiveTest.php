@@ -27,7 +27,7 @@ class DomainInactiveTest extends DomainTestBase {
 
     // Create four new domains programmatically.
     $this->domainCreateTestDomains(4);
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->getDomains();
 
     // Grab a known domain for testing.
     $domain = $domains['two_example_com'];
@@ -37,7 +37,9 @@ class DomainInactiveTest extends DomainTestBase {
 
     // Disable the domain and test for redirect.
     $domain->disable();
-    $default = \Drupal::entityTypeManager()->getStorage('domain')->loadDefaultDomain();
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    $default = $storage->loadDefaultDomain();
     // Our postSave() cache tag clear should allow this to work properly.
     $this->drupalGet($domain->getPath());
 
@@ -65,6 +67,7 @@ class DomainInactiveTest extends DomainTestBase {
     $domain3 = $domains['three_example_com'];
 
     // Check against trusted host patterns.
+    $settings = [];
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => ['^' . $this->prepareTrustedHostname($domain->getHostname()) . '$',
         '^' . $this->prepareTrustedHostname($domain2->getHostname()) . '$',

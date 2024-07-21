@@ -51,7 +51,7 @@ trait DomainAliasTestTrait {
    *   A domain alias entity.
    */
   public function domainAliasCreateTestAlias(DomainInterface $domain, $pattern = NULL, $redirect = 0, $environment = 'default', $save = TRUE) {
-    if (empty($pattern)) {
+    if (is_null($pattern)) {
       $pattern = '*.' . $domain->getHostname();
     }
     $values = [

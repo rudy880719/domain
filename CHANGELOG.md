@@ -24,12 +24,20 @@ Changelog
 19-FEB-2021 8.x-1.0-beta4
 25-FEB-2021 8.x-1.0-beta5
 24-JUN-2021 8.x-1.0-beta6
+15-FEB-2023 8.x-1.0-beta7
+27-FEB-2023 8.x-1.0-beta8
+06-JUL-2023 2.0.0-beta1
+
 
 Status
 ====
 
 The 8.x-1.x version is a ground up rewrite of a module originally written for
 Drupal 5.
+
+As of Drupal 9.5 and higher, the 8.x-1.x branch is deprecated in favor of 2.0.x.
+
+No new releases are expected for the 8.x-1.x branch. Upgrading should be seamless if you are on Drupal 9.5 or higher.
 
 The following feature sets are considered critical for each release stage. Items
 marked with [x] are considered complete.
@@ -136,6 +144,6 @@ marked with [x] are considered complete.
 - [ ] Provide an upgrade path from 6.x
 - [ ] Provide an upgrade path from 7.x-3.x
 - [x] Remove calls to deprecated methods / classes
-- [ ] Remove unnecessary use statements
+- [x] Remove unnecessary use statements
 - [ ] Support Tour module
 - [ ] Views schema fails -- see https://www.drupal.org/project/drupal/issues/2834801

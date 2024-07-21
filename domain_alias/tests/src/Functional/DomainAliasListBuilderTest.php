@@ -77,7 +77,7 @@ class DomainAliasListBuilderTest extends DomainAliasTestBase {
     $this->drupalGet($path);
     foreach ($this->getDomains() as $domain) {
       $href = 'admin/config/domain/alias/' . $domain->id();
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->linkByHrefExists($href, 0, 'Link found');
       }
       else {
@@ -89,7 +89,7 @@ class DomainAliasListBuilderTest extends DomainAliasTestBase {
     foreach ($this->getDomains() as $domain) {
       $path = 'admin/config/domain/alias/' . $domain->id();
       $this->drupalGet($path);
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->assertSession()->statusCodeEquals(200);
       }
       else {

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for the rewriting links subject to Trusted Host settings.
@@ -21,7 +21,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
     'domain_source',
     'field',
     'node',
-    'user'
+    'user',
   ];
 
   /**
@@ -50,6 +50,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
 
     // Variables for our tests.
     $path = 'node/1';
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $source = $domains[$id];
     $expected = $source->getPath() . $path;
@@ -65,6 +66,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
     $domain2 = $domains['two_example_com'];
 
     // Check against trusted host patterns.
+    $settings = ['settings' => []];
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => ['^' . $this->prepareTrustedHostname($domain2->getHostname()) . '$'],
       'required' => TRUE,
@@ -75,6 +77,7 @@ class DomainSourceTrustedHostTest extends DomainTestBase {
     $this->assertSession()->responseContains('The provided host name is not valid for this server.');
 
     // Now switch the node to a domain that is trusted.
+    // @phpstan-ignore-next-line
     $node->{DomainSourceElementManagerInterface::DOMAIN_SOURCE_FIELD} = $domain2->id();
     $node->save();
     // Get the link using Url::fromRoute().

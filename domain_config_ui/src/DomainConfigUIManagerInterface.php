@@ -23,7 +23,7 @@ interface DomainConfigUIManagerInterface {
   /**
    * Get the selected domain ID.
    *
-   * @return string
+   * @return string|null
    *   A domain machine name.
    */
   public function getSelectedDomainId();
@@ -31,7 +31,7 @@ interface DomainConfigUIManagerInterface {
   /**
    * Get the selected language ID.
    *
-   * @return string
+   * @return string|null
    *   A language code.
    */
   public function getSelectedLanguageId();

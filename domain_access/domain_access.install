@@ -17,9 +17,10 @@ function domain_access_install() {
     // validation events.
     return;
   }
+  $list = [];
+
   // Assign domain access to bundles.
   $list['user'] = 'user';
-
   $node_types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
   foreach ($node_types as $type => $info) {
     $list[$type] = 'node';

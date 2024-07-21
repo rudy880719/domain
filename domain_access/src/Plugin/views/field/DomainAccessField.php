@@ -2,8 +2,8 @@
 
 namespace Drupal\domain_access\Plugin\views\field;
 
-use Drupal\views\ResultRow;
 use Drupal\views\Plugin\views\field\EntityField;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present the link an entity on a domain.
@@ -19,7 +19,8 @@ class DomainAccessField extends EntityField {
     $items = parent::getItems($values);
     // Override the default link generator, which wants to send us to the entity
     // page, not the entity we are looking at.
-    if (!empty($this->options['settings']['link'])) {
+    $is_link = $this->options['settings']['link'] ?? FALSE;
+    if ($is_link) {
       foreach ($items as &$item) {
         $object = $item['raw'];
         $entity = $object->getEntity();

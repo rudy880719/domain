@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\domain_content\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Base class and helper methods for testing domain content.
@@ -59,6 +59,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
    * 25 users, 5 per domain and 5 to all affiliates.
    */
   public function createDomainUsers() {
+    $account = [];
     foreach ($this->domains as $id => $domain) {
       for ($i = 0; $i < 5; $i++) {
         $account[$id] = $this->drupalCreateUser([
@@ -77,7 +78,7 @@ abstract class DomainContentTestBase extends DomainTestBase {
   }
 
   /**
-   * Strips whitespace from a page response and runs assertSession()->responseContains() equivalent.
+   * Strips whitespace from a page response and runs assertions.
    *
    * In tests, we were having difficulty with spacing in tables. This method
    * takes some concepts from Mink and rearranges them to work for our tests.
