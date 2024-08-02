@@ -55,6 +55,7 @@ class DomainToken {
    * Implements hook_token_info().
    */
   public function getTokenInfo() {
+    $info = [];
     // Domain token types.
     $info['types']['domain'] = [
       'name' => $this->t('Domains'),
@@ -129,7 +130,7 @@ class DomainToken {
     // Based on the type, get the proper domain context.
     switch ($type) {
       case 'domain':
-        if (!empty($data['domain'])) {
+        if (isset($data['domain'])) {
           $domain = $data['domain'];
         }
         else {
@@ -147,11 +148,11 @@ class DomainToken {
     }
 
     // Set the token information.
-    if (!empty($domain)) {
+    if ($domain instanceof DomainInterface) {
       $callbacks = $this->getCallbacks();
       foreach ($tokens as $name => $original) {
         if (isset($callbacks[$name])) {
-          $replacements[$original] = $domain->{$callbacks[$name]}();
+          $replacements[$original] = call_user_func_array([$domain, $callbacks[$name]], []);
           $bubbleable_metadata->addCacheableDependency($domain);
         }
       }

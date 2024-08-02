@@ -4,8 +4,8 @@ namespace Drupal\domain\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\domain\DomainStorageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Sets a base class for injecting domain information into controllers.

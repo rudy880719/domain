@@ -2,6 +2,7 @@
 
 namespace Drupal\domain_access\Plugin\Action;
 
+use Drupal\domain_access\DomainAccessManager;
 use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
@@ -20,7 +21,7 @@ class DomainAccessRemoveEditor extends DomainAccessActionBase {
    */
   public function execute($entity = NULL) {
     $id = $this->configuration['domain_id'];
-    $user_domains = \Drupal::service('domain_access.manager')->getAccessValues($entity);
+    $user_domains = DomainAccessManager::getAccessValues($entity);
 
     // Skip adding the role to the user if they already have it.
     if ($entity !== FALSE && isset($user_domains[$id])) {

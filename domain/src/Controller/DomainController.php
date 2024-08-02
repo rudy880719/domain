@@ -2,8 +2,9 @@
 
 namespace Drupal\domain\Controller;
 
-use Drupal\Core\Url;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\domain\DomainInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class DomainController {
 
   use StringTranslationTrait;
+  use MessengerTrait;
 
   /**
    * Handles AJAX operations from the overview form.
@@ -63,10 +65,10 @@ class DomainController {
 
     // Set a message.
     if ($success) {
-      \Drupal::messenger()->addMessage($message);
+      $this->messenger()->addMessage($message);
     }
     else {
-      \Drupal::messenger()->addError($this->t('The operation failed.'));
+      $this->messenger()->addError($this->t('The operation failed.'));
     }
 
     // Return to the invoking page.

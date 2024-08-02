@@ -2,9 +2,9 @@
 
 namespace Drupal\domain;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\CacheableSecuredRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -45,7 +45,7 @@ class DomainRedirectResponse extends CacheableSecuredRedirectResponse {
    */
   protected function isLocal($url) {
     $base_url = $this->getRequestContext()->getCompleteBaseUrl();
-    return !UrlHelper::isExternal($url) || UrlHelper::externalIsLocal($url, $base_url) || $this->externalIsRegistered($url, $base_url);
+    return !UrlHelper::isExternal($url) || UrlHelper::externalIsLocal($url, $base_url) || self::externalIsRegistered($url, $base_url);
   }
 
   /**
@@ -63,6 +63,7 @@ class DomainRedirectResponse extends CacheableSecuredRedirectResponse {
    */
   protected function getRequestContext() {
     if (!isset($this->requestContext)) {
+      // @phpstan-ignore-next-line
       $this->requestContext = \Drupal::service('router.request_context');
     }
     return $this->requestContext;
@@ -104,7 +105,7 @@ class DomainRedirectResponse extends CacheableSecuredRedirectResponse {
     $url_parts = parse_url($url);
     $base_parts = parse_url($base_url);
 
-    if (empty($url_parts['host'])) {
+    if (!isset($url_parts['host']) || $url_parts['host'] === '') {
       throw new \InvalidArgumentException('A path was passed when a fully qualified domain was expected.');
     }
 
@@ -115,6 +116,7 @@ class DomainRedirectResponse extends CacheableSecuredRedirectResponse {
     }
 
     // Check that the requested $url is registered.
+    // @phpstan-ignore-next-line
     $negotiator = \Drupal::service('domain.negotiator');
     $registered_domain = $negotiator->isRegisteredDomain($url_parts['host']);
 
@@ -160,7 +162,7 @@ class DomainRedirectResponse extends CacheableSecuredRedirectResponse {
     if (count(self::$trustedHostPatterns) > 0) {
       // To avoid host header injection attacks, you should provide a list of
       // trusted host patterns.
-      if (in_array($host, self::$trustedHosts)) {
+      if (in_array($host, self::$trustedHosts, TRUE)) {
         return TRUE;
       }
       foreach (self::$trustedHostPatterns as $pattern) {

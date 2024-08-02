@@ -2,6 +2,7 @@
 
 namespace Drupal\domain_access\Plugin\Action;
 
+use Drupal\domain_access\DomainAccessManager;
 use Drupal\domain_access\DomainAccessManagerInterface;
 
 /**
@@ -20,7 +21,7 @@ class DomainAccessRemove extends DomainAccessActionBase {
    */
   public function execute($entity = NULL) {
     $id = $this->configuration['domain_id'];
-    $node_domains = \Drupal::service('domain_access.manager')->getAccessValues($entity);
+    $node_domains = DomainAccessManager::getAccessValues($entity);
 
     // Remove domain assignment if present.
     if ($entity !== FALSE && isset($node_domains[$id])) {

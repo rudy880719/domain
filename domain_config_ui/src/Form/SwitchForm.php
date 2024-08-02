@@ -10,13 +10,13 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainElementManagerInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain_config_ui\DomainConfigUIManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class SwitchForm.
+ * Form for switching the active settings domain.
  */
 class SwitchForm extends FormBase {
 
@@ -118,7 +118,7 @@ class SwitchForm extends FormBase {
    */
   public function canUseDomainConfig() {
     if ($this->currentUser()->hasPermission('administer domains')) {
-      $user_domains = 'all';
+      $user_domains = ['all'];
     }
     else {
       $account = $this->currentUser();
@@ -127,7 +127,7 @@ class SwitchForm extends FormBase {
     }
     $permission = $this->currentUser()->hasPermission('use domain config ui')
       || $this->currentUser()->hasPermission('administer domain config ui');
-    return (!empty($user_domains) && $permission);
+    return ($user_domains !== [] && $permission);
   }
 
   /**
@@ -147,7 +147,9 @@ class SwitchForm extends FormBase {
     ];
 
     // Add domain switch select field.
-    if ($selected_domain_id = $this->domainConfigUIManager->getSelectedDomainId()) {
+    $selected_domain = NULL;
+    $selected_domain_id = $this->domainConfigUIManager->getSelectedDomainId();
+    if (!is_null($selected_domain_id)) {
       $selected_domain = $this->domainStorage->load($selected_domain_id);
     }
     // Get the form options.
@@ -155,7 +157,7 @@ class SwitchForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Domain'),
       '#options' => $this->getDomainOptions(),
-      '#default_value' => !empty($selected_domain) ? $selected_domain->id() : '',
+      '#default_value' => !is_null($selected_domain) ? $selected_domain->id() : '',
       '#ajax' => [
         'callback' => '::switchCallback',
       ],
@@ -189,7 +191,7 @@ class SwitchForm extends FormBase {
       ];
     }
 
-    // @TODO: Add cache contexts to form?
+    // @todo Add cache contexts to form?
     return $form;
   }
 
@@ -214,6 +216,7 @@ class SwitchForm extends FormBase {
     // Note that this service was renamed in Drupal 9.5 and deprecated in 10.
     $version = (int) explode('.', \Drupal::VERSION)[0];
     if ($version < 10) {
+      // @phpstan-ignore-next-line
       $request = \Drupal::service('request_stack')->getMasterRequest();
     }
     else {
@@ -231,7 +234,8 @@ class SwitchForm extends FormBase {
     $parsed = UrlHelper::parse($request_uri);
     unset($parsed['query']['ajax_form'], $parsed['query'][MainContentViewSubscriber::WRAPPER_FORMAT]);
 
-    if (\Drupal::config('domain_config_ui.settings')->get('remember_domain')) {
+    $remember_domain = (bool) \Drupal::config('domain_config_ui.settings')->get('remember_domain');
+    if ($remember_domain) {
       // Save domain and language on session.
       $_SESSION['domain_config_ui_domain'] = $form_state->getValue('domain');
       $_SESSION['domain_config_ui_language'] = $form_state->getValue('language');

@@ -2,9 +2,9 @@
 
 namespace Drupal\domain\Plugin\EntityReferenceSelection;
 
-use Drupal\user\Entity\User;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Provides entity reference selections for the domain entity type.
@@ -44,10 +44,12 @@ class DomainSelection extends DefaultSelection {
     // with, so look up the entity type and bundle.
     $info = $query->getMetaData('entity_reference_selection_handler');
 
-    if (!empty($info->configuration['entity'])) {
-      $context['entity_type'] = $info->configuration['entity']->getEntityTypeId();
-      $context['bundle'] = $info->configuration['entity']->bundle();
-      $context['field_type'] = $this->fieldType;
+    if (isset($info->configuration['entity'])) {
+      $context = [
+        'entity_type' => $info->configuration['entity']->getEntityTypeId(),
+        'bundle' => $info->configuration['entity']->bundle(),
+        'field_type' => $this->fieldType,
+      ];
 
       // Load the current user.
       $account = User::load($this->currentUser->id());

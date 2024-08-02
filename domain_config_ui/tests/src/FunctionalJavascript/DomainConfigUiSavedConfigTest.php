@@ -3,8 +3,8 @@
 namespace Drupal\Tests\domain_config_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 use Drupal\Tests\domain\Traits\DomainTestTrait;
+use Drupal\Tests\domain_config_ui\Traits\DomainConfigUITestTrait;
 
 /**
  * Tests the domain config inspector.
@@ -71,7 +71,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $page->findField('domain');
     $page->findField('language');
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->waitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -88,12 +88,12 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
 
     // Test our form.
     $page->selectFieldOption('domain', 'one_example_com');
-    $this->waitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_domain', 'one_example_com');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('language', 'es');
-    $this->waitOnAjaxRequest();
+    $this->waitOnAjaxRequest('domain_config_ui_language', 'es');
     $this->htmlOutput($page->getHtml());
 
     $page = $this->getSession()->getPage();
@@ -176,7 +176,7 @@ class DomainConfigUiSavedConfigTest extends WebDriverTestBase {
     $this->rebuildContainer();
 
     $es = \Drupal::entityTypeManager()->getStorage('configurable_language')->load('es');
-    $this->assertTrue(!empty($es), 'Created test language.');
+    $this->assertTrue(!is_null($es), 'Created test language.');
   }
 
 }

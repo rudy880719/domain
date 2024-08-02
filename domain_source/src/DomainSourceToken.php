@@ -5,6 +5,7 @@ namespace Drupal\domain_source;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeInterface;
 
 /**
  * Token handler for Domain Source.
@@ -45,10 +46,16 @@ class DomainSourceToken {
    */
   public function getTokenInfo() {
     // Domain Source tokens.
-    $info['tokens']['node']['canonical-source-domain-url'] = [
-      'name' => $this->t('Canonical Source Domain URL'),
-      'description' => $this->t("The canonical URL from the source domain for this node."),
-      'type' => 'node',
+    $info = [
+      'tokens' => [
+        'node' => [
+          'canonical-source-domain-url' => [
+            'name' => $this->t('Canonical Source Domain URL'),
+            'description' => $this->t("The canonical URL from the source domain for this node."),
+            'type' => 'node',
+          ],
+        ],
+      ],
     ];
 
     return $info;
@@ -67,12 +74,13 @@ class DomainSourceToken {
           if ($name !== 'canonical-source-domain-url') {
             continue;
           }
-          if (!empty($data['node'])) {
-            /** @var \Drupal\node\NodeInterface $node */
+          if (isset($data['node']) && $data['node'] instanceof NodeInterface) {
             $node = $data['node'];
             $original = $tokens['canonical-source-domain-url'];
-            if (in_array('canonical', $this->getExcludedRoutes()) && $node->hasField('field_domain_source') && !$node->field_domain_source->isEmpty()) {
+            // @phpstan-ignore-next-line
+            if (in_array('canonical', $this->getExcludedRoutes(), TRUE) && $node->hasField('field_domain_source') && !$node->field_domain_source->isEmpty()) {
               /** @var \Drupal\domain\Entity\Domain $sourceDomain */
+              // @phpstan-ignore-next-line
               $sourceDomain = $node->field_domain_source->entity;
               $url = $node->toUrl('canonical')->toString();
               $replacements[$original] = $sourceDomain->buildUrl($url);

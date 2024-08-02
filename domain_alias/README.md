@@ -129,7 +129,7 @@ The pattern can repeat for each of the environments listed above. The intended u
 * staging -- for a pre-deployment server (such as those provided by many SaSS hosting services)
 * testing -- for continuous integration services (such as TravisCI or CircleCI).
 
-None of these environments are required. You may safely set all aliases to default if your workflow does not span multiple server environments or if those environments have the same DNS mapping. (See `drupalci.yml` in the project rootand `define_subdomains.sh` for example of setting DNS resolvers for CI environments.)
+None of these environments are required. You may safely set all aliases to default if your workflow does not span multiple server environments or if those environments have the same DNS mapping. (See `drupalci.yml` in the project root and `define_subdomains.sh` for example of setting DNS resolvers for CI environments.)
 
 How does it work?
 ----

@@ -17,6 +17,9 @@ class DomainActionsTest extends DomainTestBase {
     $admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($admin_user);
 
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('domain');
+
     $path = 'admin/config/domain';
 
     // Create test domains.
@@ -27,8 +30,7 @@ class DomainActionsTest extends DomainTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Test the domains.
-    $storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $domains = $storage->loadMultiple();
+    $domains = $this->getDomains();
     $this->assertCount(4, $domains, 'Four domain records found.');
 
     // Check the default domain.
@@ -57,7 +59,7 @@ class DomainActionsTest extends DomainTestBase {
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(200);
 
-    foreach ($storage->loadMultiple() as $domain) {
+    foreach ($this->getDomains() as $domain) {
       if ($domain->id() === 'one_example_com') {
         $this->assertEmpty($domain->status(), 'One domain inactive.');
       }
@@ -79,7 +81,7 @@ class DomainActionsTest extends DomainTestBase {
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(200);
 
-    foreach ($storage->loadMultiple() as $domain) {
+    foreach ($this->getDomains() as $domain) {
       $this->assertNotEmpty($domain->status(), 'All domains active.');
     }
 

@@ -60,19 +60,19 @@ class DomainReferencesTest extends DomainTestBase {
     $this->fillField('pass[pass2]', 'test');
 
     // We expect to find 5 domain options. We set three as selected.
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->getDomains();
 
     $ids = ['example_com', 'one_example_com', 'two_example_com'];
     $edit_ids = ['example_com', 'one_example_com'];
     foreach ($domains as $domain) {
       $locator = DomainInterface::DOMAIN_ADMIN_FIELD . '[' . $domain->id() . ']';
       $this->findField($locator);
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->checkField($locator);
       }
       $locator = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD . '[' . $domain->id() . ']';
       $this->findField($locator);
-      if (in_array($domain->id(), $edit_ids)) {
+      if (in_array($domain->id(), $edit_ids, TRUE)) {
         $this->checkField($locator);
       }
     }
@@ -190,7 +190,7 @@ class DomainReferencesTest extends DomainTestBase {
       // Some Domain Access field rights exist for this user. This adds
       // one to the count.
       $locator = DomainAccessManagerInterface::DOMAIN_ACCESS_FIELD . '[' . $domain->id() . ']';
-      if (in_array($domain->id(), $new_ids)) {
+      if (in_array($domain->id(), $new_ids, TRUE)) {
         $this->findField($locator);
         $this->checkField($locator);
       }

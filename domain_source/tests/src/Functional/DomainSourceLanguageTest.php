@@ -3,10 +3,9 @@
 namespace Drupal\Tests\domain_source\Functional;
 
 use Drupal\Core\Url;
-use Drupal\domain_access\DomainAccessManagerInterface;
-use Drupal\Tests\domain\Functional\DomainTestBase;
 use Drupal\domain_source\DomainSourceElementManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests behavior for the rewriting links using core URL methods.
@@ -73,6 +72,7 @@ class DomainSourceLanguageTest extends DomainTestBase {
 
     // Variables for our tests.
     $path = 'node/1';
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     $source = $domains[$id];
     $expected = $source->getPath() . $path;
@@ -94,7 +94,7 @@ class DomainSourceLanguageTest extends DomainTestBase {
     $url = Url::fromUri($uri, $options)->toString();
     $this->assertTrue($url === $expected, 'fromUri');
 
-    // Now test the same for the Arfrikaans translation.
+    // Now test the same for the Afrikaans translation.
     $path = 'node/1';
     $source = $domains[$id2];
     $expected = $source->getPath() . 'af/' . $path;

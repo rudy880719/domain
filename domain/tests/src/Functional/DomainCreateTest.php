@@ -17,7 +17,9 @@ class DomainCreateTest extends DomainTestBase {
     $this->domainTableIsEmpty();
 
     // Create a new domain programmatically.
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
+    /** @var \Drupal\domain\DomainInterface $domain */
     $domain = $storage->create();
     $domain->set('id', $storage->createMachineName($domain->getHostname()));
     $keys = [
@@ -40,6 +42,7 @@ class DomainCreateTest extends DomainTestBase {
     $this->assertNotEmpty($default_id, 'Default domain has been set.');
 
     // Does it load correctly?
+    /** @var \Drupal\domain\DomainInterface $new_domain */
     $new_domain = $storage->load($default_id);
     $this->assertEquals($new_domain->id(), $domain->id(), 'Domain loaded properly.');
 

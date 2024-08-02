@@ -5,6 +5,7 @@ namespace Drupal\domain\Plugin\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\domain\DomainInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a token information block for a domain request.
@@ -15,6 +16,23 @@ use Drupal\domain\DomainInterface;
  * )
  */
 class DomainTokenBlock extends DomainBlockBase {
+
+  /**
+   * The token service.
+   *
+   * @var \Drupal\Core\Utility\Token
+   */
+  protected $token;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->token = $container->get('token');
+
+    return $instance;
+  }
 
   /**
    * Overrides \Drupal\block\BlockBase::access().
@@ -30,13 +48,14 @@ class DomainTokenBlock extends DomainBlockBase {
    */
   public function build() {
     /** @var \Drupal\domain\DomainInterface $domain */
-    $domain = \Drupal::service('domain.negotiator')->getActiveDomain();
-    if (!$domain) {
+    $domain = $this->domainNegotiator->getActiveDomain();
+    if (is_null($domain)) {
       return [
         '#markup' => $this->t('No domain record could be loaded.'),
       ];
     }
     $header = [$this->t('Token'), $this->t('Value')];
+
     return [
       '#theme' => 'table',
       '#rows' => $this->renderTokens($domain),
@@ -55,8 +74,7 @@ class DomainTokenBlock extends DomainBlockBase {
    */
   private function renderTokens(DomainInterface $domain) {
     $rows = [];
-    $token = \Drupal::token();
-    $tokens = $token->getInfo();
+    $tokens = $this->token->getInfo();
     // The 'domain' token is supported by core. The others by Token module,
     // so we cannot assume that Token module is present.
     $domain_tokens = ['domain', 'current-domain', 'default-domain'];
@@ -71,7 +89,7 @@ class DomainTokenBlock extends DomainBlockBase {
           $string = "[$key:$name]";
           $rows[] = [
             $string,
-            $token->replace($string, $data),
+            $this->token->replace($string, $data),
           ];
         }
       }

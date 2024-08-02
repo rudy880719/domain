@@ -34,7 +34,9 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['administer domains']);
 
     // Set the storage handles.
+    /** @var \Drupal\domain\DomainStorageInterface $domain_storage */
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
+    /** @var \Drupal\domain_alias\DomainAliasStorageInterface $alias_storage */
     $alias_storage = \Drupal::entityTypeManager()->getStorage('domain_alias');
 
     // Set known prefixes that work with our tests. This will give us domains
@@ -68,8 +70,8 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
       $this->assertSession()->responseContains('ALIAS:');
       $this->assertSession()->responseContains($alias->getPattern());
 
-      // Test redirections.
-      // @TODO: This could be much more elegant: the redirects break assertSession()->responseContains()
+      // Test redirection.
+      // @todo This could be much more elegant: the redirects break assertSession()->responseContains()
       $alias->set('redirect', 301);
       $alias->save();
       $this->drupalGet($url);
@@ -78,7 +80,7 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
       $this->drupalGet($url);
     }
     // Test a wildcard alias.
-    // @TODO: Refactor this test to merge with the above.
+    // @todo Refactor this test to merge with the above.
     $alias_domain = $domain_storage->loadDefaultDomain();
     $pattern = '*.' . $this->baseHostname;
     $this->domainAliasCreateTestAlias($alias_domain, $pattern);
@@ -93,8 +95,8 @@ class DomainAliasNegotiatorTest extends DomainAliasTestBase {
     $this->assertSession()->responseContains('ALIAS:');
     $this->assertSession()->responseContains($alias->getPattern());
 
-    // Test redirections.
-    // @TODO: This could be much more elegant: the redirects break assertSession()->responseContains()
+    // Test redirection.
+    // @todo This could be much more elegant: the redirects break assertSession()->responseContains()
     $alias->set('redirect', 301);
     $alias->save();
     $this->drupalGet($url);

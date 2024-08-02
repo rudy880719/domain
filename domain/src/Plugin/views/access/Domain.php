@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
 use Drupal\domain\DomainStorageInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
@@ -89,7 +90,7 @@ class Domain extends AccessPluginBase implements CacheableDependencyInterface {
    */
   public function alterRouteDefinition(Route $route) {
     if ($this->options['domain']) {
-      $route->setRequirement('_domain', (string) implode('+', $this->options['domain']));
+      $route->setRequirement('_domain', implode('+', $this->options['domain']));
     }
   }
 
@@ -142,7 +143,7 @@ class Domain extends AccessPluginBase implements CacheableDependencyInterface {
     $domain = $form_state->getValue(['access_options', 'domain']);
     $domain = array_filter($domain);
 
-    if (!$domain) {
+    if ($domain === []) {
       $form_state->setError($form['domain'], $this->t('You must select at least one domain if type is "by domain"'));
     }
 
@@ -156,7 +157,8 @@ class Domain extends AccessPluginBase implements CacheableDependencyInterface {
     $dependencies = parent::calculateDependencies();
 
     foreach (array_keys($this->options['domain']) as $id) {
-      if ($domain = $this->domainStorage->load($id)) {
+      $domain = $this->domainStorage->load($id);
+      if ($domain instanceof DomainInterface) {
         $dependencies[$domain->getConfigDependencyKey()][] = $domain->getConfigDependencyName();
       }
     }

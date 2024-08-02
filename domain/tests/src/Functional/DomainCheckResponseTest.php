@@ -17,6 +17,7 @@ class DomainCheckResponseTest extends DomainTestBase {
     $admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($admin_user);
 
+    /** @var \Drupal\domain\DomainStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('domain');
 
     // Make a POST request on admin/config/domain/add.
@@ -27,7 +28,7 @@ class DomainCheckResponseTest extends DomainTestBase {
     $this->submitForm($edit, 'Save');
     // Did it save correctly?
     $this->assertSession()->responseNotContains('The server request to');
-    $domains = $storage->loadMultiple();
+    $domains = $this->getDomains();
     $this->assertCount(1, $domains, 'Domain record saved via form.');
 
     // Make an invalid POST request on admin/config/domain/add.
@@ -46,7 +47,7 @@ class DomainCheckResponseTest extends DomainTestBase {
     }
     // The domain should not save.
     $this->assertSession()->responseContains('The server request to');
-    $domains = $storage->loadMultiple();
+    $domains = $this->getDomains();
     $this->assertCount(1, $domains, 'Domain record not saved via form.');
 
     // Bypass the check.
@@ -56,7 +57,7 @@ class DomainCheckResponseTest extends DomainTestBase {
 
     // The domain should save.
     $this->assertSession()->responseNotContains('The server request to');
-    $domains = $storage->loadMultiple();
+    $domains = $this->getDomains();
     $this->assertCount(2, $domains, 'Domain record saved via form.');
   }
 

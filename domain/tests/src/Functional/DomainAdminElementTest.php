@@ -49,13 +49,13 @@ class DomainAdminElementTest extends DomainTestBase {
     $this->fillField('pass[pass2]', 'test');
 
     // We expect to find 5 domain options. We set two as selected.
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->getDomains();
 
     $ids = ['example_com', 'one_example_com', 'two_example_com'];
     foreach ($domains as $domain) {
       $locator = DomainInterface::DOMAIN_ADMIN_FIELD . '[' . $domain->id() . ']';
       $this->findField($locator);
-      if (in_array($domain->id(), $ids)) {
+      if (in_array($domain->id(), $ids, TRUE)) {
         $this->checkField($locator);
       }
     }
@@ -129,7 +129,7 @@ class DomainAdminElementTest extends DomainTestBase {
     $this->fillField('name', 'testuser2');
     $this->fillField('mail', 'test2@example.com');
     // In 8.3, this field is not present?
-    if (!empty($this->findField('pass[pass1]'))) {
+    if (!is_null($this->findField('pass[pass1]'))) {
       $this->fillField('pass[pass1]', 'test');
       $this->fillField('pass[pass2]', 'test');
     }

@@ -81,6 +81,13 @@ class DomainListBuilder extends DraggableListBuilder {
   protected $userStorage;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -127,6 +134,10 @@ class DomainListBuilder extends DraggableListBuilder {
     $this->userStorage = $this->entityTypeManager->getStorage('user');
     // DraggableListBuilder sets this to FALSE, which cancels any pagination.
     $this->limit = 50;
+
+    // Do not inject the form builder for backwards-compatibility.
+    // @phpstan-ignore-next-line.
+    $this->formBuilder = \Drupal::formBuilder();
   }
 
   /**
@@ -199,7 +210,7 @@ class DomainListBuilder extends DraggableListBuilder {
     $default = $this->domainStorage->loadDefaultDomain();
 
     // Deleting the site default domain is not allowed.
-    if ($default && $id === $default->id()) {
+    if (!is_null($default) && $id === $default->id()) {
       unset($operations['delete']);
     }
     return $operations;
@@ -209,6 +220,7 @@ class DomainListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
+    $header = [];
     $header['label'] = $this->t('Name');
     $header['hostname'] = $this->t('Hostname');
     $header['status'] = $this->t('Status');
@@ -231,6 +243,7 @@ class DomainListBuilder extends DraggableListBuilder {
       return;
     }
 
+    $row = [];
     $row['label'] = $entity->label();
     $row['hostname'] = ['#markup' => $entity->getLink()];
     if ($entity->isActive()) {
@@ -315,7 +328,7 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   public function render() {
     // Build the default form, which includes weights.
-    $form = $this->formBuilder()->getForm($this);
+    $form = $this->formBuilder->getForm($this);
 
     // Only add the pager if a limit is specified.
     if ($this->limit) {
@@ -341,6 +354,7 @@ class DomainListBuilder extends DraggableListBuilder {
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(FALSE)
       ->sort($this->entityType->getKey('weight'));
 
     // If the user cannot administer domains, we must filter the query further

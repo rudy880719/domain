@@ -31,15 +31,18 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
    * Test for environment matching.
    */
   public function testDomainAliasEnvironments() {
+    /** @var \Drupal\domain\DomainStorageInterface $domain_storage */
     $domain_storage = \Drupal::entityTypeManager()->getStorage('domain');
-    $alias_loader = \Drupal::entityTypeManager()->getStorage('domain_alias');
-    $domains = $domain_storage->loadMultipleSorted();
+    /** @var \Drupal\domain_alias\DomainAliasStorageInterface $alias_storage */
+    $alias_storage = \Drupal::entityTypeManager()->getStorage('domain_alias');
+    /** @var \Drupal\domain\DomainInterface[] $domains */
+    $domains = $domain_storage->loadMultiple();
     // Our patterns should map to example.com, one.example.com, two.example.com.
     $patterns = [
       '*.' . $this->baseHostname, 'four.' . $this->baseHostname,
-      'five.' . $this->baseHostname
+      'five.' . $this->baseHostname,
     ];
-    $domain = NULL;
+
     foreach ($domains as $domain) {
       $values = [
         'domain_id' => $domain->id(),
@@ -50,25 +53,27 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
       $this->createDomainAlias($values);
     }
     // Test the environment loader.
-    $local = $alias_loader->loadByEnvironment('local');
+    $local = $alias_storage->loadByEnvironment('local');
     $this->assertTrue(count($local) === 3, 'Three aliases set to local');
     // Test the environment matcher. $domain here is two.example.com.
-    $match = $alias_loader->loadByEnvironmentMatch($domain, 'local');
-    $this->assertTrue(count($match) === 1, 'One environment match loaded');
-    $alias = current($match);
+    $test_domain = end($domains);
+    $matches = $alias_storage->loadByEnvironmentMatch($test_domain, 'local');
+    $this->assertTrue(count($matches) === 1, 'One environment match loaded');
+    $alias = current($matches);
     $this->assertTrue($alias->getPattern() === 'five.' . $this->baseHostname, 'Proper pattern match loaded.');
 
     // Set one alias to a different environment.
     $alias->set('environment', 'testing')->save();
-    $local = $alias_loader->loadByEnvironment('local');
+    $local = $alias_storage->loadByEnvironment('local');
     $this->assertTrue(count($local) === 2, 'Two aliases set to local');
     // Test the environment matcher. $domain here is two.example.com.
-    $matches = $alias_loader->loadByEnvironmentMatch($domain, 'local');
+    $matches = $alias_storage->loadByEnvironmentMatch($test_domain, 'local');
     $this->assertTrue(count($matches) === 0, 'No environment matches loaded');
 
     // Test the environment matcher. $domain here is one.example.com.
-    $domain = $domain_storage->load('one_example_com');
-    $matches = $alias_loader->loadByEnvironmentMatch($domain, 'local');
+    /** @var \Drupal\domain\DomainInterface $test_domain */
+    $test_domain = $domain_storage->load('one_example_com');
+    $matches = $alias_storage->loadByEnvironmentMatch($test_domain, 'local');
     $this->assertTrue(count($matches) === 1, 'One environment match loaded');
     $alias = current($matches);
     $this->assertTrue($alias->getPattern() === 'four.' . $this->baseHostname, 'Proper pattern match loaded.');
@@ -81,13 +86,13 @@ class DomainAliasEnvironmentTest extends DomainAliasTestBase {
     // To get around block access, let the anon user view the block.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['administer domains']);
     // For a non-aliased request, the url list should be normal.
-    $this->drupalGet($domain->getPath());
+    $this->drupalGet($test_domain->getPath());
     foreach ($domains as $domain) {
       $this->assertSession()->assertEscaped($domain->getHostname());
       $this->assertSession()->linkByHrefExists($domain->getPath(), 0, 'Link found: ' . $domain->getPath());
     }
     // For an aliased request (four.example.com), the list should be aliased.
-    $url = $domain->getScheme() . $alias->getPattern();
+    $url = $test_domain->getScheme() . $alias->getPattern() . $GLOBALS['base_path'];
     $this->drupalGet($url);
     foreach ($matches as $match) {
       $this->assertSession()->assertEscaped($match->getPattern());

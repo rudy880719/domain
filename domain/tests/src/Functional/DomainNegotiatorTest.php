@@ -34,7 +34,7 @@ class DomainNegotiatorTest extends DomainTestBase {
     user_role_grant_permissions(AccountInterface::ANONYMOUS_ROLE, ['view domain information']);
 
     // Test the response of the default home page.
-    foreach (\Drupal::entityTypeManager()->getStorage('domain')->loadMultiple() as $domain) {
+    foreach ($this->getDomains() as $domain) {
       $this->drupalGet($domain->getPath());
       $this->assertSession()->responseContains($domain->label());
     }

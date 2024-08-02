@@ -2,8 +2,9 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
-use Drupal\Tests\domain\Functional\DomainTestBase;
+use Drupal\domain_access\DomainAccessManager;
 use Drupal\domain_access\DomainAccessManagerInterface;
+use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
  * Tests the domain access entity reference field type.
@@ -72,6 +73,7 @@ class DomainAccessAllAffiliatesTest extends DomainTestBase {
 
     // We expect to find 5 domain options.
     $one = $two = NULL;
+    /** @var \Drupal\domain\DomainInterface[] $domains */
     $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
@@ -86,16 +88,18 @@ class DomainAccessAllAffiliatesTest extends DomainTestBase {
     }
 
     // Try to post a node, assigned to the first two domains.
-    $edit['title[0][value]'] = 'Test node';
-    $edit["field_domain_access[{$one}]"] = TRUE;
-    $edit["field_domain_access[{$two}]"] = TRUE;
-    $edit["field_domain_all_affiliates[value]"] = 1;
+    $edit = [
+      'title[0][value]' => 'Test node',
+      "field_domain_access[{$one}]" => TRUE,
+      "field_domain_access[{$two}]" => TRUE,
+      'field_domain_all_affiliates[value]' => 1,
+    ];
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $node = \Drupal::entityTypeManager()->getStorage('node')->load(1);
     // Check that two values are set.
-    $values = \Drupal::service('domain_access.manager')->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertCount(2, $values, 'Node saved with two domain records.');
     // Check that all affiliates is set.
     $this->assertNotEmpty($node->get(DomainAccessManagerInterface::DOMAIN_ACCESS_ALL_FIELD)->value, 'Node assigned to all affiliates.');

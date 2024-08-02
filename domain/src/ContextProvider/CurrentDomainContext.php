@@ -3,11 +3,10 @@
 namespace Drupal\domain\ContextProvider;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\Plugin\Context\EntityContext;
-use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\domain\DomainInterface;
 use Drupal\domain\DomainNegotiatorInterface;
 
 /**
@@ -42,7 +41,7 @@ class CurrentDomainContext implements ContextProviderInterface {
     // Load the current domain.
     $current_domain = $this->negotiator->getActiveDomain();
     // Set the context, if we have a domain.
-    if (!empty($current_domain->id())) {
+    if ($current_domain instanceof DomainInterface) {
       $context = EntityContext::fromEntity($current_domain, $this->t('Active domain'));
       // Allow caching.
       $cacheability = new CacheableMetadata();
@@ -63,7 +62,7 @@ class CurrentDomainContext implements ContextProviderInterface {
    */
   public function getAvailableContexts() {
     // See https://www.drupal.org/project/domain/issues/3201514
-    if ($this->negotiator->getActiveDomain()) {
+    if ($this->negotiator->getActiveDomain() instanceof DomainInterface) {
       return $this->getRuntimeContexts([]);
     }
     return [];

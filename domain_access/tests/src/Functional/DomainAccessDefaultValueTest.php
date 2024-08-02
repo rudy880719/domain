@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\domain_access\Functional;
 
+use Drupal\domain_access\DomainAccessManager;
 use Drupal\Tests\domain\Functional\DomainTestBase;
 
 /**
@@ -58,9 +59,9 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load(1);
     $this->assertNotNull($node, 'Article node created.');
     // Check that the values are set.
-    $values = \Drupal::service('domain_access.manager')->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertCount(1, $values, 'Node saved with one domain record.');
-    $allValue = \Drupal::service('domain_access.manager')->getAllValue($node);
+    $allValue = DomainAccessManager::getAllValue($node);
     $this->assertEmpty($allValue, 'Not sent to all affiliates.');
 
     // Logout the admin user.
@@ -89,9 +90,9 @@ class DomainAccessDefaultValueTest extends DomainTestBase {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load(1);
     $this->assertNotNull($node, 'Article node created.');
     // Check that the values are set.
-    $values = \Drupal::service('domain_access.manager')->getAccessValues($node);
+    $values = DomainAccessManager::getAccessValues($node);
     $this->assertCount(1, $values, 'Node saved with one domain record.');
-    $allValue = \Drupal::service('domain_access.manager')->getAllValue($node);
+    $allValue = DomainAccessManager::getAllValue($node);
     $this->assertEmpty($allValue, 'Not sent to all affiliates.');
 
   }

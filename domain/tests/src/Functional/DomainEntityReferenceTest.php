@@ -87,23 +87,25 @@ class DomainEntityReferenceTest extends DomainTestBase {
 
     // We expect to find 5 domain options.
     $one = $two = NULL;
-    $domains = \Drupal::entityTypeManager()->getStorage('domain')->loadMultiple();
+    $domains = $this->getDomains();
     foreach ($domains as $domain) {
       $string = 'value="' . $domain->id() . '"';
       $this->assertSession()->responseContains($string);
-      if (empty($one)) {
+      if (is_null($one)) {
         $one = $domain->id();
         continue;
       }
-      if (empty($two)) {
+      if (is_null($two)) {
         $two = $domain->id();
       }
     }
 
     // Try to post a node, assigned to the first two domains.
-    $edit['title[0][value]'] = 'Test node';
-    $edit["field_domain[{$one}]"] = TRUE;
-    $edit["field_domain[{$two}]"] = TRUE;
+    $edit = [
+      'title[0][value]' => 'Test node',
+      "field_domain[{$one}]" => TRUE,
+      "field_domain[{$two}]" => TRUE,
+    ];
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -151,7 +153,8 @@ class DomainEntityReferenceTest extends DomainTestBase {
     $field_config->save();
 
     // Tell the form system how to behave.
-    if ($display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.article.default')) {
+    $display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.article.default');
+    if (!is_null($display)) {
       $display->setComponent($name, ['type' => 'options_buttons'])->save();
     }
   }
