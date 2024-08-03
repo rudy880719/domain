@@ -3,6 +3,7 @@
 namespace Drupal\domain\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\CacheableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
@@ -102,7 +103,7 @@ class DomainSubscriber implements EventSubscriberInterface {
   public function onKernelRequestDomain(RequestEvent $event) {
     // Negotiate the request and set domain context.
     $domain = $this->domainNegotiator->getActiveDomain(TRUE);
-    if ($domain instanceof DomainInterface) {
+    if ($domain instanceof DomainInterface && $this->routeProvider instanceof CacheableRouteProviderInterface) {
       $this->routeProvider->addExtraCacheKeyPart('domain', $domain->id());
       $hostname = $domain->getHostname();
       $domain_url = $domain->getUrl();
