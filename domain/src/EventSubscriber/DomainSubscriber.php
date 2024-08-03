@@ -73,6 +73,8 @@ class DomainSubscriber implements EventSubscriberInterface {
    *   The access check interface.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider to load routes by name.
    */
   public function __construct(DomainNegotiatorInterface $negotiator, EntityTypeManagerInterface $entity_type_manager, DomainAccessCheck $access_check, AccountInterface $account, RouteProviderInterface $route_provider) {
     $this->domainNegotiator = $negotiator;
