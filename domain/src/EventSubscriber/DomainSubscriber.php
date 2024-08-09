@@ -101,8 +101,10 @@ class DomainSubscriber implements EventSubscriberInterface {
   public function onKernelRequestDomain(RequestEvent $event) {
     // Negotiate the request and set domain context.
     $domain = $this->domainNegotiator->getActiveDomain(TRUE);
-    if ($domain instanceof DomainInterface && $this->routeProvider instanceof CacheableRouteProviderInterface) {
-      $this->routeProvider->addExtraCacheKeyPart('domain', $domain->id());
+    if ($domain instanceof DomainInterface) {
+      if ($this->routeProvider instanceof CacheableRouteProviderInterface) {
+        $this->routeProvider->addExtraCacheKeyPart('domain', $domain->id());
+      }
       $hostname = $domain->getHostname();
       $domain_url = $domain->getUrl();
       $redirect_status = $domain->getRedirect();
