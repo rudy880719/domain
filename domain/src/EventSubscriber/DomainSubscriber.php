@@ -58,10 +58,8 @@ class DomainSubscriber implements EventSubscriberInterface {
 
   /**
    * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
    */
-  protected $routeProvider;
+  protected RouteProviderInterface $routeProvider;
 
   /**
    * Constructs a DomainSubscriber object.
