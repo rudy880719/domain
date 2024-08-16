@@ -95,6 +95,35 @@ class DomainNavBlockTest extends DomainTestBase {
   }
 
   /**
+   * Test domain navigation block configuration update.
+   */
+  public function testBlockConfigurationUpdate() {
+    $user = $this->drupalCreateUser(['administer blocks']);
+    $this->drupalLogin($user);
+
+    $default_settings = ['link_options' => 'home', 'link_theme' => 'ul', 'link_label' => 'name'];
+    $expected_settings = ['link_options' => 'active', 'link_theme' => 'select', 'link_label' => 'hostname'];
+
+    $block = $this->drupalPlaceBlock('domain_nav_block', $default_settings);
+
+    $this->drupalGet('admin/structure/block/manage/' . $block->id());
+
+    $submit_settings = [];
+    foreach ($expected_settings as $key => $value) {
+      $key = sprintf('settings[%s]', $key);
+      $submit_settings[$key] = $value;
+    }
+
+    $this->submitForm($submit_settings, 'Save block');
+
+    $actual_settings = $this->config('block.block.' . $block->id());
+    foreach ($expected_settings as $key => $expected_value) {
+      $actual_value = $actual_settings->get("settings.{$key}");
+      $this->assertEquals($expected_value, $actual_value, "Mismatching value for settings $key");
+    }
+  }
+
+  /**
    * Test links class in domain navigation block.
    */
   public function testActiveDomainLinkClass() {
