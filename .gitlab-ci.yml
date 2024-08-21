@@ -49,5 +49,5 @@ include:
     - echo "127.0.0.1 nine.example.local" >> /etc/hosts
     - echo "127.0.0.1 ten.example.local" >> /etc/hosts
 variables:
-  #_PHPUNIT_CONCURRENT: '1'
+  _PHPUNIT_CONCURRENT: '1'
   OPT_IN_TEST_NEXT_MAJOR: 1
