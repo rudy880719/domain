@@ -135,13 +135,12 @@ class DomainElementManager implements DomainElementManagerInterface {
         $values = $form_state->getValue($field . '_disallowed');
         $entity_values = $form_state->getValue($field);
 
-        if (is_array($values)) {
-          foreach ($values as $value) {
+        $values = is_array($values) ? $values : [$values];
+        $existing_values = array_column($entity_values, 'target_id');
+        foreach ($values as $value) {
+          if (!in_array($value, $existing_values)) {
             $entity_values[]['target_id'] = $value;
           }
-        }
-        else {
-          $entity_values[]['target_id'] = $values;
         }
       }
       // Prevent a fatal error caused by passing a NULL value.
