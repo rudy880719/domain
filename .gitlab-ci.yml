@@ -48,8 +48,6 @@ include:
     - echo "127.0.0.1 eight.example.local" >> /etc/hosts
     - echo "127.0.0.1 nine.example.local" >> /etc/hosts
     - echo "127.0.0.1 ten.example.local" >> /etc/hosts
-    - cp $CI_PROJECT_DIR/$_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/domain/domain.info.yml $CI_PROJECT_DIR/$_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/domain.info.yml
-    - ls -l $CI_PROJECT_DIR/$_WEB_ROOT/modules/custom/$CI_PROJECT_NAME
 variables:
   _PHPUNIT_CONCURRENT: '1'
   OPT_IN_TEST_NEXT_MAJOR: 1

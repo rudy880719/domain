@@ -3,6 +3,7 @@ description: 'Stub file to trick testing on Gitlab.'
 type: module
 package: Domain
 version: VERSION
+hidden: true
 core_version_requirement: ^9 || ^10 || ^11
 dependencies:
   - domain:domain
