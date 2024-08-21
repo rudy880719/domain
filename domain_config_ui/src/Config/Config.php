@@ -44,6 +44,10 @@ class Config extends CoreConfig {
         parent::save($has_trusted_data);
       }
 
+      // Update module override config.
+      if ($domainConfigName !== $originalName) {
+        $this->setModuleOverride($this->getRawData());
+      }
       // Switch to use domain config name and save.
       $this->name = $domainConfigName;
       parent::save($has_trusted_data);
