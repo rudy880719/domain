@@ -48,7 +48,8 @@ include:
     - echo "127.0.0.1 eight.example.local" >> /etc/hosts
     - echo "127.0.0.1 nine.example.local" >> /etc/hosts
     - echo "127.0.0.1 ten.example.local" >> /etc/hosts
-    - mv $_WEB_ROOT/modules/custom/domain/domain/domain.info.yml $_WEB_ROOT/modules/custom/domain/domain.info.yml
+    - cp $_WEB_ROOT/modules/custom/domain/domain/domain.info.yml $_WEB_ROOT/modules/custom/domain/domain.info.yml
+    - ls -l $_WEB_ROOT/modules/custom/domain
 variables:
   _PHPUNIT_CONCURRENT: '1'
   OPT_IN_TEST_NEXT_MAJOR: 1
