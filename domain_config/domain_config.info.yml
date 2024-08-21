@@ -3,6 +3,6 @@ description: 'Allows domain specific configuration.'
 type: module
 package: Domain
 version: VERSION
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10 || ^11
 dependencies:
   - domain:domain
