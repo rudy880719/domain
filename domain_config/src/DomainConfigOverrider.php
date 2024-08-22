@@ -212,6 +212,8 @@ class DomainConfigOverrider implements ConfigFactoryOverrideInterface {
     $metadata = new CacheableMetadata();
     if ($this->domain instanceof DomainInterface) {
       $metadata->addCacheContexts(['url.site', 'languages:language_interface']);
+      $config_name = $this->getDomainConfigName($name, $this->domain);
+      $metadata->addCacheTags(['config:' . $config_name['domain'], 'config:' . $config_name['langcode']]);
     }
     return $metadata;
   }
