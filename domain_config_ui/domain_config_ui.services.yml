@@ -19,4 +19,5 @@ services:
         '@event_dispatcher',
         '@config.typed',
         '@domain_config_ui.manager',
+        '@uuid',
       ]

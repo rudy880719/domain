@@ -2,6 +2,7 @@
 
 namespace Drupal\domain_config_ui\Config;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\Config as CoreConfig;
 use Drupal\domain_config_ui\DomainConfigUIManager;
 
@@ -18,6 +19,13 @@ class Config extends CoreConfig {
   protected $domainConfigUIManager;
 
   /**
+   * The UUID generator.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidGenerator;
+
+  /**
    * Set the Domain config UI manager.
    *
    * @param \Drupal\domain_config_ui\DomainConfigUIManager $domain_config_ui_manager
@@ -28,11 +36,22 @@ class Config extends CoreConfig {
   }
 
   /**
+   * Set the UUID generator manager.
+   *
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
+   *   The UUID generator.
+   */
+  public function setUuidGenerator(UuidInterface $uuid_generator) {
+    $this->uuidGenerator = $uuid_generator;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function save($has_trusted_data = FALSE) {
-    // Remember original config name.
+    // Remember original config name and UUID.
     $originalName = $this->name;
+    $originalUuid = $this->getOriginal('uuid', FALSE);
 
     try {
       // Get domain config name for saving.
@@ -44,6 +63,15 @@ class Config extends CoreConfig {
         parent::save($has_trusted_data);
       }
 
+      // Update module override config.
+      if ($domainConfigName !== $originalName) {
+        // Override UUID.
+        $this->set('uuid', $this->hasOverrides('uuid') ? $this->getOriginal('uuid') : $this->uuidGenerator->generate());
+        // Update module override config.
+        // Useful for config entities because save can be triggered
+        // several times.
+        $this->setModuleOverride($this->getRawData());
+      }
       // Switch to use domain config name and save.
       $this->name = $domainConfigName;
       parent::save($has_trusted_data);
@@ -54,8 +82,9 @@ class Config extends CoreConfig {
       throw $e;
     }
 
-    // Reset back to original config name after saving.
+    // Reset back to original config name and UUID after saving.
     $this->name = $originalName;
+    $this->set('uuid', $originalUuid);
 
     return $this;
   }

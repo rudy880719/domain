@@ -2,6 +2,7 @@
 
 namespace Drupal\domain_config_ui\Config;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\ConfigFactory as CoreConfigFactory;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -21,6 +22,13 @@ class ConfigFactory extends CoreConfigFactory {
   protected $domainConfigUIManager;
 
   /**
+   * The UUID generator.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidGenerator;
+
+  /**
    * Constructs the Config factory.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
@@ -31,10 +39,13 @@ class ConfigFactory extends CoreConfigFactory {
    *   The typed configuration manager.
    * @param \Drupal\domain_config_ui\DomainConfigUIManagerInterface $domain_config_ui_manager
    *   The domain config UI manager.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
+   *   The UUID generator.
    */
-  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config, DomainConfigUIManagerInterface $domain_config_ui_manager) {
+  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config, DomainConfigUIManagerInterface $domain_config_ui_manager, UuidInterface $uuid_generator) {
     parent::__construct($storage, $event_dispatcher, $typed_config);
     $this->domainConfigUIManager = $domain_config_ui_manager;
+    $this->uuidGenerator = $uuid_generator;
   }
 
   /**
@@ -45,6 +56,7 @@ class ConfigFactory extends CoreConfigFactory {
       $config = new Config($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
       // Pass the UI manager to the Config object.
       $config->setDomainConfigUiManager($this->domainConfigUIManager);
+      $config->setUuidGenerator($this->uuidGenerator);
       return $config;
     }
     return parent::createConfigObject($name, $immutable);
