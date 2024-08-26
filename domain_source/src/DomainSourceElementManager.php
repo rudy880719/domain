@@ -26,7 +26,7 @@ class DomainSourceElementManager extends DomainElementManager implements DomainS
       // @phpstan-ignore-next-line
       if (isset($field['widget']['#options']) && !empty($entity_values)) {
         // @phpstan-ignore-next-line
-        $value = $entity_values->getValue('target_id');
+        $value = $entity_values->getValue();
         $options = array_diff_key(array_flip($value), $field['widget']['#options']);
       }
     }
